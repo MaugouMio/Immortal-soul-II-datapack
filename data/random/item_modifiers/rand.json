@@ -1,0 +1,33 @@
+[
+  {
+    "function": "minecraft:set_attributes",
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.max_health",
+        "name": "random",
+        "amount": {
+          "min": {
+            "type": "minecraft:score",
+            "target": {
+              "type": "minecraft:fixed",
+              "name": "#RAND_MIN"
+            },
+            "score": "number",
+            "scale": 0.0001
+          },
+          "max": {
+            "type": "minecraft:score",
+            "target": {
+              "type": "minecraft:fixed",
+              "name": "#RAND_MAX"
+            },
+            "score": "number",
+            "scale": 0.0001
+          }
+        },
+        "operation": "addition",
+        "slot": "mainhand"
+      }
+    ]
+  }
+]

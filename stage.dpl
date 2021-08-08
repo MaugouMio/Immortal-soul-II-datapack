@@ -1,0 +1,66 @@
+namespace stage()
+{
+	func install()
+	{
+		scoreboard objectives add game_id dummy
+		
+		scoreboard players set #PLAYER_MODE number 1
+		scoreboard players set #SELECTED_STAGE number 1
+		
+		bossbar add boss "BOSS"
+		bossbar set minecraft:boss color red
+		bossbar add zone {"translate":"Zone"}
+		bossbar set minecraft:zone max 2000
+	}
+	
+	func main()
+	{
+		execute if score #CURRENT_STAGE number matches 1 run function ARG(_PATH)stage1/main
+		execute if score #CURRENT_STAGE number matches 2 run function ARG(_PATH)stage2/main
+		execute if score #CURRENT_STAGE number matches 3 run function ARG(_PATH)stage3/main
+	}
+	
+	# activated by sign click
+	func start()
+	{
+		scoreboard players set @s player 1
+		scoreboard players set @s weapon_mode 1
+		item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+		item replace entity @s weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+		
+		# swap mode
+		execute if score #PLAYER_MODE number matches 3 as @p[scores={player=0},gamemode=adventure] run function ARG(_PATH)set_player2
+		gamemode spectator @a[scores={player=0}]
+		
+		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start
+		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start
+		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/start
+		
+		bossbar set minecraft:boss players @a
+		bossbar set minecraft:boss max 2000
+		bossbar set minecraft:boss value 2000
+		bossbar set minecraft:boss visible true
+		
+		execute store result score @a[scores={player=1..}] game_id run scoreboard players add #GLOBAL game_id 1
+	}
+	
+	func set_player2()
+	{
+		scoreboard players set @s player 2
+		scoreboard players set @s weapon_mode -1
+		item replace entity @s weapon.mainhand with minecraft:spyglass{display:{Name:'{"translate":"Supreme Pulse","bold":true,"italic":false}'},weapon:1b}
+	}
+	
+	folder stage1()
+	{
+		func start()
+		{
+			bossbar set minecraft:boss name {"translate":"Sacred Knight"}
+			bossbar set minecraft:zone value 2000
+			bossbar set minecraft:zone players @a
+			bossbar set minecraft:zone visible true
+			# tp @a x y z rx ry
+			# summon ...
+		}
+	}
+}

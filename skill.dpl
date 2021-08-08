@@ -1,0 +1,948 @@
+import utils, loop
+
+namespace skill()
+{
+	func install()
+	{
+		scoreboard objectives add throw_gun minecraft.dropped:minecraft.spyglass
+		scoreboard objectives add throw_edge minecraft.dropped:minecraft.carrot_on_a_stick
+		scoreboard objectives add right minecraft.used:minecraft.carrot_on_a_stick
+		# 1 = edge ; -1 = gun
+		scoreboard objectives add player dummy
+		scoreboard objectives add weapon_mode dummy
+		scoreboard objectives add damage_scale dummy
+		scoreboard objectives add slash dummy
+		scoreboard objectives add slashtime dummy
+		scoreboard objectives add cd_right dummy
+		scoreboard objectives add cd_left dummy
+		scoreboard objectives add life dummy
+		# 0 = left ; 1 = right
+		scoreboard objectives add last_hand dummy
+		scoreboard objectives add airtime dummy
+		scoreboard objectives add airtime2 dummy
+		scoreboard objectives add sneaktime dummy
+		scoreboard objectives add sneaktime2 dummy
+		
+		scoreboard objectives add gun_load dummy
+		scoreboard objectives add shooting dummy
+		scoreboard objectives add aiming dummy
+		scoreboard objectives add escape_used dummy
+		scoreboard objectives add beamtime dummy
+		
+		data modify storage skill:main beam_bar set value []
+	}
+	
+	func main()
+	{
+		execute as @e[type=armor_stand,tag=skill_effect] run function ARG(_PATH)effect_check
+		
+		execute as @a[scores={slashtime=1..}] run function ARG(_PATH)edge/basic/slashtime
+		execute as @a[scores={airtime=1..}] at @s run function ARG(_PATH)edge/air/airtime
+		execute as @a[scores={airtime2=1..}] at @s run function ARG(_PATH)edge/air/airtime2
+		execute as @a[scores={sneaktime=1..}] at @s run function ARG(_PATH)edge/sneak/sneaktime
+		execute as @a[scores={sneaktime2=1..}] at @s run function ARG(_PATH)edge/sneak/sneaktime2
+		
+		function ARG(_PATH)gun/beam/show_bar/update
+		execute as @a if score @s beamtime matches 0.. run function ARG(_PATH)gun/beam/prepare
+		execute as @a unless score @s beamtime matches 0.. at @s run function ARG(_PATH)action_check
+		
+		execute as @a if predicate skill:switch at @s run function ARG(_PATH)switch/check
+	}
+	
+	func action_check()
+	{
+		execute if score @s right matches 1.. run function ARG(_PATH)edge/main
+		execute if score @s escape_used matches 0.. run function ARG(_PATH)gun/escape/check
+		execute if score @s shooting matches 0.. run function ARG(_PATH)gun/check
+	}
+	
+	func effect_check()
+	{
+		execute if entity @s[tag=slash] run function ARG(_PATH)edge/slash
+		execute if entity @s[tag=bullet] at @s run function ARG(_PATH)gun/escape/bullet/move_check
+	}
+	
+	func rand_damage() from random().generate(8, 14, "@s display_number");
+	func damage()
+	{
+		execute unless entity @s[tag=boss] store result score @s health run data get entity @s Health 10
+
+		function ARG(_PATH)rand_damage
+		scoreboard players operation @s display_number *= #DAMAGE_SCALE number
+		scoreboard players operation @s health -= @s display_number
+		scoreboard players operation @s display_number /= #10 number
+		function number:display
+
+		execute unless entity @s[tag=boss] store result entity @s Health float 0.1 run scoreboard players get @s health
+		execute if entity @s[tag=boss] run function ARG(_PATH)boss_damage
+	}
+	
+	func boss_damage()
+	{
+		execute store result bossbar minecraft:boss value run scoreboard players get @s health
+		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value 16711680
+		schedule function ARG(_PATH)boss_hurt_reset 10t
+
+		# execute if score @s health matches ..0 run function skill:end_battle
+	}
+	
+	func boss_hurt_reset()
+	{
+		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value -1
+	}
+		
+	func reset_action()
+	{
+		scoreboard players reset @s slash
+		scoreboard players reset @s slashtime
+		scoreboard players reset @s last_hand
+		
+		scoreboard players reset @s airtime
+		scoreboard players reset @s airtime2
+		scoreboard players reset @s sneaktime
+		scoreboard players reset @s sneaktime2
+		
+		attribute @s minecraft:generic.movement_speed modifier remove 36a5b73d-2fe3-4601-bddd-ae65698a062c
+		scoreboard players reset @s shooting
+		scoreboard players reset @s aiming
+		
+		scoreboard players set @s[scores={escape_used=0..}] escape_used 13
+		effect clear @s minecraft:levitation
+	}
+	
+	folder switch()
+	{
+		func check()
+		{
+			execute if score @s beamtime matches 0.. run function ARG(_PATH)reset
+			execute unless score @s beamtime matches 0.. run function ARG(_PATH)check_mode
+			
+			scoreboard players reset @s throw_edge
+			scoreboard players reset @s throw_gun
+			execute as @e[type=item] if data entity @s Item.tag.weapon run kill @s
+		}
+		
+		func reset()
+		{
+			execute if score @s weapon_mode matches 1 run item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+			execute if score @s weapon_mode matches 1 run item replace entity @s weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+			execute if score @s weapon_mode matches -1 run item replace entity @s weapon.mainhand with minecraft:spyglass{display:{Name:'{"translate":"Supreme Pulse","bold":true,"italic":false}'},weapon:1b}
+		}
+		
+		func check_mode()
+		{
+			```
+			raise Warning("TODO: set #PLAYER_MODE number before game starts")
+			```
+			# 1 = single ; 2 = switch ; 3 = swap
+			execute if score #PLAYER_MODE number matches 1 run function ARG(_PATH)single
+			execute if score #PLAYER_MODE number matches 2 run function ARG(_PATH)switch/find
+			execute if score #PLAYER_MODE number matches 3 run function ARG(_PATH)swap/find
+		}
+		
+		func single()
+		{
+			scoreboard players operation @s weapon_mode *= #-1 number
+			execute if score @s weapon_mode matches 1 run function ARG(_PATH)change_edge
+			execute if score @s weapon_mode matches -1 run function ARG(_PATH)change_gun
+		}
+		
+		folder switch()
+		{
+			func find()
+			{
+				scoreboard players set #FOUND_TEAMMATE number 0
+				
+				scoreboard players operation #WEAPON_MODE number = @s weapon_mode
+				execute as @p[gamemode=spectator] run function ARG(_PATH)up
+				
+				# no teammates found, run single player logic
+				execute if score #FOUND_TEAMMATE number matches 0 run function ARG(__PATH)single
+				execute if score #FOUND_TEAMMATE number matches 0 run scoreboard players set #PLAYER_MODE number 1
+			}
+			
+			func up()
+			{
+				execute at @s as @a[gamemode=adventure] run function ARG(_PATH)down
+				tp @s ~ ~ ~ ~ ~
+				gamemode adventure @s
+				
+				execute store result score @s weapon_mode run scoreboard players operation #WEAPON_MODE number *= #-1 number
+				execute if score @s weapon_mode matches 1 run function ARG(_PATH)change_edge
+				execute if score @s weapon_mode matches -1 run function ARG(_PATH)change_gun
+				
+				scoreboard players set #FOUND_TEAMMATE number 1
+			}
+			
+			func down()
+			{
+				tp @s ~ ~ ~ ~ ~
+				gamemode spectator @s
+				function skill:reset_action
+				title @s actionbar ""
+			}
+		}
+		
+		folder swap()
+		{
+			func find()
+			{
+				scoreboard players set #FOUND_TEAMMATE number 0
+				scoreboard players set #CANCEL_SWAP number 0
+				```
+				raise Warning("TODO: set player 1 and 2 score on game starts")
+				```
+				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run function ARG(_PATH)check_can_swap
+				execute if score @s player matches 2 as @a[scores={player=1},limit=1] run function ARG(_PATH)check_can_swap
+				
+				execute if score #CANCEL_SWAP number matches 1 run function ARG(__PATH)reset
+				
+				# no teammates found, run single player logic
+				execute if score #FOUND_TEAMMATE number matches 0 run function ARG(__PATH)single
+				execute if score #FOUND_TEAMMATE number matches 0 run scoreboard players set #PLAYER_MODE number 1
+				execute if score #FOUND_TEAMMATE number matches 1 if score #CANCEL_SWAP number matches 0 run function ARG(__PATH)effect
+			}
+			
+			func check_can_swap()
+			{
+				execute if score @s beamtime matches 0.. run scoreboard players set #CANCEL_SWAP number 1
+				execute unless score @s beamtime matches 0.. run function ARG(_PATH)do_swap
+				scoreboard players set #FOUND_TEAMMATE number 1
+			}
+			
+			func do_swap()
+			{
+				execute if score @s player matches 1 at @s run tp @a[scores={player=2},limit=1] ~ ~ ~ ~ ~
+				execute if score @s player matches 2 at @s run tp @a[scores={player=1},limit=1] ~ ~ ~ ~ ~
+				execute at @s run function ARG(__PATH)effect
+				tp @s ~ ~ ~ ~ ~
+			}
+		}
+		
+		func change_edge()
+		{
+			title @s actionbar ""
+			clear @s minecraft:spyglass{weapon:1b}
+			clear @s minecraft:carrot_on_a_stick{weapon:1b}
+			item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+			item replace entity @s weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+			function ARG(_PATH)effect
+		}
+		
+		func change_gun()
+		{
+			clear @s minecraft:spyglass{weapon:1b}
+			clear @s minecraft:carrot_on_a_stick{weapon:1b}
+			item replace entity @s weapon.mainhand with minecraft:spyglass{display:{Name:'{"translate":"Supreme Pulse","bold":true,"italic":false}'},weapon:1b}
+			function ARG(_PATH)effect
+		}
+		
+		func effect()
+		{
+			particle minecraft:flash ~ ~1 ~ 0 0 0 1 1 force
+			playsound minecraft:skill.switch player @a
+		}
+	}
+	
+	folder edge()
+	{
+		func main()
+		{
+			execute unless block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking run function ARG(_PATH)basic/judge
+			execute if block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking run function ARG(_PATH)air/judge
+			execute unless block ~ ~-1 ~ #skill:canpass if predicate skill:sneaking run function ARG(_PATH)sneak/judge
+			
+			scoreboard players reset @s right
+		}
+		
+		func reset_right()
+		{
+			execute store result score #GAMETIME number run time query gametime
+			execute as @a if score @s cd_right = #GAMETIME number run scoreboard players reset @s cd_right
+		}
+		
+		func reset_left()
+		{
+			execute store result score #GAMETIME number run time query gametime
+			execute as @a if score @s cd_left = #GAMETIME number run scoreboard players reset @s cd_left
+		}
+		
+		folder basic()
+		{
+			func judge()
+			{
+				execute store result score #BOTH_HAND number if entity @s[nbt={Inventory:[{Slot:-106b,id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}],SelectedItem:{id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}}]
+				execute unless score @s slash matches 5 unless score @s slashtime matches ..3 unless score @s cd_right matches 0.. if entity @s[nbt={SelectedItem:{id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}}] run function ARG(_PATH)right
+				execute unless score @s slash matches 5 unless score @s slashtime matches ..3 unless score @s cd_left matches 0.. if entity @s[nbt={Inventory:[{Slot:-106b,id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}]}] run function ARG(_PATH)left
+			}
+			
+			func right()
+			{
+				scoreboard players add @s slash 1
+				scoreboard players add @s[scores={last_hand=1}] slash 1
+				scoreboard players set @s slashtime 1
+
+				execute if score @s slash matches 5 rotated ~ 0 if block ^ ^ ^0.5 #skill:canpass run tp @p ^ ^ ^0.5
+
+				execute if score @s slash matches ..4 run function ARG(_PATH)basic1
+				execute if score @s slash matches 5 run function ARG(_PATH)basic3
+			}
+			
+			func left()
+			{
+				scoreboard players add @s slash 1
+				scoreboard players add @s[scores={last_hand=0}] slash 1
+				scoreboard players set @s slashtime 1
+
+				execute if score @s slash matches 5 rotated ~ 0 if block ^ ^ ^0.5 #skill:canpass run tp @p ^ ^ ^0.5
+
+				execute if score @s slash matches ..4 run function ARG(_PATH)basic2
+				# 雙手最後一刀的狀態下，右手會讓 slash = 5，所以這個function進不來，不用擔心 basic3 重複執行
+				execute if score @s slash matches 5 run function ARG(_PATH)basic3
+			}
+			
+			func basic1()
+			{
+				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
+				
+				execute unless score @s last_hand matches 1 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)mainhand_effect
+				execute if score @s last_hand matches 1 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)offhand_effect
+				
+				playsound minecraft:skill.basic1 player @a
+				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
+
+				scoreboard players set #DAMAGE_SCALE number 10
+				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,distance=..2] at @s run function skill:edge/damage
+				
+				scoreboard players set @s last_hand 1
+			}
+			
+			func basic2()
+			{
+				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
+				
+				execute unless score @s last_hand matches 0 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)offhand_effect
+				execute if score @s last_hand matches 0 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)mainhand_effect
+				
+				playsound minecraft:skill.basic1 player @a
+				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
+
+				scoreboard players set #DAMAGE_SCALE number 10
+				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,distance=..2] at @s run function skill:edge/damage
+				
+				scoreboard players set @s last_hand 0
+			}
+			
+			func basic3()
+			{
+				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
+				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
+				
+				execute if score #BOTH_HAND number matches 0 rotated ~ 0 run summon minecraft:armor_stand ^ ^ ^3 {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:8}}]}
+				execute if score #BOTH_HAND number matches 1 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)double_effect
+				playsound minecraft:skill.basic2 player @a
+				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 5 force
+
+				scoreboard players set #DAMAGE_SCALE number 20
+				execute if score #BOTH_HAND number matches 1 run scoreboard players add #DAMAGE_SCALE number 20
+				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,distance=..3] at @s run function skill:edge/damage
+			}
+			
+			func slashtime()
+			{
+				scoreboard players add @s slashtime 1
+				execute if score @s slashtime matches 24 run function ARG(_PATH)reset
+			}
+			
+			func reset()
+			{
+				scoreboard players reset @s slash
+				scoreboard players reset @s slashtime
+				scoreboard players reset @s last_hand
+			}
+			
+			func mainhand_effect()
+			{
+				summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:basic_main/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:basic_main/0"}', 'new_font_anim']}
+				scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+				tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+			}
+			
+			func offhand_effect()
+			{
+				summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:basic_off/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:basic_off/0"}', 'new_font_anim']}
+				scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+				tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+			}
+			
+			func double_effect()
+			{
+				summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:basic_double/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:basic_double/0"}', 'new_font_anim']}
+				scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+				tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+			}
+		}
+		
+		folder air()
+		{
+			func judge()
+			{
+				execute unless score @s cd_right matches 0.. unless score @s airtime matches 1.. if entity @s[nbt={SelectedItem:{id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}}] run function ARG(_PATH)drop
+				execute unless score @s cd_left matches 0.. unless score @s airtime2 matches 1.. if entity @s[nbt={Inventory:[{Slot:-106b,id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}]}] run function ARG(_PATH)double
+			}
+			
+			func drop()
+			{
+				scoreboard players set @s airtime 1
+
+				effect give @s minecraft:levitation 1 9 true
+				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
+			}
+			
+			func start_drop()
+			{
+				scoreboard players set #DAMAGE_SCALE number 10
+				scoreboard players set #GRAVITY number 0
+				function ARG(_PATH)drop_loop
+			}
+			
+			func drop_loop()
+			{
+				scoreboard players add #DAMAGE_SCALE number 10
+				scoreboard players add #GRAVITY number 2
+				scoreboard players operation #DAMAGE_SCALE number += #GRAVITY number
+				
+				execute positioned ~ ~-1 ~ unless block ~ ~ ~ #skill:canpass run function ARG(_PATH)drop_attack
+				execute positioned ~ ~-1 ~ if block ~ ~ ~ #skill:canpass run function ARG(_PATH)drop_loop
+			}
+			
+			func drop_attack()
+			{
+				execute align y run tp @s ~ ~1.5 ~
+				effect clear @s minecraft:levitation
+
+				execute align y rotated ~ 0 run summon armor_stand ^ ^0.2 ^3 {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:11}}]}
+				playsound minecraft:skill.drop_attack player @a
+
+				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)drop_damage
+			}
+			
+			func drop_damage()
+			{
+				execute store result entity @s[tag=!knockback_resist] Motion[0] double -1 run data get entity @s Motion[0]
+				execute store result entity @s[tag=!knockback_resist] Motion[1] double 0.35 run scoreboard players get #1 number
+				execute store result entity @s[tag=!knockback_resist] Motion[2] double -1 run data get entity @s Motion[2]
+
+				function skill:edge/damage
+			}
+			
+			func airtime()
+			{
+				scoreboard players add @s airtime 1
+
+				execute if score @s airtime matches 5 run function ARG(_PATH)start_drop
+				scoreboard players reset @s[scores={airtime=31..}] airtime
+			}
+			
+			func double()
+			{
+				scoreboard players set @s airtime2 1
+				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
+
+				effect give @s minecraft:levitation 1 30 true
+				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:14}}]}
+				playsound minecraft:skill.double player @a
+
+				scoreboard players set #DAMAGE_SCALE number 15
+				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)double_damage
+			}
+			
+			func double_damage()
+			{
+				execute store result entity @s[tag=!knockback_resist] Motion[0] double -0.5 run data get entity @s Motion[0]
+				execute store result entity @s[tag=!knockback_resist] Motion[2] double -0.5 run data get entity @s Motion[2]
+				
+				function skill:edge/damage
+			}
+			
+			func airtime2()
+			{
+				scoreboard players add @s airtime2 1
+
+				effect clear @s[scores={airtime2=2}] minecraft:levitation
+				scoreboard players reset @s[scores={airtime2=31..}] airtime2
+			}
+		}
+		
+		folder sneak()
+		{
+			func judge()
+			{
+				execute unless score @s cd_right matches 0.. unless score @s sneaktime matches 1.. if entity @s[nbt={SelectedItem:{id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}}] run function ARG(_PATH)rush
+				execute unless score @s cd_left matches 0.. unless score @s sneaktime2 matches 1.. if entity @s[nbt={Inventory:[{Slot:-106b,id:"minecraft:carrot_on_a_stick",tag:{CustomModelData:1}}]}] run function ARG(_PATH)jump
+			}
+			
+			func rush()
+			{
+				scoreboard players set @s sneaktime 1
+				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
+			}
+			
+			folder move() from for_loop().for(4, "if block ^ ^ ^0.5 #skill:canpass positioned ^ ^ ^0.5")
+			{
+				func execute()
+				{
+					tp @s ~ ~ ~
+					particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.05 3 force
+				}
+			}
+			
+			func rush_attack()
+			{
+				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
+				
+				scoreboard players set #DAMAGE_SCALE number 25
+				execute as @e[type=#skill:hostile,distance=..5] at @s run function ARG(_PATH)rush_damage
+				playsound minecraft:skill.rush_attack player @a
+			}
+			
+			func rush_damage()
+			{
+				execute store result entity @s[tag=!knockback_resist] Motion[0] double -1 run data get entity @s Motion[0] 1
+				execute store result entity @s[tag=!knockback_resist] Motion[1] double 0.35 run scoreboard players get #1 number
+				execute store result entity @s[tag=!knockback_resist] Motion[2] double -1 run data get entity @s Motion[2] 1
+				function skill:edge/damage
+			}
+			
+			func sneaktime()
+			{
+				execute if score @s sneaktime matches ..2 rotated ~ 0 run function ARG(_PATH)move/run
+				execute if score @s sneaktime matches 1 run playsound minecraft:skill.flash player @a
+
+				execute if score @s sneaktime matches 2 at @s run function ARG(_PATH)rush_attack
+
+				scoreboard players add @s sneaktime 1
+				scoreboard players reset @s[scores={sneaktime=31..}] sneaktime
+			}
+			
+			func jump()
+			{
+				scoreboard players set @s sneaktime2 1
+				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
+
+				effect give @s minecraft:levitation 1 80 true
+				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:20}}]}
+				playsound minecraft:skill.double player @a
+
+				scoreboard players set #DAMAGE_SCALE number 25
+				execute as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)jump_damage
+			}
+			
+			func jump_damage()
+			{
+				data merge entity @s[tag=!knockback_resist] {Motion:[0.0,0.7,0.0]}
+				function skill:edge/damage
+			}
+			
+			func sneaktime2()
+			{
+				scoreboard players add @s sneaktime2 1
+
+				effect clear @s[scores={sneaktime2=2}] minecraft:levitation
+				scoreboard players reset @s[scores={sneaktime2=31..}] sneaktime2
+			}
+		}
+		
+		func slash()
+		{
+			execute unless score @s number matches 1.. store result score @s number run data get entity @s ArmorItems[3].tag.CustomModelData
+			
+			scoreboard players add @s life 1
+			execute if score @s life matches 0..2 store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players add @s number 1
+
+			kill @s[scores={life=3}]
+		}
+		
+		func damage()
+		{
+			execute positioned ~ ~0.5 ~ run function ARG(_PATH)hit_effect
+			function skill:damage
+		}
+		
+		func hit_effect()
+		{
+			summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:edge_hit/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:edge_hit/0"}', 'new_font_anim']}
+			scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+			tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+		}
+	}
+	
+	folder gun()
+	{
+		func check()
+		{
+			# execute if score @s aiming matches 1.. run function ARG(_PATH)shoot/aim/locate
+			
+			execute unless block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking if score @s gun_load matches 1.. run function ARG(_PATH)shoot/run
+			execute unless block ~ ~-1 ~ #skill:canpass if predicate skill:sneaking unless score #BEAM_CD number matches 0.. run function ARG(_PATH)beam/run
+			execute if block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking unless score @s escape_used matches 1.. run function ARG(_PATH)escape/run
+			
+			scoreboard players remove @s shooting 1
+			execute if score @s shooting matches -1 run function ARG(_PATH)reset_stat
+		}
+		
+		folder shoot()
+		{
+			func run()
+			{
+				function ARG(_PATH)search_enemy/run
+				execute if score #TARGET number matches 1.. run function ARG(_PATH)target
+				execute if score #TARGET number matches 0 run scoreboard players reset @s aiming
+				execute positioned ^-0.34 ^0.818 ^1.5 run function ARG(_PATH)shoot_effect
+				playsound minecraft:skill.shoot player @a
+				
+				scoreboard players set @s gun_load -1
+			}
+			
+			folder search_enemy()
+			{
+				func run()
+				{
+					summon minecraft:marker ~ ~ ~ {UUID:[I;0,1,0,1]}
+					tp 00000000-0000-0001-0000-000000000001 ~ ~ ~ ~ 0
+					
+					execute as @e[type=#skill:hostile,distance=..30] run function ARG(_PATH)check_view
+					kill 00000000-0000-0001-0000-000000000001
+					
+					execute as @e[type=#skill:hostile,tag=target_potential,limit=1,sort=nearest] run function ARG(_PATH)mark
+					tag @e[type=#skill:hostile,tag=target_potential] remove target_potential
+				}
+				
+				func check_view()
+				{
+					scoreboard players set #IN_VIEW number 0
+					execute facing entity @s eyes rotated ~ 0 as 00000000-0000-0001-0000-000000000001 positioned ^ ^ ^1 rotated as @s positioned ^ ^ ^-1 if entity @s[distance=..0.517] run scoreboard players set #IN_VIEW number 1
+					
+					execute if score #IN_VIEW number matches 1 run tag @s add target_potential
+				}
+				
+				func mark()
+				{
+					tag @s add target
+					scoreboard players operation #TARGET number = @s number
+				}
+			}
+			
+			func target()
+			{
+				scoreboard players operation @s aiming = #TARGET number
+				# function ARG(_PATH)aim/rotate
+				
+				scoreboard players set #DAMAGE_SCALE number 3
+				execute as @e[type=#skill:hostile,tag=target,limit=1] at @s run function ARG(_PATH)damage
+			}
+			
+			folder aim()
+			{
+				func locate()
+				{
+					scoreboard players set #FOUND_TARGET number 0
+					scoreboard players operation #TARGET number = @s aiming
+					execute as @e[type=#skill:hostile] if score @s number = #TARGET number run function ARG(_PATH)set_target
+					
+					execute if score #FOUND_TARGET number matches 1 run function ARG(_PATH)aim
+					execute if score #FOUND_TARGET number matches 0 run scoreboard players reset @s aiming
+				}
+				
+				func set_target()
+				{
+					scoreboard players set #FOUND_TARGET number 1
+					tag @s add target
+				}
+				
+				func aim()
+				{
+					function ARG(_PATH)rotate
+					tag @e[type=#skill:hostile,tag=target,limit=1] remove target
+				}
+				
+				func rotate()
+				{
+					execute facing entity @e[type=#skill:hostile,tag=target,limit=1] eyes rotated ~ 0 run summon minecraft:marker ^ ^ ^4 {UUID:[I;0,1,0,1]}
+					execute as 00000000-0000-0001-0000-000000000001 positioned as @s run tp @s ~ ~ ~ ~ ~
+					
+					execute rotated ~ 0 positioned ^ ^ ^2 facing entity 00000000-0000-0001-0000-000000000001 eyes rotated ~ 0 positioned ^ ^ ^0.3 facing entity @s feet positioned as @s run tp @s ~ ~ ~ ~180 ~
+					execute store result entity 00000000-0000-0001-0000-000000000001 Rotation[0] float 1 run data get entity @s Rotation[0]
+					execute rotated as 00000000-0000-0001-0000-000000000001 run tp @s ~ ~ ~ ~ ~
+					kill 00000000-0000-0001-0000-000000000001
+				}
+			}
+			
+			func damage()
+			{
+				execute positioned ~ ~0.5 ~ run function ARG(_PATH)hit_effect
+				function skill:damage
+				tag @s remove target
+			}
+			
+			func shoot_effect()
+			{
+				summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:gun_fire/0"}',CustomNameVisible:1,Duration:3,Tags:['{"text":"","font":"font_animation:gun_fire/0"}', 'new_font_anim']}
+				scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 2
+				tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+			}
+			
+			func hit_effect()
+			{
+				summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:gun_hit/0"}',CustomNameVisible:1,Duration:3,Tags:['{"text":"","font":"font_animation:gun_hit/0"}', 'new_font_anim']}
+				scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 2
+				tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+			}
+		}
+		
+		folder beam()
+		{
+			func run()
+			{
+				execute align y run summon minecraft:marker ~ ~ ~ {UUID:[I;0,2,0,2]}
+				tp 00000000-0000-0002-0000-000000000002 @s
+				
+				effect give @s minecraft:glowing 1000000 0 true
+				effect give @s minecraft:slowness 1000000 10 true
+				team join red @s
+				
+				playsound minecraft:skill.blast_prepare player @a ~ ~ ~ 3 1 0
+				execute rotated ~ 0 run function ARG(_PATH)summon
+				
+				scoreboard players set @s beamtime 0
+				function ARG(_PATH)timer/start
+			}
+			
+			func prepare()
+			{
+				scoreboard players add @s beamtime 1
+				data remove storage skill:main beam_bar[0]
+				execute if score @s beamtime matches ..10 as 00000000-0000-0002-0000-000000000002 at @s positioned ^ ^ ^1 rotated ~ 0 positioned ^ ^ ^0.4 facing entity @s eyes positioned ^ ^ ^3 facing entity @s eyes positioned as @s run function ARG(_PATH)aim
+				tp @s 00000000-0000-0002-0000-000000000002
+				
+				execute if score @s beamtime matches 2 run team leave @s
+				execute if score @s beamtime matches 10 at @s run function ARG(_PATH)shoot
+				execute if score @s beamtime matches 26 as @e[type=armor_stand,tag=blast_target] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 29
+				execute if score @s beamtime matches 28 as @e[type=armor_stand,tag=blast_target] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 30
+				execute if score @s beamtime matches 30 run function ARG(_PATH)reset
+			}
+			
+			func aim()
+			{
+				tp @s ~ ~ ~ ~ ~
+				# execute positioned ^ ^ ^2 positioned ~ ~1.7 ~ run summon minecraft:item ~ ~ ~ {Item:{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:27}},Age:5998,PickupDelay:100,Invulnerable:1,NoGravity:1,Glowing:1b}
+			}
+			
+			func shoot()
+			{
+				playsound minecraft:skill.blast player @a ~ ~ ~ 3 1 0
+				scoreboard players set #DAMAGE_SCALE number 210
+				execute as @e[type=armor_stand,tag=blast_target] at @s run function ARG(_PATH)show_beam
+			}
+			
+			func reset()
+			{
+				effect clear @s glowing
+				effect clear @s slowness
+				scoreboard players reset @s beamtime
+				kill @e[type=armor_stand,tag=blast_target]
+				kill 00000000-0000-0002-0000-000000000002
+			}
+			
+			func summon()
+			{
+				summon minecraft:armor_stand ^ ^ ^3 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target","blast_start"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^5 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^7 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^9 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^11 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^13 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^15 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^17 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^19 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^21 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				execute as @e[type=armor_stand,tag=blast_target] positioned as @s run tp @s ~ ~0.1 ~ ~180 ~
+			}
+			
+			func show_beam()
+			{
+				data modify entity @s[tag=!blast_start] ArmorItems[3].tag.CustomModelData set value 27
+				data modify entity @s[tag=blast_start] ArmorItems[3].tag.CustomModelData set value 28
+				execute as @e[type=#skill:hostile,distance=..2] at @s run function skill:damage
+			}
+			
+			folder timer()
+			{
+				func start()
+				{
+					```
+					raise Warning("TODO: reset skill:main beam_bar and start timer when a game starts")
+					```
+					scoreboard players set #BEAM_CD number 31
+					schedule function ARG(_PATH)countdown 1s
+				}
+				
+				func countdown()
+				{
+					scoreboard players remove #BEAM_CD number 1
+					execute if score #BEAM_CD number matches ..29 run data modify storage skill:main beam_bar append value "4"
+					execute if score #BEAM_CD number matches 0 run scoreboard players set #BEAM_ANIMATION number -1
+					execute if score #BEAM_CD number matches 0 run scoreboard players reset #BEAM_CD number
+					
+					execute if score #BEAM_CD number matches 0.. run schedule function ARG(_PATH)countdown 1s
+				}
+			}
+			
+			folder show_bar()
+			{
+				func update()
+				{
+					execute if score #BEAM_CD number matches 1.. run function ARG(_PATH)normal
+					execute unless score #BEAM_CD number matches 1.. run function ARG(_PATH)animate
+				}
+				
+				func animate()
+				{
+					scoreboard players add #BEAM_ANIMATION number 1
+					execute if score #BEAM_ANIMATION number matches 30 run scoreboard players set #BEAM_ANIMATION number 0
+					
+					execute if score #BEAM_ANIMATION number matches ..3 run title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"84","font":"space:default"},{"score":{"objective":"number","name":"#BEAM_ANIMATION"}},{"text":"8","font":"space:default"}]
+					execute if score #BEAM_ANIMATION number matches 4.. run function ARG(_PATH)normal
+				}
+				
+				func normal()
+				{
+					title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"\uF82B\uF82A\uF829\uF828\uF824","font":"space:default"}]
+				}
+			}
+		}
+		
+		folder escape()
+		{
+			func run()
+			{
+				tp @s @s
+				effect give @s minecraft:levitation 1 0 true
+				playsound minecraft:skill.escape_prepare player @a
+				
+				scoreboard players set @s escape_used 0
+			}
+			
+			func check()
+			{
+				scoreboard players add @s escape_used 1
+				execute unless block ~ ~-1 ~ #skill:canpass run scoreboard players reset @s escape_used
+				
+				execute if score @s escape_used matches 6 positioned ^ ^0.5 ^ run function ARG(_PATH)shoot
+				execute if score @s escape_used matches 6..9 if block ^ ^ ^-1 #skill:canpass positioned ^ ^ ^-1 if block ~ ~1 ~ #skill:canpass run tp @s ^ ^ ^-1
+				effect clear @s[scores={escape_used=12}] minecraft:levitation
+			}
+			
+			func shoot()
+			{
+				playsound minecraft:skill.escape_shoot player @a
+				summon armor_stand ^ ^-0.4 ^ {Pose:{Head:[1.0f,0.0f,0.0f]},Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["slash","skill_effect","new_escape_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				particle minecraft:flash ~ ~0.4 ~ 0 0 0 0 1 force
+				data modify storage skill:main Rotation set from entity @s Rotation[1]
+				execute as @e[type=armor_stand,tag=new_escape_effect,limit=1] run function ARG(_PATH)set_circle
+				
+				summon minecraft:armor_stand ~ ~ ~ {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Tags:["bullet","skill_effect","new_bullet"],CustomName:'{"text":"0","font":"skill:main"}',CustomNameVisible:1b}
+				execute as @e[type=armor_stand,tag=new_bullet,limit=1] run function ARG(_PATH)bullet/set
+			}
+			
+			func set_circle()
+			{
+				tp @s ~ ~ ~ ~ ~
+				data modify entity @s Pose.Head[0] set from storage skill:main Rotation
+				scoreboard players set @s life -4
+				scoreboard players set @s number 22
+				tag @s remove new_escape_effect
+			}
+			
+			folder bullet()
+			{
+				func set()
+				{
+					execute positioned as @s run tp @s ~ ~ ~ ~ ~
+					tag @s remove new_bullet
+				}
+				
+				func move_check()
+				{
+					particle minecraft:soul_fire_flame ~ ~0.4 ~ 0.2 0.2 0.2 0.02 5 force
+					execute unless block ~ ~ ~ #skill:canpass positioned ~ ~1 ~ align y run function ARG(_PATH)explode
+					kill @s[scores={life=30..}]
+					execute if entity @s if block ~ ~ ~ #skill:canpass run function ARG(_PATH)move
+				}
+				
+				func move()
+				{
+					scoreboard players set #FOUND_TARGET number 0
+					tag @s add moving_bullet
+					execute as @e[type=#skill:hostile,distance=..20,limit=1,sort=nearest] run function ARG(_PATH)trace
+					execute if score #FOUND_TARGET number matches 0 run tp @s ^ ^ ^1
+					tag @s remove moving_bullet
+					
+					scoreboard players add @s life 1
+				}
+				
+				func trace()
+				{
+					scoreboard players set #FOUND_TARGET number 1
+					
+					scoreboard players set #HIT_TARGET number 0
+					execute if entity @s[distance=..0.8] at @s as @e[type=armor_stand,tag=moving_bullet,limit=1] run function ARG(_PATH)explode
+					execute if score #HIT_TARGET number matches 0 positioned ^ ^ ^0.714 facing entity @s feet positioned ^ ^ ^0.285 run function ARG(_PATH)step
+				}
+				
+				func step()
+				{
+					summon minecraft:marker ~ ~ ~ {UUID:[I;0,1,0,1]}
+					execute as @e[type=armor_stand,tag=moving_bullet,limit=1] at @s facing entity 00000000-0000-0001-0000-000000000001 eyes positioned as 00000000-0000-0001-0000-000000000001 run tp @s ~ ~ ~ ~ ~
+					kill 00000000-0000-0001-0000-000000000001
+				}
+				
+				func explode()
+				{
+					scoreboard players set #DAMAGE_SCALE number 30
+					execute as @e[type=#skill:hostile,distance=..1.5] at @s run function skill:damage
+					
+					playsound minecraft:skill.explode player @a ~ ~ ~ 1 1 1
+					particle minecraft:flash ~ ~ ~ 0 0 0 0 1 force
+					execute positioned ~ ~-0.5 ~ run function ARG(_PATH)explode_effect
+					
+					scoreboard players set #HIT_TARGET number 1
+					kill @s
+				}
+				
+				func explode_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:gun_explode/0"}',CustomNameVisible:1,Duration:21,Tags:['{"text":"","font":"font_animation:gun_explode/0"}', '{"text":"","font":"font_animation:gun_explode/1"}', '{"text":"","font":"font_animation:gun_explode/2"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 20
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+			}
+		}
+		
+		func reset_stat()
+		{
+			attribute @s minecraft:generic.movement_speed modifier remove 36a5b73d-2fe3-4601-bddd-ae65698a062c
+			scoreboard players reset @s shooting
+		}
+	
+		func use()
+		{
+			attribute @s minecraft:generic.movement_speed modifier add 36a5b73d-2fe3-4601-bddd-ae65698a062c use_gun 3 multiply_base
+			scoreboard players add @s gun_load 1
+			
+			execute unless score @s shooting matches ..1 run scoreboard players reset @s aiming
+			scoreboard players set @s shooting 1
+			advancement revoke @s only skill:use_gun
+		}
+	}
+}

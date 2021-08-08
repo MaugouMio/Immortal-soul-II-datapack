@@ -1,0 +1,177 @@
+import utils, skill
+
+description = "Immortal Soul II datapack"
+
+```
+constants = [-1, 1, 10]
+constants = set(constants)
+```
+
+namespace main()
+{
+	func install()
+	{
+		forceload add 0 0
+		fill -1 0 -1 1 3 1 minecraft:bedrock
+		setblock 0 0 0 minecraft:shulker_box
+		setblock 0 1 0 minecraft:oak_sign
+		
+		gamerule commandBlockOutput false
+		gamerule disableRaids true
+		gamerule doDaylightCycle false
+		gamerule doEntityDrops false
+		gamerule doFireTick false
+		gamerule doInsomnia false
+		gamerule doMobLoot false
+		gamerule doMobSpawning false
+		gamerule doPatrolSpawning false
+		gamerule doTileDrops false
+		gamerule doTraderSpawning false
+		gamerule doWeatherCycle false
+		gamerule drowningDamage false
+		gamerule fallDamage false
+		gamerule fireDamage false
+		gamerule forgiveDeadPlayers true
+		gamerule keepInventory true
+		gamerule logAdminCommands false
+		gamerule mobGriefing false
+		gamerule naturalRegeneration false
+		gamerule randomTickSpeed 0
+		gamerule sendCommandFeedback false
+		gamerule showDeathMessages false
+		gamerule spawnRadius 0
+		gamerule universalAnger false
+		
+		defaultgamemode adventure
+		difficulty normal
+		
+		team add enemy
+		team modify enemy collisionRule never
+		team add red
+		team modify red color red
+		
+		scoreboard objectives add number dummy
+		scoreboard objectives add health dummy
+		scoreboard objectives add login minecraft.custom:minecraft.leave_game
+		scoreboard objectives add font_animation dummy
+		
+		```
+		for i in constants:
+			print("scoreboard players set #{0} number {0}".format(i))
+		```
+		
+		function number:install
+		function skill:install
+		function stage:install
+		
+		function ARG(_PATH)effect
+	}
+	
+	func main()
+	{
+		execute as @a if score @s login matches 1.. run function ARG(_PATH)login_reset/check
+		execute as @e[type=area_effect_cloud,scores={font_animation=1..}] run function ARG(_PATH)font_effect_update/check
+		function stage:main
+		function skill:main
+	}
+	
+	func new_player()
+	{
+		scoreboard players set @s player 0
+		attribute @s minecraft:generic.attack_damage base set 0
+		effect give @s minecraft:saturation 1000000 100 true
+		effect give @s minecraft:jump_boost 1000000 1 true
+		gamemode adventure @s
+	}
+	
+	folder login_reset()
+	{
+		func check()
+		{
+			execute unless score @s game_id = #GLOBAL game_id run function ARG(_PATH)reset
+			scoreboard players reset @s login
+		}
+		
+		func reset()
+		{
+			```
+			raise Warning("TODO: set spawnpoint on login_reset/reset")
+			```
+			# tp @s x y z rx ry
+			scoreboard players reset @s player
+			function skill:reset_action
+		}
+	}
+	
+	func effect()
+	{
+		effect give @a minecraft:saturation 1000000 100 true
+		effect give @a minecraft:jump_boost 1000000 1 true
+		schedule function default:stats 30s
+	}
+	
+	folder font_effect_update()
+	{
+		func check()
+		{
+			execute store result score #FRAME font_animation run data get entity @s Age
+			execute if score #FRAME font_animation = @s font_animation run kill @s
+			execute if score #FRAME font_animation matches 1.. unless score #FRAME font_animation = @s font_animation run function ARG(_PATH)update
+		}
+	
+		func update()
+		{
+			scoreboard players operation #FRAME font_animation %= #10 number
+			execute if score #FRAME font_animation matches 0 run data remove entity @s Tags[0]
+			
+			data modify storage font_animation:main effect_font set from entity @s Tags[0]
+			data modify block 0 1 0 Text1 set value '[{"nbt":"effect_font","storage":"font_animation:main","interpret":true},{"score":{"name":"#FRAME","objective":"font_animation"}}]'
+			data modify entity @s CustomName set from block 0 1 0 Text1
+		}
+	}
+	
+	func test_enemy()
+	{
+		execute rotated ~ 0 run summon zombie ^ ^ ^5 {Attributes:[{Name:"generic.max_health",Base:1000},{Name:"generic.attack_damage",Base:0.0}],Health:1000.0f,Silent:1b,Tags:["knockback_resist"]}
+		scoreboard players add @e[type=zombie] number 1
+		execute rotated ~ 0 run summon zombie ^ ^ ^5 {Attributes:[{Name:"generic.max_health",Base:1000},{Name:"generic.attack_damage",Base:0.0}],Health:1000.0f,Silent:1b,Tags:["knockback_resist"]}
+		scoreboard players add @e[type=zombie] number 1
+		execute rotated ~ 0 run summon zombie ^ ^ ^5 {Attributes:[{Name:"generic.max_health",Base:1000},{Name:"generic.attack_damage",Base:0.0}],Health:1000.0f,Silent:1b,Tags:["knockback_resist"]}
+		scoreboard players add @e[type=zombie] number 1
+		execute rotated ~ 0 run summon zombie ^ ^ ^5 {Attributes:[{Name:"generic.max_health",Base:1000},{Name:"generic.attack_damage",Base:0.0}],Health:1000.0f,Silent:1b,Tags:["knockback_resist"]}
+		scoreboard players add @e[type=zombie] number 1
+		execute rotated ~ 0 run summon zombie ^ ^ ^5 {Attributes:[{Name:"generic.max_health",Base:1000},{Name:"generic.attack_damage",Base:0.0}],Health:1000.0f,Silent:1b,Tags:["knockback_resist"]}
+		scoreboard players add @e[type=zombie] number 1
+	}
+}
+
+namespace number()
+{
+	func install()
+	{
+		scoreboard objectives add display_number dummy
+	}
+	
+	func display()
+	{
+		execute store result storage number:main num int 1 run scoreboard players get @s display_number
+		scoreboard players reset @s display_number
+		
+		execute at @s run summon minecraft:item ~ ~1.5 ~ {Tags:["new_number"],Motion:[0.0,0.2,0.0],Age:5988s,PickupDelay:100s,Item:{id:"minecraft:potion",Count:1b,tag:{CustomModelData:1}},CustomName:'""',CustomNameVisible:1b}
+		data modify block 0 1 0 Text1 set value '{"nbt":"num","storage":"number:main","font":"ui:damage"}'
+		execute as @e[type=item,tag=new_number,limit=1] run function ARG(_PATH)set_num
+	}
+	
+	func set_num()
+	{
+		data modify entity @s CustomName set from block 0 1 0 Text1
+		tag @s remove new_number
+	}
+}
+
+
+
+tag tick
+{
+	main:main
+}
