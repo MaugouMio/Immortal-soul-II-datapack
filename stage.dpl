@@ -31,6 +31,8 @@ namespace stage()
 		# swap mode
 		execute if score #PLAYER_MODE number matches 3 as @p[scores={player=0},gamemode=adventure] run function ARG(_PATH)set_player2
 		gamemode spectator @a[scores={player=0}]
+		# reset beam CD
+		function skill:gun/beam/timer/start
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start
 		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start
@@ -51,16 +53,144 @@ namespace stage()
 		item replace entity @s weapon.mainhand with minecraft:spyglass{display:{Name:'{"translate":"Supreme Pulse","bold":true,"italic":false}'},weapon:1b}
 	}
 	
+	func end()
+	{
+		bossbar set minecraft:boss visible false
+		kill @e[tag=object]
+		
+		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/end
+		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/end
+		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/end
+	}
+	
+	# 真白之刃
 	folder stage1()
 	{
 		func start()
 		{
-			bossbar set minecraft:boss name {"translate":"Sacred Knight"}
-			bossbar set minecraft:zone value 2000
+			bossbar set minecraft:boss name {"translate":"Sacred Knight","color":"white","bold":true}
 			bossbar set minecraft:zone players @a
-			bossbar set minecraft:zone visible true
+			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
 			# summon ...
+			schedule function ARG(_PATH)skills/loop 7s
+		}
+		
+		func end()
+		{
+			schedule clear ARG(_PATH)skills/loop
+			schedule clear ARG(_PATH)skills/zone/reset
+			bossbar set minecraft:zone visible false
+		}
+		
+		func main()
+		{
+			
+		}
+		
+		folder skills()
+		{
+			func loop()
+			{
+				schedule function ARG(_PATH)loop 7s
+			}
+			
+			folder dodge()
+			{
+				func try()
+				{
+					
+				}
+			}
+			
+			folder zone()
+			{
+				func reset()
+				{
+					execute store result score #ZONE number run bossbar get minecraft:zone max
+					execute store result bossbar minecraft:zone value run bossbar get minecraft:zone max
+					bossbar set minecraft:zone visible true
+				}
+				
+				func hit()
+				{
+					execute if entity @s[tag=beam_hit] run function ARG(__PATH)dodge/try
+					execute if entity @s[tag=!beam_hit] run function ARG(_PATH)decrease
+				}
+				
+				func decrease()
+				{
+					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number -= @s display_number
+					# visual and sound effect
+					execute if score #ZONE number matches ..0 run function ARG(_PATH)break
+				}
+				
+				func break()
+				{
+					bossbar set minecraft:zone visible false
+					schedule function ARG(_PATH)reset 10s
+				}
+			}
+		}
+	}
+	
+	# 至尊魔導
+	folder stage2()
+	{
+		func start()
+		{
+			bossbar set minecraft:boss name {"translate":"Arch Magician","color":"white","bold":true}
+			# tp @a x y z rx ry
+			# summon ...
+			schedule function ARG(_PATH)skills/loop 7s
+		}
+		
+		func end()
+		{
+			schedule clear ARG(_PATH)skills/loop
+		}
+		
+		func main()
+		{
+			
+		}
+		
+		folder skills()
+		{
+			func loop()
+			{
+				schedule function ARG(_PATH)loop 7s
+			}
+		}
+	}
+	
+	# 深淵恐懼
+	folder stage3()
+	{
+		func start()
+		{
+			bossbar set minecraft:boss name {"translate":"Root of Fear","color":"white","bold":true}
+			# tp @a x y z rx ry
+			# summon ...
+			schedule function ARG(_PATH)skills/loop 7s
+		}
+		
+		func end()
+		{
+			schedule clear ARG(_PATH)skills/loop
+		}
+		
+		func main()
+		{
+			
+		}
+		
+		folder skills()
+		{
+			func loop()
+			{
+				schedule function ARG(_PATH)loop 7s
+			}
 		}
 	}
 }

@@ -69,6 +69,13 @@ namespace skill()
 
 		function ARG(_PATH)rand_damage
 		scoreboard players operation @s display_number *= #DAMAGE_SCALE number
+		# 有ZONE的只有真白，沒有小怪，不用判定boss標籤
+		execute if score #ZONE number matches 1.. run function stage:stage1/skills/zone/hit
+		execute unless score #ZONE number matches 1.. run function ARG(_PATH)deal_damage
+	}
+	
+	func deal_damage()
+	{
 		scoreboard players operation @s health -= @s display_number
 		scoreboard players operation @s display_number /= #10 number
 		function number:display
@@ -83,7 +90,7 @@ namespace skill()
 		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value 16711680
 		schedule function ARG(_PATH)boss_hurt_reset 10t
 
-		# execute if score @s health matches ..0 run function skill:end_battle
+		execute if score @s health matches ..0 run function stage:end
 	}
 	
 	func boss_hurt_reset()
@@ -338,7 +345,7 @@ namespace skill()
 				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
 				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
 				
-				execute if score #BOTH_HAND number matches 0 rotated ~ 0 run summon minecraft:armor_stand ^ ^ ^3 {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:8}}]}
+				execute if score #BOTH_HAND number matches 0 rotated ~ 0 run summon minecraft:armor_stand ^ ^ ^3 {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:8}}]}
 				execute if score #BOTH_HAND number matches 1 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)double_effect
 				playsound minecraft:skill.basic2 player @a
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 5 force
@@ -421,7 +428,7 @@ namespace skill()
 				execute align y run tp @s ~ ~1.5 ~
 				effect clear @s minecraft:levitation
 
-				execute align y rotated ~ 0 run summon armor_stand ^ ^0.2 ^3 {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:11}}]}
+				execute align y rotated ~ 0 run summon armor_stand ^ ^0.2 ^3 {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:11}}]}
 				playsound minecraft:skill.drop_attack player @a
 
 				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)drop_damage
@@ -450,7 +457,7 @@ namespace skill()
 				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
 
 				effect give @s minecraft:levitation 1 30 true
-				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:14}}]}
+				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:14}}]}
 				playsound minecraft:skill.double player @a
 
 				scoreboard players set #DAMAGE_SCALE number 15
@@ -499,7 +506,7 @@ namespace skill()
 			
 			func rush_attack()
 			{
-				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
+				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
 				
 				scoreboard players set #DAMAGE_SCALE number 25
 				execute as @e[type=#skill:hostile,distance=..5] at @s run function ARG(_PATH)rush_damage
@@ -531,7 +538,7 @@ namespace skill()
 				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
 
 				effect give @s minecraft:levitation 1 80 true
-				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:20}}]}
+				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:20}}]}
 				playsound minecraft:skill.double player @a
 
 				scoreboard players set #DAMAGE_SCALE number 25
@@ -773,16 +780,21 @@ namespace skill()
 			{
 				data modify entity @s[tag=!blast_start] ArmorItems[3].tag.CustomModelData set value 27
 				data modify entity @s[tag=blast_start] ArmorItems[3].tag.CustomModelData set value 28
-				execute as @e[type=#skill:hostile,distance=..2] at @s run function skill:damage
+				execute as @e[type=#skill:hostile,distance=..2] at @s run function ARG(_PATH)damage
+			}
+			
+			func damage()
+			{
+				tag @s add beam_hit
+				function skill:damage
+				tag @s remove beam_hit
 			}
 			
 			folder timer()
 			{
 				func start()
 				{
-					```
-					raise Warning("TODO: reset skill:main beam_bar and start timer when a game starts")
-					```
+					data modify storage skill:main beam_bar set value []
 					scoreboard players set #BEAM_CD number 31
 					schedule function ARG(_PATH)countdown 1s
 				}
@@ -846,12 +858,12 @@ namespace skill()
 			func shoot()
 			{
 				playsound minecraft:skill.escape_shoot player @a
-				summon armor_stand ^ ^-0.4 ^ {Pose:{Head:[1.0f,0.0f,0.0f]},Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["slash","skill_effect","new_escape_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon armor_stand ^ ^-0.4 ^ {Pose:{Head:[1.0f,0.0f,0.0f]},Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect","new_escape_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 				particle minecraft:flash ~ ~0.4 ~ 0 0 0 0 1 force
 				data modify storage skill:main Rotation set from entity @s Rotation[1]
 				execute as @e[type=armor_stand,tag=new_escape_effect,limit=1] run function ARG(_PATH)set_circle
 				
-				summon minecraft:armor_stand ~ ~ ~ {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Tags:["bullet","skill_effect","new_bullet"],CustomName:'{"text":"0","font":"skill:main"}',CustomNameVisible:1b}
+				summon minecraft:armor_stand ~ ~ ~ {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Tags:["object","bullet","skill_effect","new_bullet"],CustomName:'{"text":"0","font":"skill:main"}',CustomNameVisible:1b}
 				execute as @e[type=armor_stand,tag=new_bullet,limit=1] run function ARG(_PATH)bullet/set
 			}
 			
