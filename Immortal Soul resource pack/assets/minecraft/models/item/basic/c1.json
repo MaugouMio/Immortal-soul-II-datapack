@@ -1,0 +1,27 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"texture": "item/basic/a1"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [-16, -16, 8],
+			"to": [32, 32, 8],
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#texture"},
+				"east": {"uv": [16, 0, 0, 0], "rotation": 270, "texture": "#texture"},
+				"south": {"uv": [0, 16, 16, 0], "texture": "#texture"},
+				"west": {"uv": [16, 0, 0, 0], "rotation": 90, "texture": "#texture"},
+				"up": {"uv": [0, 0, 16, 0], "texture": "#texture"},
+				"down": {"uv": [0, 0, 16, 0], "rotation": 180, "texture": "#texture"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"scale": [3, 3, 3]
+		}
+	}
+}

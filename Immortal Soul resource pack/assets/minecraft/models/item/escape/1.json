@@ -1,0 +1,26 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"circle": "item/escape/circle"
+	},
+	"elements": [
+		{
+			"name": "circle",
+			"from": [0, 0, 8],
+			"to": [16, 16, 8],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#circle"},
+				"east": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#circle"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#circle"},
+				"west": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#circle"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#circle"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#circle"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"scale": [4, 4, 4]
+		}
+	}
+}

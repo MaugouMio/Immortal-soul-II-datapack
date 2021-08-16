@@ -1,0 +1,28 @@
+{
+	"textures": {
+		"texture": "item/enemy/target_attack",
+		"empty": "item/empty"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [ -4.0, -16.0, 7.99 ], 
+			"to": [ 20.0, 32.0, 8.01 ],
+			"faces": {
+				"north": { "texture": "#texture", "uv": [ 0.0, 0.0, 8.0, 16.0 ] },
+				"east": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"south": { "texture": "#empty", "uv": [ 0.0, 0.0, 8.0, 16.0 ] },
+				"west": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"up": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"down": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 0, 0 ],
+			"scale":[ 2.4, 2.4, 2.4 ]
+		}
+	}
+}

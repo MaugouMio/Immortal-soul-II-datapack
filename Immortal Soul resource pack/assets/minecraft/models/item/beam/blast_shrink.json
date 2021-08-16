@@ -1,0 +1,42 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"side": "item/enemy/blast_side",
+		"c_side": "item/enemy/blast_circle_side_s",
+		"empty": "item/empty"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [5, 5, -0.6],
+			"to": [11, 11, 16.6],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"up": {"uv": [16, 16, 0, 0], "rotation": 90, "texture": "#side"},
+				"down": {"uv": [16, 16, 0, 0], "rotation": 90, "texture": "#side"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [-2, -2, -0.6],
+			"to": [18, 18, 16.6],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#c_side"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"west": {"uv": [16, 16, 0, 0], "texture": "#c_side"},
+				"up": {"uv": [16, 16, 0, 0], "rotation": 90, "texture": "#c_side"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#c_side"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [2, -12, -24],
+			"scale": [1.5, 1.5, 3]
+		}
+	}
+}

@@ -1,0 +1,28 @@
+{
+	"textures": {
+		"texture": "item/enemy/ice_ground",
+		"empty": "item/empty"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [ -16.0, 0.0, -16.0 ], 
+			"to": [ 32.0, 0.0, 32.0 ],
+			"faces": {
+				"north": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"east": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"south": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"west": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"up": { "texture": "#texture", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"down": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, -10, 0 ],
+			"scale":[ 3.9, 3.9, 3.9 ]
+		}
+	}
+}

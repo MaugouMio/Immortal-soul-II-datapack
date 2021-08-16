@@ -1,0 +1,31 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/basic_main/0.png",
+            "ascent": 76,
+            "height": 153,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/basic_main/1.png",
+            "ascent": 76,
+            "height": 153,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/basic_main/2.png",
+            "ascent": 76,
+            "height": 153,
+            "chars": [
+                "2"
+            ]
+        }
+    ]
+}

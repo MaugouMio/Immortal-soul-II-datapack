@@ -1,0 +1,22 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/gun_fire/0.png",
+            "ascent": 25,
+            "height": 51,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/gun_fire/1.png",
+            "ascent": 25,
+            "height": 51,
+            "chars": [
+                "1"
+            ]
+        }
+    ]
+}

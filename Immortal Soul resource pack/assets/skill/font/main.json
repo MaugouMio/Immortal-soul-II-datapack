@@ -1,0 +1,13 @@
+{
+	"providers": [
+		{
+			"type": "bitmap",
+			"file": "skill:font/bullet.png",
+			"ascent": 48,
+			"height": 96,
+			"chars": [
+				"0"
+			]
+		}
+	]
+}

@@ -1,0 +1,33 @@
+{
+	"parent": "item/handheld",
+	"textures": {
+		"layer0": "item/diamond_hoe"
+	},
+	"overrides": [
+		{"predicate": {"custom_model_data": 1},"model": "item/edge"},
+		{"predicate": {"custom_model_data": 8},"model": "item/basic/c1"},
+		{"predicate": {"custom_model_data": 9},"model": "item/basic/c2"},
+		{"predicate": {"custom_model_data": 10},"model": "item/basic/c3"},
+		{"predicate": {"custom_model_data": 11},"model": "item/air/m1"},
+		{"predicate": {"custom_model_data": 12},"model": "item/air/m2"},
+		{"predicate": {"custom_model_data": 13},"model": "item/air/m3"},
+		{"predicate": {"custom_model_data": 14},"model": "item/air/o1"},
+		{"predicate": {"custom_model_data": 15},"model": "item/air/o2"},
+		{"predicate": {"custom_model_data": 16},"model": "item/air/o3"},
+		{"predicate": {"custom_model_data": 17},"model": "item/sneak/m1"},
+		{"predicate": {"custom_model_data": 18},"model": "item/sneak/m2"},
+		{"predicate": {"custom_model_data": 19},"model": "item/sneak/m3"},
+		{"predicate": {"custom_model_data": 20},"model": "item/sneak/o1"},
+		{"predicate": {"custom_model_data": 21},"model": "item/sneak/o2"},
+		{"predicate": {"custom_model_data": 22},"model": "item/sneak/o3"},
+		{"predicate": {"custom_model_data": 23},"model": "item/escape/1"},
+		{"predicate": {"custom_model_data": 24},"model": "item/escape/2"},
+		{"predicate": {"custom_model_data": 25},"model": "item/escape/3"},
+		{"predicate": {"custom_model_data": 26},"model": "item/empty"},
+		{"predicate": {"custom_model_data": 27},"model": "item/beam/blast"},
+		{"predicate": {"custom_model_data": 28},"model": "item/beam/blast_start"},
+		{"predicate": {"custom_model_data": 29},"model": "item/beam/blast_shrink"},
+		{"predicate": {"custom_model_data": 30},"model": "item/beam/blast_shrink2"},
+		{"predicate": {"custom_model_data": 31},"model": "item/enemy/bullet"}
+	]
+}

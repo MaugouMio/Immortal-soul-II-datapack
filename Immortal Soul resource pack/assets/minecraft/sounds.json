@@ -1,0 +1,175 @@
+{
+  "skill.basic1": {
+    "sounds": [
+      {
+        "name": "skill/basic1",
+        "stream": true
+      }
+    ]
+  },
+  "skill.basic2": {
+    "sounds": [
+      {
+        "name": "skill/basic2",
+        "stream": true
+      }
+    ]
+  },
+  "skill.double": {
+    "sounds": [
+      {
+        "name": "skill/double",
+        "stream": true
+      }
+    ]
+  },
+  "skill.drop_attack": {
+    "sounds": [
+      {
+        "name": "skill/drop_attack",
+        "stream": true
+      }
+    ]
+  },
+  "skill.flash": {
+    "sounds": [
+      {
+        "name": "skill/flash",
+        "stream": true
+      }
+    ]
+  },
+  "skill.rush_attack": {
+    "sounds": [
+      {
+        "name": "skill/rush_attack",
+        "stream": true
+      }
+    ]
+  },
+  "skill.shoot": {
+    "sounds": [
+      {
+        "name": "skill/shoot",
+        "stream": true
+      }
+    ]
+  },
+  "skill.escape_prepare": {
+    "sounds": [
+      {
+        "name": "skill/escape_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "skill.escape_shoot": {
+    "sounds": [
+      {
+        "name": "skill/escape_shoot",
+        "stream": true
+      }
+    ]
+  },
+  "skill.explode": {
+    "sounds": [
+      {
+        "name": "skill/explode",
+        "stream": true
+      }
+    ]
+  },
+  "skill.blast_prepare": {
+    "sounds": [
+      {
+        "name": "skill/blast_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "skill.blast": {
+    "sounds": [
+      {
+        "name": "skill/blast",
+        "stream": true
+      }
+    ]
+  },
+  "skill.switch": {
+    "sounds": [
+      {
+        "name": "skill/switch",
+        "stream": true
+      }
+    ]
+  },
+  
+  
+  
+  
+  
+  "enemy.target_attack": {
+    "sounds": [
+      {
+        "name": "enemy/target_attack",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.summon_bullet": {
+    "sounds": [
+      {
+        "name": "enemy/summon_bullet",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.shoot_bullet": {
+    "sounds": [
+      {
+        "name": "enemy/shoot_bullet",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.bullet_hit": {
+    "sounds": [
+      {
+        "name": "enemy/bullet_hit",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.blow": {
+    "sounds": [
+      {
+        "name": "enemy/blow",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.ice": {
+    "sounds": [
+      {
+        "name": "enemy/ice",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.blast_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/blast_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.blast": {
+    "sounds": [
+      {
+        "name": "enemy/blast",
+        "stream": true
+      }
+    ]
+  }
+}

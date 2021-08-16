@@ -1,0 +1,20 @@
+{
+	"Immortal Edge": "不朽之刃",
+	"Plain Edge": "樸素的刀",
+	"Supreme Pulse": "靈魂衝擊",
+	
+	"Sacred Knight": "真白之刃",
+	"Arch Magician": "至尊魔導",
+	"Root of Fear": "深淵恐懼",
+	
+	"Zone": "領域",
+	
+	"menu.options": "§a選項...§r",
+	"options.video": "§a顯示設定...§r",
+	"options.fovEffectScale": "§a視角廣度效果(關閉)§r",
+	"options.entityDistanceScaling": "§a實體顯示距離(400+)§r",
+	"options.sounds": "§a音樂和音效...§r",
+	"soundCategory.music": "§a音樂(關閉)§r",
+	"soundCategory.player": "§a音效§r",
+	"soundCategory.ambient": "§a環境音效/環境(關閉)§r"
+}

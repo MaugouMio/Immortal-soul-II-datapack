@@ -1,0 +1,28 @@
+{
+	"textures": {
+		"texture": "item/enemy/blow_prepare",
+		"empty": "item/empty"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [ -16.0, 0.0, -16.0 ], 
+			"to": [ 32.0, 0.0, 32.0 ],
+			"faces": {
+				"north": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"east": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"south": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"west": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"up": { "texture": "#texture", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+				"down": { "texture": "#empty", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+			}
+		}
+	],
+	"display": {
+		"ground": {
+			"rotation": [ 0, 0, 0 ],
+			"translation": [ 0, 17, 0 ],
+			"scale":[ 4, 4, 4 ]
+		}
+	}
+}
