@@ -1,3 +1,5 @@
+import utils
+
 namespace stage()
 {
 	func install()
@@ -39,8 +41,6 @@ namespace stage()
 		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/start
 		
 		bossbar set minecraft:boss players @a
-		bossbar set minecraft:boss max 2000
-		bossbar set minecraft:boss value 2000
 		bossbar set minecraft:boss visible true
 		
 		execute store result score @a[scores={player=1..}] game_id run scoreboard players add #GLOBAL game_id 1
@@ -68,38 +68,85 @@ namespace stage()
 	{
 		func start()
 		{
+			bossbar set minecraft:boss max 2000
+			bossbar set minecraft:boss value 2000
 			bossbar set minecraft:boss name {"translate":"Sacred Knight","color":"white","bold":true}
+			
 			bossbar set minecraft:zone players @a
 			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
-			# summon ...
+			# summon ... {UUID:[I;1,1,1,1]}
+			# summon fly_sword
 			schedule function ARG(_PATH)skills/loop 7s
+			schedule function ARG(_PATH)skills/fly_sword/start 3s
 		}
 		
 		func end()
 		{
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/zone/reset
+			schedule clear ARG(_PATH)skills/fly_sword/stop
+			schedule clear ARG(_PATH)skills/fly_sword/aim
+			schedule clear ARG(_PATH)skills/fly_sword/start
+			
 			bossbar set minecraft:zone visible false
+			scoreboard players set #FLYING_SWORD number 0
 		}
 		
 		func main()
 		{
-			
+			execute if score #FLYING_SWORD number matches 1 as @e[type=armor_stand,tag=fly_sword,limit=1] at @s run function ARG(_PATH)skills/fly_sword/move
 		}
 		
 		folder skills()
 		{
 			func loop()
 			{
+				function random:rand_rate
+				execute at 00000001-0000-0001-0000-000100000001 store success score #NEAR_SKILL number if entity @a[distance=..4,limit=1]
+				execute if score #NEAR_SKILL number matches 1 as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)near_judge
+				execute if score #NEAR_SKILL number matches 0 as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)far_judge
+				
 				schedule function ARG(_PATH)loop 7s
+			}
+			
+			func near_judge()
+			{
+				execute if score @s health matches ..1000 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
+				execute if score #RAND_RESULT number matches 0..49 run function ARG(_PATH)flaw/cast
+				execute if score #RAND_RESULT number matches 50..99 run function ARG(_PATH)tornado/cast
+			}
+			
+			func far_judge()
+			{
+				execute if score @s health matches ..1000 if score #RAND_RESULT number matches 80..99 run function ARG(_PATH)slash/cast
+				execute if score #RAND_RESULT number matches 0..19 run function ARG(_PATH)sword_dance/cast
 			}
 			
 			folder dodge()
 			{
 				func try()
 				{
-					
+					scoreboard players set #DODGE_SUCCESS number 0
+					execute positioned ^2 ^ ^ if block ~ ~ ~ #skill:canpass if block ~ ~1 ~ #skill:canpass unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)tp
+					execute if score #DODGE_SUCCESS number matches 0 positioned ^-2 ^ ^ if block ~ ~ ~ #skill:canpass if block ~ ~1 ~ #skill:canpass unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)tp
+					execute if score #DODGE_SUCCESS number matches 0 run function ARG(_PATH)random_tp
+				}
+				
+				func tp()
+				{
+					scoreboard players set #DODGE_SUCCESS number 1
+					tp @s ~ ~ ~
+				}
+				
+				func random_tp()
+				{
+					```
+					raise Warning("TODO: set max height for spreadplayers")
+					```
+					spreadplayers ~ ~ 0 7 under 10 false @s
+					execute at @s unless entity @e[type=armor_stand,tag=blast_target,distance=..2,limit=1] unless entity @a[distance=..5,limit=1] run scoreboard players set #DODGE_SUCCESS number 1
+					execute if score #DODGE_SUCCESS number matches 0 run function ARG(_PATH)random_tp
 				}
 			}
 			
@@ -121,7 +168,12 @@ namespace stage()
 				func decrease()
 				{
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number -= @s display_number
-					# visual and sound effect
+					execute if score @s display_number matches ..110 run playsound minecraft:enemy.sword.strike_small player @a ~ ~ ~ 3 1 0
+					execute if score @s display_number matches 111.. run playsound minecraft:enemy.sword.strike_big player @a ~ ~ ~ 3 1 0
+					```
+					raise Warning("TODO: set hand pose for zone strike")
+					```
+					execute positioned ~ ~0.5 ~ run function ARG(_PATH)strike_effect
 					execute if score #ZONE number matches ..0 run function ARG(_PATH)break
 				}
 				
@@ -129,6 +181,82 @@ namespace stage()
 				{
 					bossbar set minecraft:zone visible false
 					schedule function ARG(_PATH)reset 10s
+				}
+				
+				func strike_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:strike/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:strike/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+			}
+			
+			folder fly_sword()
+			{
+				func move()
+				{
+					tp @s ^ ^ ^0.5
+					execute at @s as @a[scores={player=1..},distance=..1,tag=!sword_hit] run function ARG(_PATH)hit
+					execute at @s unless block ~ ~ ~ #skill:canpass run function ARG(_PATH)stop
+				}
+				
+				func hit()
+				{
+					effect give @s minecraft:instant_damage 1 0 true
+					tag @s add sword_hit
+				}
+				
+				func stop()
+				{
+					schedule clear ARG(_PATH)stop
+					tag @a remove sword_hit
+					
+					scoreboard players set #FLYING_SWORD number 0
+					schedule function ARG(_PATH)aim 1s
+				}
+				
+				func aim()
+				{
+					execute as @e[type=armor_stand,tag=fly_sword,limit=1] at @s facing entity @p[scores={player=1..}] eyes run tp @s ~ ~ ~ ~ ~
+					schedule function ARG(_PATH)start 1s
+				}
+				
+				func start()
+				{
+					scoreboard players set #FLYING_SWORD number 1
+					schedule function ARG(_PATH)stop 2s
+				}
+			}
+			
+			folder sword_dance()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder slash()
+			{
+				func cast()
+				{
+					scoreboard players set #RAND_RESULT number -1
+				}
+			}
+			
+			folder flaw()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder tornado()
+			{
+				func cast()
+				{
+					
 				}
 			}
 		}

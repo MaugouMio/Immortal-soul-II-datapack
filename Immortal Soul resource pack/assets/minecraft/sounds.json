@@ -108,6 +108,22 @@
   
   
   
+  "enemy.sword.strike_small": {
+    "sounds": [
+      {
+        "name": "enemy/sword/strike_small",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.sword.strike_big": {
+    "sounds": [
+      {
+        "name": "enemy/sword/strike_big",
+        "stream": true
+      }
+    ]
+  },
   "enemy.target_attack": {
     "sounds": [
       {
