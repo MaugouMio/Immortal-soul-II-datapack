@@ -76,7 +76,7 @@ namespace stage()
 			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
 			# summon ... {UUID:[I;1,1,1,1]}
-			# summon fly_sword
+			# summon armor_stand ~ ~ ~ #fly_sword
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/fly_sword/start 3s
 		}
@@ -91,23 +91,30 @@ namespace stage()
 			
 			bossbar set minecraft:zone visible false
 			scoreboard players set #FLYING_SWORD number 0
+			scoreboard players set #SWORD_DANCE number 0
 		}
 		
 		func main()
 		{
 			execute if score #FLYING_SWORD number matches 1 as @e[type=armor_stand,tag=fly_sword,limit=1] at @s run function ARG(_PATH)skills/fly_sword/move
+			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
 		}
 		
 		folder skills()
 		{
 			func loop()
 			{
+				execute unless score #SWORD_DANCE number matches 1.. run function ARG(_PATH)rand_skill
+				
+				schedule function ARG(_PATH)loop 7s
+			}
+			
+			func rand_skill()
+			{
 				function random:rand_rate
 				execute at 00000001-0000-0001-0000-000100000001 store success score #NEAR_SKILL number if entity @a[distance=..4,limit=1]
 				execute if score #NEAR_SKILL number matches 1 as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)near_judge
 				execute if score #NEAR_SKILL number matches 0 as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)far_judge
-				
-				schedule function ARG(_PATH)loop 7s
 			}
 			
 			func near_judge()
@@ -131,6 +138,8 @@ namespace stage()
 					execute positioned ^2 ^ ^ if block ~ ~ ~ #skill:canpass if block ~ ~1 ~ #skill:canpass unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)tp
 					execute if score #DODGE_SUCCESS number matches 0 positioned ^-2 ^ ^ if block ~ ~ ~ #skill:canpass if block ~ ~1 ~ #skill:canpass unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)tp
 					execute if score #DODGE_SUCCESS number matches 0 run function ARG(_PATH)random_tp
+					
+					scoreboard players set #IGNORE_DAMAGE number 1
 				}
 				
 				func tp()
@@ -163,6 +172,12 @@ namespace stage()
 				{
 					execute if entity @s[tag=beam_hit] run function ARG(__PATH)dodge/try
 					execute if entity @s[tag=!beam_hit] run function ARG(_PATH)decrease
+					scoreboard players set #IGNORE_DAMAGE number 1
+					
+					# 換回平常站立姿勢模型
+					# execute if score #REVERT_ACTION number matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData set value ...
+					# 不用做劍舞復原動作
+					scoreboard players set #REVERT_ACTION number 0
 				}
 				
 				func decrease()
@@ -232,7 +247,92 @@ namespace stage()
 			{
 				func cast()
 				{
+					# 暫時關閉ZONE
+					scoreboard players set #ZONE number 0
+					execute as @a[scores={player=1..},limit=1,sort=random] at @s run function ARG(_PATH)mark
 					
+					function ARG(_PATH)open_wing/start
+				}
+				
+				func mark()
+				{
+					# 頭上標記特效(危)
+					tag @s add sword_dance_target
+				}
+				
+				folder open_wing()
+				{
+					func start()
+					{
+						
+					}
+					
+					func end()
+					{
+						scoreboard players set #SWORD_DANCE number 1
+					}
+				}
+				
+				func trace()
+				{
+					execute facing entity @a[tag=sword_dance_target,limit=1] feet run tp @s ^ ^ ^0.5 ~ ~
+					
+					# 約 8 tick 的反應時間
+					execute if score #SWORD_DANCE number matches 2 at @s if entity @a[tag=sword_dance_target,distance=..1,limit=1] run function ARG(_PATH)attack
+					execute if score #SWORD_DANCE number matches 1 at @s if entity @a[tag=sword_dance_target,distance=..5,limit=1] run function ARG(_PATH)prepare
+				}
+				
+				func prepare()
+				{
+					# title @a[tag=sword_dance_target] title "反擊"
+					# 切換攻擊預備動作模型
+					# 小閃光特效
+					scoreboard players set #SWORD_DANCE number 2
+				}
+				
+				func attack()
+				{
+					execute as @a[tag=sword_dance_target,limit=1] run function ARG(_PATH)damage
+					# 切換揮刀模型
+					# 刀光特效
+					# 命中音效
+					
+					function ARG(_PATH)end
+				}
+				
+				func damage()
+				{
+					# 讓 BOSS 穿過玩家 1.5 格
+					execute facing entity @s feet positioned as @s rotated ~ 0 run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^1.5 ~ ~
+					effect give @s minecraft:instant_damage 1 2 true
+				}
+				
+				func counter()
+				{
+					# 切換揮刀模型
+					# 刀光格擋特效
+					# 格擋音效
+					
+					function ARG(_PATH)end
+				}
+				
+				func end()
+				{
+					# 繼續啟用ZONE的效果
+					execute store result score #ZONE number run bossbar get minecraft:zone value
+					
+					scoreboard players set #REVERT_ACTION number 1
+					schedule function ARG(_PATH)revert_action 1s
+					scoreboard players set #SWORD_DANCE number 0
+					tag @a remove sword_dance_target
+				}
+				
+				func revert_action()
+				{
+					# 換回平常站立姿勢模型
+					# execute if score #REVERT_ACTION number matches 1 run data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value ...
+					execute at 00000001-0000-0001-0000-000100000001 run particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
+					scoreboard players set #REVERT_ACTION number 0
 				}
 			}
 			
