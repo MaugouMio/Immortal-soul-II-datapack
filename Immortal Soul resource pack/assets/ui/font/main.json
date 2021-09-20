@@ -8,6 +8,15 @@
 			"chars": [
 				"0"
 			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/counter.png",
+			"ascent": 8,
+			"height": 16,
+			"chars": [
+				"1"
+			]
 		}
 	]
 }

@@ -124,6 +124,22 @@
       }
     ]
   },
+  "enemy.sword.clash": {
+    "sounds": [
+      {
+        "name": "enemy/sword/clash",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.sword.dance_attack": {
+    "sounds": [
+      {
+        "name": "enemy/sword/dance_attack",
+        "stream": true
+      }
+    ]
+  },
   "enemy.target_attack": {
     "sounds": [
       {

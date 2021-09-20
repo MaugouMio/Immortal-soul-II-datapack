@@ -76,7 +76,7 @@ namespace stage()
 			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
 			# summon ... {UUID:[I;1,1,1,1]}
-			# summon armor_stand ~ ~ ~ #fly_sword
+			# summon armor_stand ~ ~ ~ {UUID:[I;2,2,2,2]}  #fly_sword
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/fly_sword/start 3s
 		}
@@ -96,7 +96,8 @@ namespace stage()
 		
 		func main()
 		{
-			execute if score #FLYING_SWORD number matches 1 as @e[type=armor_stand,tag=fly_sword,limit=1] at @s run function ARG(_PATH)skills/fly_sword/move
+			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
+			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=sword_dance_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~ 0
 			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
 		}
 		
@@ -176,6 +177,7 @@ namespace stage()
 					
 					# 換回平常站立姿勢模型
 					# execute if score #REVERT_ACTION number matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData set value ...
+					particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
 					# 不用做劍舞復原動作
 					scoreboard players set #REVERT_ACTION number 0
 				}
@@ -256,8 +258,19 @@ namespace stage()
 				
 				func mark()
 				{
-					# 頭上標記特效(危)
+					# 頭上標記特效
+					execute positioned ~ ~1.5 ~ run function ARG(_PATH)mark_effect
+					summon minecraft:armor_stand ~ ~ ~ {UUID:[I;3,3,3,3],Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+					scoreboard players set 00000003-0000-0003-0000-000300000003 number 32
+					scoreboard players set 00000003-0000-0003-0000-000300000003 life -100000
 					tag @s add sword_dance_target
+				}
+				
+				func mark_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:mark/1"}',CustomNameVisible:1,Duration:11,Tags:['{"text":"","font":"font_animation:mark/1"}', '{"text":"","font":"font_animation:mark/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 10
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 				
 				folder open_wing()
@@ -284,7 +297,9 @@ namespace stage()
 				
 				func prepare()
 				{
-					# title @a[tag=sword_dance_target] title "反擊"
+					# 反擊ICON
+					title @a[tag=sword_dance_target] times 0 10000 0
+					title @a[tag=sword_dance_target] title {"text":"1","font":"ui:main"}
 					# 切換攻擊預備動作模型
 					# 小閃光特效
 					scoreboard players set #SWORD_DANCE number 2
@@ -294,8 +309,9 @@ namespace stage()
 				{
 					execute as @a[tag=sword_dance_target,limit=1] run function ARG(_PATH)damage
 					# 切換揮刀模型
-					# 刀光特效
-					# 命中音效
+					scoreboard players set 00000003-0000-0003-0000-000300000003 life 0
+					execute as 00000003-0000-0003-0000-000300000003 store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
+					playsound minecraft:enemy.sword.dance_attack player @a
 					
 					function ARG(_PATH)end
 				}
@@ -311,7 +327,7 @@ namespace stage()
 				{
 					# 切換揮刀模型
 					# 刀光格擋特效
-					# 格擋音效
+					playsound minecraft:enemy.sword.clash player @a ~ ~ ~ 3 1 0
 					
 					function ARG(_PATH)end
 				}
@@ -324,6 +340,8 @@ namespace stage()
 					scoreboard players set #REVERT_ACTION number 1
 					schedule function ARG(_PATH)revert_action 1s
 					scoreboard players set #SWORD_DANCE number 0
+					
+					title @a[tag=sword_dance_target] title ""
 					tag @a remove sword_dance_target
 				}
 				
