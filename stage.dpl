@@ -326,10 +326,17 @@ namespace stage()
 				func counter()
 				{
 					# 切換揮刀模型
-					# 刀光格擋特效
+					execute positioned ~ ~1 ~ run function ARG(_PATH)counter_effect
 					playsound minecraft:enemy.sword.clash player @a ~ ~ ~ 3 1 0
 					
 					function ARG(_PATH)end
+				}
+				
+				func counter_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:sword_clash/0"}',CustomNameVisible:1,Duration:5,Tags:['{"text":"","font":"font_animation:sword_clash/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 4
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 				
 				func end()
