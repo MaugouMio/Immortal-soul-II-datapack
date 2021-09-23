@@ -323,7 +323,7 @@ namespace skill()
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
 
 				scoreboard players set #DAMAGE_SCALE number 10
-				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,distance=..2] at @s run function skill:edge/damage
+				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
 				
 				scoreboard players set @s last_hand 1
 			}
@@ -339,7 +339,7 @@ namespace skill()
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
 
 				scoreboard players set #DAMAGE_SCALE number 10
-				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,distance=..2] at @s run function skill:edge/damage
+				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
 				
 				scoreboard players set @s last_hand 0
 			}
@@ -349,14 +349,14 @@ namespace skill()
 				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
 				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
 				
-				execute if score #BOTH_HAND number matches 0 rotated ~ 0 run summon minecraft:armor_stand ^ ^ ^3 {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:8}}]}
+				execute if score #BOTH_HAND number matches 0 rotated ~ 0 run summon minecraft:armor_stand ^ ^ ^3 {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:8}}]}
 				execute if score #BOTH_HAND number matches 1 rotated ~ 0 positioned ^ ^1 ^2 run function ARG(_PATH)double_effect
 				playsound minecraft:skill.basic2 player @a
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 5 force
 
 				scoreboard players set #DAMAGE_SCALE number 20
 				execute if score #BOTH_HAND number matches 1 run scoreboard players add #DAMAGE_SCALE number 20
-				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,distance=..3] at @s run function skill:edge/damage
+				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,tag=!effect,distance=..3] at @s run function skill:edge/damage
 			}
 			
 			func slashtime()
@@ -432,10 +432,10 @@ namespace skill()
 				execute align y run tp @s ~ ~1.5 ~
 				effect clear @s minecraft:levitation
 
-				execute align y rotated ~ 0 run summon armor_stand ^ ^0.2 ^3 {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:11}}]}
+				execute align y rotated ~ 0 run summon armor_stand ^ ^0.2 ^3 {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:11}}]}
 				playsound minecraft:skill.drop_attack player @a
 
-				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)drop_damage
+				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)drop_damage
 			}
 			
 			func drop_damage()
@@ -461,11 +461,11 @@ namespace skill()
 				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
 
 				effect give @s minecraft:levitation 1 30 true
-				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:14}}]}
+				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:14}}]}
 				playsound minecraft:skill.double player @a
 
 				scoreboard players set #DAMAGE_SCALE number 15
-				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)double_damage
+				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)double_damage
 			}
 			
 			func double_damage()
@@ -510,10 +510,10 @@ namespace skill()
 			
 			func rush_attack()
 			{
-				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
+				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
 				
 				scoreboard players set #DAMAGE_SCALE number 25
-				execute as @e[type=#skill:hostile,distance=..5] at @s run function ARG(_PATH)rush_damage
+				execute as @e[type=#skill:hostile,tag=!effect,distance=..5] at @s run function ARG(_PATH)rush_damage
 				playsound minecraft:skill.rush_attack player @a
 			}
 			
@@ -542,11 +542,11 @@ namespace skill()
 				execute store result score @s cd_left run schedule function skill:edge/reset_left 6t append
 
 				effect give @s minecraft:levitation 1 80 true
-				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:20}}]}
+				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:20}}]}
 				playsound minecraft:skill.double player @a
 
 				scoreboard players set #DAMAGE_SCALE number 25
-				execute as @e[type=#skill:hostile,distance=..4] at @s run function ARG(_PATH)jump_damage
+				execute as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)jump_damage
 			}
 			
 			func jump_damage()
@@ -629,11 +629,11 @@ namespace skill()
 					summon minecraft:marker ~ ~ ~ {UUID:[I;0,1,0,1]}
 					tp 00000000-0000-0001-0000-000000000001 ~ ~ ~ ~ 0
 					
-					execute as @e[type=#skill:hostile,distance=..30] run function ARG(_PATH)check_view
+					execute as @e[type=#skill:hostile,tag=!effect,distance=..30] run function ARG(_PATH)check_view
 					kill 00000000-0000-0001-0000-000000000001
 					
-					execute as @e[type=#skill:hostile,tag=target_potential,limit=1,sort=nearest] run function ARG(_PATH)mark
-					tag @e[type=#skill:hostile,tag=target_potential] remove target_potential
+					execute as @e[type=#skill:hostile,tag=!effect,tag=target_potential,limit=1,sort=nearest] run function ARG(_PATH)mark
+					tag @e[type=#skill:hostile,tag=!effect,tag=target_potential] remove target_potential
 				}
 				
 				func check_view()
@@ -657,7 +657,7 @@ namespace skill()
 				# function ARG(_PATH)aim/rotate
 				
 				scoreboard players set #DAMAGE_SCALE number 3
-				execute as @e[type=#skill:hostile,tag=target,limit=1] at @s run function ARG(_PATH)damage
+				execute as @e[type=#skill:hostile,tag=!effect,tag=target,limit=1] at @s run function ARG(_PATH)damage
 			}
 			
 			folder aim()
@@ -666,7 +666,7 @@ namespace skill()
 				{
 					scoreboard players set #FOUND_TARGET number 0
 					scoreboard players operation #TARGET number = @s aiming
-					execute as @e[type=#skill:hostile] if score @s number = #TARGET number run function ARG(_PATH)set_target
+					execute as @e[type=#skill:hostile,tag=!effect] if score @s number = #TARGET number run function ARG(_PATH)set_target
 					
 					execute if score #FOUND_TARGET number matches 1 run function ARG(_PATH)aim
 					execute if score #FOUND_TARGET number matches 0 run scoreboard players reset @s aiming
@@ -681,12 +681,12 @@ namespace skill()
 				func aim()
 				{
 					function ARG(_PATH)rotate
-					tag @e[type=#skill:hostile,tag=target,limit=1] remove target
+					tag @e[type=#skill:hostile,tag=!effect,tag=target,limit=1] remove target
 				}
 				
 				func rotate()
 				{
-					execute facing entity @e[type=#skill:hostile,tag=target,limit=1] eyes rotated ~ 0 run summon minecraft:marker ^ ^ ^4 {UUID:[I;0,1,0,1]}
+					execute facing entity @e[type=#skill:hostile,tag=!effect,tag=target,limit=1] eyes rotated ~ 0 run summon minecraft:marker ^ ^ ^4 {UUID:[I;0,1,0,1]}
 					execute as 00000000-0000-0001-0000-000000000001 positioned as @s run tp @s ~ ~ ~ ~ ~
 					
 					execute rotated ~ 0 positioned ^ ^ ^2 facing entity 00000000-0000-0001-0000-000000000001 eyes rotated ~ 0 positioned ^ ^ ^0.3 facing entity @s feet positioned as @s run tp @s ~ ~ ~ ~180 ~
@@ -774,16 +774,16 @@ namespace skill()
 			
 			func summon()
 			{
-				summon minecraft:armor_stand ^ ^ ^3 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target","blast_start"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^5 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^7 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^9 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^11 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^13 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^15 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^17 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^19 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
-				summon minecraft:armor_stand ^ ^ ^21 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^3 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target","blast_start"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^5 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^7 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^9 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^11 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^13 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^15 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^17 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^19 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon minecraft:armor_stand ^ ^ ^21 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 				execute as @e[type=armor_stand,tag=blast_target] positioned as @s run tp @s ~ ~0.1 ~ ~180 ~
 			}
 			
@@ -791,7 +791,7 @@ namespace skill()
 			{
 				data modify entity @s[tag=!blast_start] ArmorItems[3].tag.CustomModelData set value 27
 				data modify entity @s[tag=blast_start] ArmorItems[3].tag.CustomModelData set value 28
-				execute as @e[type=#skill:hostile,distance=..2] at @s run function ARG(_PATH)damage
+				execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function ARG(_PATH)damage
 			}
 			
 			func damage()
@@ -869,12 +869,12 @@ namespace skill()
 			func shoot()
 			{
 				playsound minecraft:skill.escape_shoot player @a
-				summon armor_stand ^ ^-0.4 ^ {Pose:{Head:[1.0f,0.0f,0.0f]},Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect","new_escape_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+				summon armor_stand ^ ^-0.4 ^ {Pose:{Head:[1.0f,0.0f,0.0f]},Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect","new_escape_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 				particle minecraft:flash ~ ~0.4 ~ 0 0 0 0 1 force
 				data modify storage skill:main Rotation set from entity @s Rotation[1]
 				execute as @e[type=armor_stand,tag=new_escape_effect,limit=1] run function ARG(_PATH)set_circle
 				
-				summon minecraft:armor_stand ~ ~ ~ {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Tags:["object","bullet","skill_effect","new_bullet"],CustomName:'{"text":"0","font":"skill:main"}',CustomNameVisible:1b}
+				summon minecraft:armor_stand ~ ~ ~ {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Tags:["object","effect","bullet","skill_effect","new_bullet"],CustomName:'{"text":"0","font":"skill:main"}',CustomNameVisible:1b}
 				execute as @e[type=armor_stand,tag=new_bullet,limit=1] run function ARG(_PATH)bullet/set
 			}
 			
@@ -907,7 +907,7 @@ namespace skill()
 				{
 					scoreboard players set #FOUND_TARGET number 0
 					tag @s add moving_bullet
-					execute as @e[type=#skill:hostile,distance=..20,limit=1,sort=nearest] run function ARG(_PATH)trace
+					execute as @e[type=#skill:hostile,tag=!effect,distance=..20,limit=1,sort=nearest] run function ARG(_PATH)trace
 					execute if score #FOUND_TARGET number matches 0 run tp @s ^ ^ ^1
 					tag @s remove moving_bullet
 					
@@ -933,7 +933,7 @@ namespace skill()
 				func explode()
 				{
 					scoreboard players set #DAMAGE_SCALE number 30
-					execute as @e[type=#skill:hostile,distance=..1.5] at @s run function skill:damage
+					execute as @e[type=#skill:hostile,tag=!effect,distance=..1.5] at @s run function skill:damage
 					
 					playsound minecraft:skill.explode player @a ~ ~ ~ 1 1 1
 					particle minecraft:flash ~ ~ ~ 0 0 0 0 1 force

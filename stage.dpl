@@ -9,6 +9,8 @@ namespace stage()
 		scoreboard players set #PLAYER_MODE number 1
 		scoreboard players set #SELECTED_STAGE number 1
 		
+		data modify storage stage:stage1 ZonePose set value [[311f,22f,174f],[300f,0f,40f],[300f,0f,75f]]
+		
 		bossbar add boss "BOSS"
 		bossbar set minecraft:boss color red
 		bossbar add zone {"translate":"Zone"}
@@ -75,8 +77,8 @@ namespace stage()
 			bossbar set minecraft:zone players @a
 			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
-			# summon ... {UUID:[I;1,1,1,1]}
-			# summon armor_stand ~ ~ ~ {UUID:[I;2,2,2,2]}  #fly_sword
+			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:3}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4}}],Pose:[RightArm:[300f,0f,75f]],Tags:["boss"],UUID:[I;1,1,1,1]}
+			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect"],UUID:[I;2,2,2,2]}
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/fly_sword/start 3s
 		}
@@ -187,9 +189,11 @@ namespace stage()
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number -= @s display_number
 					execute if score @s display_number matches ..110 run playsound minecraft:enemy.sword.strike_small player @a ~ ~ ~ 3 1 0
 					execute if score @s display_number matches 111.. run playsound minecraft:enemy.sword.strike_big player @a ~ ~ ~ 3 1 0
-					```
-					raise Warning("TODO: set hand pose for zone strike")
-					```
+					
+					data modify entity @s Pose.RightArm set from storage stage:stage1 ZonePose[0]
+					data modify storage stage:stage1 ZonePose append from storage stage:stage1 ZonePose[0]
+					data remove storage stage:stage1 ZonePose[0]
+					
 					execute positioned ~ ~0.5 ~ run function ARG(_PATH)strike_effect
 					execute if score #ZONE number matches ..0 run function ARG(_PATH)break
 				}
@@ -260,7 +264,7 @@ namespace stage()
 				{
 					# 頭上標記特效
 					execute positioned ~ ~1.5 ~ run function ARG(_PATH)mark_effect
-					summon minecraft:armor_stand ~ ~ ~ {UUID:[I;3,3,3,3],Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
+					summon minecraft:armor_stand ~ ~ ~ {UUID:[I;3,3,3,3],Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 					scoreboard players set 00000003-0000-0003-0000-000300000003 number 32
 					scoreboard players set 00000003-0000-0003-0000-000300000003 life -100000
 					tag @s add sword_dance_target

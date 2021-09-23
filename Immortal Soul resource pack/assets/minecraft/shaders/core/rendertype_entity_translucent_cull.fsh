@@ -49,12 +49,13 @@ void main() {
 	bool is_light_blue = (hueAngle > 0.486) && (hueAngle < 0.625);
 	bool is_white = (ori_color.r > 0.95 && ori_color.g > 0.95 && ori_color.b > 0.95);
 	bool is_yellow = (hueAngle > 0.111) && (hueAngle < 0.166);
+	bool is_red = ori_color.r > 0.9 && ori_color.g < 0.05 && ori_color.b < 0.05;
 	
     vec4 color = texture(Sampler0, texCoord0) * ColorModulator;
     if (color.a < 0.1) {
         discard;
     }
-	else if (!is_light_blue && !is_white && !is_yellow) {
+	else if (!is_light_blue && !is_white && !is_yellow && !is_red) {
 		color *= vertexColor;
 	}
 	else if (is_light_blue && !is_white) {
