@@ -9,6 +9,9 @@
 		{"predicate": {"custom_model_data": 2},"model": "item/enemy/sword/boss"},
 		{"predicate": {"custom_model_data": 3},"model": "item/enemy/sword/right_arm"},
 		{"predicate": {"custom_model_data": 4},"model": "item/enemy/sword/left_arm"},
-		{"predicate": {"custom_model_data": 5},"model": "item/enemy/sword/fly_sword"}
+		{"predicate": {"custom_model_data": 5},"model": "item/enemy/sword/fly_sword"},
+		{"predicate": {"custom_model_data": 6},"model": "item/enemy/sword/boss_dance1"},
+		{"predicate": {"custom_model_data": 7},"model": "item/enemy/sword/boss_dance2"},
+		{"predicate": {"custom_model_data": 8},"model": "item/enemy/sword/boss_dance3"}
 	]
 }

@@ -9,7 +9,7 @@ namespace stage()
 		scoreboard players set #PLAYER_MODE number 1
 		scoreboard players set #SELECTED_STAGE number 1
 		
-		data modify storage stage:stage1 ZonePose set value [[311f,22f,174f],[300f,0f,40f],[300f,0f,75f]]
+		data modify storage stage:stage1 ZonePose set value [[300f,0f,40f],[300f,0f,75f],[311f,22f,174f]]
 		
 		bossbar add boss "BOSS"
 		bossbar set minecraft:boss color red
@@ -77,8 +77,19 @@ namespace stage()
 			bossbar set minecraft:zone players @a
 			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
-			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:3}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4}}],Pose:[RightArm:[300f,0f,75f]],Tags:["boss"],UUID:[I;1,1,1,1]}
-			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect"],UUID:[I;2,2,2,2]}
+			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:3}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4}}],Pose:[RightArm:[300f,0f,40f],LeftArm:[350f,0f,350f]],Tags:["boss","object"],UUID:[I;1,1,1,1]}
+			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
+			# 飛劍
+			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect","object"],UUID:[I;2,2,2,2]}
+			# 翅膀裝飾
+			# summon husk x y z {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
+			# summon husk x y z {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
+			# summon husk x y z {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
+			# summon husk x y z {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
+			# summon husk x y z {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
+			# summon husk x y z {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
+			effect give @e[type=husk,tag=wing] invisibility 1000000 0 true
+			
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/fly_sword/start 3s
 		}
@@ -90,10 +101,12 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/fly_sword/stop
 			schedule clear ARG(_PATH)skills/fly_sword/aim
 			schedule clear ARG(_PATH)skills/fly_sword/start
+			schedule clear ARG(_PATH)skills/sword_dance/revert_action
 			
 			bossbar set minecraft:zone visible false
 			scoreboard players set #FLYING_SWORD number 0
 			scoreboard players set #SWORD_DANCE number 0
+			scoreboard players set #WING_OPEN number 0
 		}
 		
 		func main()
@@ -101,13 +114,44 @@ namespace stage()
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
 			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=sword_dance_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~ 0
 			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
+			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
+			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
+		}
+		
+		folder wing()
+		{
+			func check()
+			{
+				execute if score #WING_OPEN number matches 0 run function ARG(_PATH)normal
+				execute if score #WING_OPEN number matches 11.. run function ARG(_PATH)fly
+			}
+			
+			func normal()
+			{
+				execute rotated ~65 ~ positioned ^ ^ ^-1.8 facing entity @s feet run tp 00000004-0000-0004-0000-000400000004 ~ ~-1.2 ~ ~ -60
+				execute rotated ~39 ~ positioned ^ ^ ^-1.8 facing entity @s feet run tp 00000005-0000-0005-0000-000500000005 ~ ~-1.1 ~ ~ -60
+				execute rotated ~13 ~ positioned ^ ^ ^-1.8 facing entity @s feet run tp 00000006-0000-0006-0000-000600000006 ~ ~-1 ~ ~ -60
+				execute rotated ~-13 ~ positioned ^ ^ ^-1.8 facing entity @s feet run tp 00000007-0000-0007-0000-000700000007 ~ ~-1 ~ ~ -60
+				execute rotated ~-39 ~ positioned ^ ^ ^-1.8 facing entity @s feet run tp 00000008-0000-0008-0000-000800000008 ~ ~-1.1 ~ ~ -60
+				execute rotated ~-65 ~ positioned ^ ^ ^-1.8 facing entity @s feet run tp 00000009-0000-0009-0000-000900000009 ~ ~-1.2 ~ ~ -60
+			}
+			
+			func fly()
+			{
+				execute rotated ~60 ~ positioned ^ ^ ^-0.7 facing entity @s feet run tp 00000004-0000-0004-0000-000400000004 ~ ~0.8 ~ ~ 50
+				execute rotated ~45 ~ positioned ^ ^ ^-1.3 facing entity @s feet run tp 00000005-0000-0005-0000-000500000005 ~ ~0.2 ~ ~ 10
+				execute rotated ~30 ~ positioned ^ ^ ^-1.6 facing entity @s feet run tp 00000006-0000-0006-0000-000600000006 ~ ~-0.3 ~ ~ -10
+				execute rotated ~-30 ~ positioned ^ ^ ^-1.6 facing entity @s feet run tp 00000007-0000-0007-0000-000700000007 ~ ~-0.3 ~ ~ -10
+				execute rotated ~-45 ~ positioned ^ ^ ^-1.3 facing entity @s feet run tp 00000008-0000-0008-0000-000800000008 ~ ~0.2 ~ ~ 10
+				execute rotated ~-60 ~ positioned ^ ^ ^-0.7 facing entity @s feet run tp 00000009-0000-0009-0000-000900000009 ~ ~0.8 ~ ~ 50
+			}
 		}
 		
 		folder skills()
 		{
 			func loop()
 			{
-				execute unless score #SWORD_DANCE number matches 1.. run function ARG(_PATH)rand_skill
+				execute unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)rand_skill
 				
 				schedule function ARG(_PATH)loop 7s
 			}
@@ -115,9 +159,9 @@ namespace stage()
 			func rand_skill()
 			{
 				function random:rand_rate
-				execute at 00000001-0000-0001-0000-000100000001 store success score #NEAR_SKILL number if entity @a[distance=..4,limit=1]
-				execute if score #NEAR_SKILL number matches 1 as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)near_judge
-				execute if score #NEAR_SKILL number matches 0 as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)far_judge
+				execute store success score #NEAR_SKILL number if entity @a[scores={player=1..},distance=..4,limit=1]
+				execute if score #NEAR_SKILL number matches 1 run function ARG(_PATH)near_judge
+				execute if score #NEAR_SKILL number matches 0 run function ARG(_PATH)far_judge
 			}
 			
 			func near_judge()
@@ -178,10 +222,7 @@ namespace stage()
 					scoreboard players set #IGNORE_DAMAGE number 1
 					
 					# 換回平常站立姿勢模型
-					# execute if score #REVERT_ACTION number matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData set value ...
-					particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
-					# 不用做劍舞復原動作
-					scoreboard players set #REVERT_ACTION number 0
+					execute if score #REVERT_ACTION number matches 1 run function ARG(__PATH)sword_dance/revert_action
 				}
 				
 				func decrease()
@@ -281,11 +322,73 @@ namespace stage()
 				{
 					func start()
 					{
+						scoreboard players set #WING_OPEN number 1
+						function stage:stage1/wing/fly
+						# 計算右手姿勢
+						execute store result score #R_ARM_X number run data get entity @s Pose.RightArm[0] 10
+						execute store result score #R_ARM_Y number run data get entity @s Pose.RightArm[1] 10
+						execute store result score #R_ARM_Z number run data get entity @s Pose.RightArm[2] 10
+						execute if score #R_ARM_X number matches 180.. run scoreboard players set #R_ARM_DIFF_X number 2400
+						execute if score #R_ARM_X number matches ..179 run scoreboard players set #R_ARM_DIFF_X number 1200
+						execute if score #R_ARM_Y number matches 180.. run scoreboard players set #R_ARM_DIFF_Y number 3500
+						execute if score #R_ARM_Y number matches ..179 run scoreboard players set #R_ARM_DIFF_Y number 100
+						execute if score #R_ARM_Z number matches 180.. run scoreboard players set #R_ARM_DIFF_Y number 2800
+						execute if score #R_ARM_Z number matches ..179 run scoreboard players set #R_ARM_DIFF_Y number 800
+						scoreboard players operation #R_ARM_DIFF_X number -= #R_ARM_X number
+						scoreboard players operation #R_ARM_DIFF_Y number -= #R_ARM_Y number
+						scoreboard players operation #R_ARM_DIFF_Z number -= #R_ARM_Z number
+						scoreboard players operation #R_ARM_DIFF_X number /= #5 number
+						scoreboard players operation #R_ARM_DIFF_Y number /= #5 number
+						scoreboard players operation #R_ARM_DIFF_Z number /= #5 number
+						# 處理正負號
+						execute store success score #R_ARM_NEG_X number if score #R_ARM_DIFF_X number matches ..-1
+						execute store success score #R_ARM_NEG_Y number if score #R_ARM_DIFF_Y number matches ..-1
+						execute store success score #R_ARM_NEG_Z number if score #R_ARM_DIFF_Z number matches ..-1
+						execute if score #R_ARM_DIFF_X number matches ..-1 run scoreboard players operation #R_ARM_DIFF_X number *= #-1 number
+						execute if score #R_ARM_DIFF_Y number matches ..-1 run scoreboard players operation #R_ARM_DIFF_Y number *= #-1 number
+						execute if score #R_ARM_DIFF_Z number matches ..-1 run scoreboard players operation #R_ARM_DIFF_Z number *= #-1 number
+						# 計算左手姿勢 (350->290, 0->30, --)
+						scoreboard players set #L_ARM_X number 350
+						scoreboard players set #L_ARM_Y number 0
+						scoreboard players set #L_ARM_DIFF_X number 12
+						scoreboard players set #L_ARM_DIFF_Y number 6
 						
+						function ARG(_PATH)anim
+					}
+					
+					func anim()
+					{
+						execute if score #WING_OPEN number matches 1..5 run function ARG(_PATH)calc_pose
+						execute if score #WING_OPEN number matches 2 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 6
+						execute if score #WING_OPEN number matches 4 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 7
+						execute if score #WING_OPEN number matches 10 run function ARG(_PATH)end
+						
+						scoreboard players add #WING_OPEN number 1
+					}
+					
+					func calc_pose()
+					{
+						# 右手
+						execute if score #R_ARM_NEG_X number matches 0 run scoreboard players operation #R_ARM_X number += #R_ARM_DIFF_X number
+						execute if score #R_ARM_NEG_X number matches 1 run scoreboard players operation #R_ARM_X number -= #R_ARM_DIFF_X number
+						execute if score #R_ARM_NEG_Y number matches 0 run scoreboard players operation #R_ARM_Y number += #R_ARM_DIFF_Y number
+						execute if score #R_ARM_NEG_Y number matches 1 run scoreboard players operation #R_ARM_Y number -= #R_ARM_DIFF_Y number
+						execute if score #R_ARM_NEG_Z number matches 0 run scoreboard players operation #R_ARM_Z number += #R_ARM_DIFF_Z number
+						execute if score #R_ARM_NEG_Z number matches 1 run scoreboard players operation #R_ARM_Z number -= #R_ARM_DIFF_Z number
+						execute store result entity @s Pose.RightArm[0] float 0.1 run scoreboard players get #R_ARM_X
+						execute store result entity @s Pose.RightArm[1] float 0.1 run scoreboard players get #R_ARM_Y
+						execute store result entity @s Pose.RightArm[2] float 0.1 run scoreboard players get #R_ARM_Z
+						# 左手
+						execute store result entity @s Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number -= #L_ARM_DIFF_X number
+						execute store result entity @s Pose.LeftArm[1] float 1 run scoreboard players operation #L_ARM_Y number += #L_ARM_DIFF_Y number
 					}
 					
 					func end()
 					{
+						particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
+						playsound minecraft:entity.wither.shoot player @a ~ ~ ~ 2 1.3 0
+						
+						data modify entity @s ArmorItems[3].tag.CustomModelData set value 8
 						scoreboard players set #SWORD_DANCE number 1
 					}
 				}
@@ -358,10 +461,22 @@ namespace stage()
 				
 				func revert_action()
 				{
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)inner_revert_action
+					schedule clear ARG(_PATH)revert_action
+				}
+				
+				func inner_revert_action()
+				{
 					# 換回平常站立姿勢模型
-					# execute if score #REVERT_ACTION number matches 1 run data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value ...
-					execute at 00000001-0000-0001-0000-000100000001 run particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
+					data modify entity @s ArmorItems[3].tag.CustomModelData set value 2
+					data modify entity @s Pose.RightArm set from storage stage:stage1 ZonePose[0]
+					data modify entity @s Pose.LeftArm set value [350f,0f,350f]
+					
+					particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
+					particle minecraft:flash ~ ~ ~ 0 0 0 1 1
+					
 					scoreboard players set #REVERT_ACTION number 0
+					scoreboard players set #WING_OPEN number 0
 				}
 			}
 			
