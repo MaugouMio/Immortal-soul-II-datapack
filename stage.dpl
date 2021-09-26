@@ -367,6 +367,7 @@ namespace stage()
 					{
 						scoreboard players set #WING_OPEN number 1
 						function stage:stage1/wing/fly
+						tp @s ~ ~-0.4 ~
 						# 計算右手姿勢
 						execute store result score #R_ARM_X number run data get entity @s Pose.RightArm[0] 10
 						execute store result score #R_ARM_Y number run data get entity @s Pose.RightArm[1] 10
@@ -468,11 +469,16 @@ namespace stage()
 				{
 					# 切換揮刀模型
 					data modify entity @s Pose.RightArm set value [30f,350f,100f]
-					
-					execute positioned ~ ~1 ~ run function ARG(_PATH)counter_effect
-					playsound minecraft:enemy.sword.clash player @a ~ ~ ~ 3 1 0
+					execute at @a[tag=sword_dance_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
 					
 					function ARG(_PATH)end
+				}
+				
+				func set_counter_effect()
+				{
+					tp @s ^ ^ ^1 ~180 ~
+					execute positioned ^ ^1 ^0.5 run function ARG(_PATH)counter_effect
+					execute positioned ^ ^1 ^0.5 run playsound minecraft:enemy.sword.clash player @a ~ ~ ~ 3 1 0
 				}
 				
 				func counter_effect()
