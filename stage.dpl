@@ -278,6 +278,9 @@ namespace stage()
 				func break()
 				{
 					# 更換暈眩姿勢模型
+					data modify entity @s ArmorItems[3].tag.CustomModelData set value 9
+					data modify entity @s Pose.RightArm set value [85f,150f,0f]
+					data modify entity @s Pose.LeftArm set value [95f,210f,0f]
 					particle flash ~ ~ ~ 0 0 0 1 2
 					
 					bossbar set minecraft:zone color blue
