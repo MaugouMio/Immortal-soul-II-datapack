@@ -107,23 +107,27 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/fly_sword/stop
 			schedule clear ARG(_PATH)skills/fly_sword/aim
 			schedule clear ARG(_PATH)skills/fly_sword/start
-			schedule clear ARG(_PATH)skills/sword_dance/revert_action
+			schedule clear ARG(_PATH)skills/revert_action
 			
 			bossbar set minecraft:zone visible false
 			scoreboard players set #ZONE_ACTIVE number 0
 			scoreboard players set #FLYING_SWORD number 0
 			scoreboard players set #SWORD_DANCE number 0
 			scoreboard players set #WING_OPEN number 0
+			scoreboard players set #SLASH_COUNTDOWN number 0
 		}
 		
 		func main()
 		{
 			execute if score #ZONE_ACTIVE number matches 1 if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
+			
 			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=sword_dance_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~ 0
 			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
 			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
+			
+			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/slash/slash_countdown
 		}
 		
 		folder wing()
@@ -191,6 +195,23 @@ namespace stage()
 				data modify entity @s Pose.RightArm set from storage stage:stage1 DefaultPose
 				data modify entity @s Pose.LeftArm set value [10f,0f,350f]
 			}
+				
+			func revert_action()
+			{
+				execute if score #ZONE_ACTIVE number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)inner_revert_action
+				
+				scoreboard players set #REVERT_ACTION number 0
+				scoreboard players set #WING_OPEN number 0
+				schedule clear ARG(_PATH)revert_action
+			}
+			
+			func inner_revert_action()
+			{
+				function ARG(_PATH)reset_pose
+				
+				# particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
+				particle minecraft:flash ~ ~ ~ 0 0 0 1 1
+			}
 			
 			folder dodge()
 			{
@@ -251,7 +272,7 @@ namespace stage()
 					scoreboard players set #IGNORE_DAMAGE number 1
 					
 					# 換回平常站立姿勢模型
-					execute if score #ZONE_ACTIVE number matches 1 if score #REVERT_ACTION number matches 1 run function ARG(__PATH)sword_dance/revert_action
+					execute if score #ZONE_ACTIVE number matches 1 if score #REVERT_ACTION number matches 1 run function ARG(__PATH)revert_action
 				}
 				
 				func decrease()
@@ -497,30 +518,12 @@ namespace stage()
 					scoreboard players set #ZONE_ACTIVE number 1
 					
 					scoreboard players set #REVERT_ACTION number 1
-					schedule function ARG(_PATH)revert_action 1s
+					schedule function ARG(__PATH)revert_action 1s
 					scoreboard players set #SWORD_DANCE number 0
 					scoreboard players set #ANIM_LOCK number 0
 					
 					title @a[tag=sword_dance_target] title ""
 					tag @a remove sword_dance_target
-				}
-				
-				func revert_action()
-				{
-					execute if score #ZONE_ACTIVE number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)inner_revert_action
-					
-					scoreboard players set #REVERT_ACTION number 0
-					scoreboard players set #WING_OPEN number 0
-					schedule clear ARG(_PATH)revert_action
-				}
-				
-				func inner_revert_action()
-				{
-					# 換回平常站立姿勢模型
-					function ARG(__PATH)reset_pose
-					
-					# particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
-					particle minecraft:flash ~ ~ ~ 0 0 0 1 1
 				}
 			}
 			
@@ -529,6 +532,117 @@ namespace stage()
 				func cast()
 				{
 					scoreboard players set #RAND_RESULT number -1
+					# 暫時關閉ZONE
+					scoreboard players set #ZONE_ACTIVE number 0
+					scoreboard players set #ANIM_LOCK number 1
+					# 準備姿勢
+					data modify entity @s ArmorItems[3].tag.CustomModelData set value 10
+					data modify entity @s Pose.RightArm set value [300f,330f,345f]
+					data modify entity @s Pose.LeftArm set value [45f,205f,15f]
+					# 腳邊旋風 & 身邊閃電特效
+					
+					# 計算右手姿勢 (300->260, --, 345->367)
+					scoreboard players set #R_ARM_X number 3000
+					scoreboard players set #R_ARM_DIFF_X number -80
+					scoreboard players set #R_ARM_Z number 3450
+					scoreboard players set #R_ARM_DIFF_Z number 44
+					# 計算左手姿勢 (45->70, --, --)
+					scoreboard players set #L_ARM_X number 45
+					scoreboard players set #L_ARM_DIFF_X number 5
+					
+					execute as @r[scores={player=1..}] at @s run function ARG(_PATH)mark
+					function ARG(_PATH)rand_slash_time
+				}
+				
+				func rand_slash_time() from random().generate(60, 100, "#SLASH_COUNTDOWN number");
+				
+				func mark()
+				{
+					tag @s add slash_target
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;10,10,10,10],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:11,CustomPotionColor:16777215}}]}
+				}
+				
+				func slash_countdown()
+				{
+					execute if score #SLASH_COUNTDOWN number matches 2..6 run function ARG(_PATH)calc_pose
+					execute if score #SLASH_COUNTDOWN number matches 8 run data modify entity 0000000a-0000-000a-0000-000a0000000a ArmorItems[3].tag.CustomPotionColor set value 16711680
+					execute if score #SLASH_COUNTDOWN number matches 8.. run tp 0000000a-0000-000a-0000-000a0000000a @a[tag=slash_target,limit=1]
+					
+					scoreboard players remove #SLASH_COUNTDOWN number 1
+					execute if score #SLASH_COUNTDOWN number matches 0 run function ARG(_PATH)end
+				}
+				
+				func calc_pose()
+				{
+					# 右手
+					execute store result entity @s Pose.RightArm[0] float 0.1 run scoreboard players operation #R_ARM_X number += #R_ARM_DIFF_X number
+					execute store result entity @s Pose.RightArm[2] float 0.1 run scoreboard players operation #R_ARM_Z number += #R_ARM_DIFF_Z number
+					# 左手
+					execute store result entity @s Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number += #L_ARM_DIFF_X number
+				}
+				
+				func end()
+				{
+					# 繼續啟用ZONE的效果
+					scoreboard players set #ZONE_ACTIVE number 1
+					scoreboard players set #ANIM_LOCK number 0
+					scoreboard players set #REVERT_ACTION number 1
+					schedule function ARG(__PATH)revert_action 1s
+					
+					# 更換劈砍姿勢模型
+					data modify @s ArmorItems[3].tag.CustomModelData set value 12
+					data modify @s Pose.RightArm set value [350f,350f,320f]
+					data modify @s Pose.LeftArm set value [350f,200f,30f]
+					
+					particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
+					execute as 0000000a-0000-000a-0000-000a0000000a at @s run function ARG(_PATH)slash
+					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ^ ^ ^4
+					tag @a remove slash_target
+				}
+				
+				func slash()
+				{
+					# 斬擊音效
+					# 斬擊特效
+					execute as @a[scores={player=1..},distance=..3] run function ARG(_PATH)damage
+					
+					schedule function ARG(_PATH)activate_shader/run 1t
+				}
+				
+				func damage()
+				{
+					function skill:reset_action
+					team join blue @s
+					effect give @s minecraft:glowing 1000000 0 true
+					tag @s add already_dead
+				}
+				
+				folder activate_shader()
+				{
+					func run()
+					{
+						execute as @a[tag=already_dead] run function ARG(_PATH)set
+						schedule function ARG(_PATH)reset 1s
+					}
+					
+					func set()
+					{
+						effect clear @s minecraft:glowing
+						team leave @s
+						# tp @s 小黑屋
+					}
+					
+					func reset()
+					{
+						execute as @a[tag=already_dead] run function ARG(_PATH)player_reset
+					}
+					
+					func player_reset()
+					{
+						effect clear @s minecraft:glowing
+						kill @s
+						tag @s remove already_dead
+					}
 				}
 			}
 			

@@ -117,6 +117,8 @@ namespace skill()
 		scoreboard players reset @s shooting
 		scoreboard players reset @s aiming
 		
+		execute if score @s beamtime matches 0.. run function ARG(_PATH)gun/beam/reset
+		
 		scoreboard players set @s[scores={escape_used=0..}] escape_used 13
 		effect clear @s minecraft:levitation
 	}
@@ -126,7 +128,8 @@ namespace skill()
 		func check()
 		{
 			execute if score @s beamtime matches 0.. run function ARG(_PATH)reset
-			execute unless score @s beamtime matches 0.. run function ARG(_PATH)check_mode
+			execute if entity @s[tag=already_dead] run function ARG(_PATH)reset
+			execute unless score @s beamtime matches 0.. if entity @s[tag=!already_dead] run function ARG(_PATH)check_mode
 			
 			scoreboard players reset @s throw_edge
 			scoreboard players reset @s throw_gun
@@ -200,9 +203,7 @@ namespace skill()
 			{
 				scoreboard players set #FOUND_TEAMMATE number 0
 				scoreboard players set #CANCEL_SWAP number 0
-				```
-				raise Warning("TODO: set player 1 and 2 score on game starts")
-				```
+				
 				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run function ARG(_PATH)check_can_swap
 				execute if score @s player matches 2 as @a[scores={player=1},limit=1] run function ARG(_PATH)check_can_swap
 				
@@ -259,9 +260,9 @@ namespace skill()
 	{
 		func main()
 		{
-			execute unless block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking run function ARG(_PATH)basic/judge
-			execute if block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking run function ARG(_PATH)air/judge
-			execute unless block ~ ~-1 ~ #skill:canpass if predicate skill:sneaking run function ARG(_PATH)sneak/judge
+			execute if entity @s[tag=!already_dead] unless block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking run function ARG(_PATH)basic/judge
+			execute if entity @s[tag=!already_dead] if block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking run function ARG(_PATH)air/judge
+			execute if entity @s[tag=!already_dead] unless block ~ ~-1 ~ #skill:canpass if predicate skill:sneaking run function ARG(_PATH)sneak/judge
 			
 			scoreboard players reset @s right
 		}
@@ -601,9 +602,9 @@ namespace skill()
 		{
 			# execute if score @s aiming matches 1.. run function ARG(_PATH)shoot/aim/locate
 			
-			execute unless block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking if score @s gun_load matches 1.. run function ARG(_PATH)shoot/run
-			execute unless block ~ ~-1 ~ #skill:canpass if predicate skill:sneaking unless score #BEAM_CD number matches 0.. run function ARG(_PATH)beam/run
-			execute if block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking unless score @s escape_used matches 1.. run function ARG(_PATH)escape/run
+			execute if entity @s[tag=!already_dead] unless block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking if score @s gun_load matches 1.. run function ARG(_PATH)shoot/run
+			execute if entity @s[tag=!already_dead] unless block ~ ~-1 ~ #skill:canpass if predicate skill:sneaking unless score #BEAM_CD number matches 0.. run function ARG(_PATH)beam/run
+			execute if entity @s[tag=!already_dead] if block ~ ~-1 ~ #skill:canpass unless predicate skill:sneaking unless score @s escape_used matches 1.. run function ARG(_PATH)escape/run
 			
 			scoreboard players remove @s shooting 1
 			execute if score @s shooting matches -1 run function ARG(_PATH)reset_stat
@@ -765,6 +766,7 @@ namespace skill()
 			
 			func reset()
 			{
+				team leave @s
 				effect clear @s glowing
 				effect clear @s slowness
 				scoreboard players reset @s beamtime

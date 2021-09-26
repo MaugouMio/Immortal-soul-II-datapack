@@ -47,7 +47,7 @@ void main() {
 	vec4 ori_color = texture(Sampler0, texCoord0);
 	float hueAngle = RGBtoHSV(ori_color.rgb).x;
 	bool is_light_blue = (hueAngle > 0.486) && (hueAngle < 0.625);
-	bool is_white = (ori_color.r > 0.95 && ori_color.g > 0.95 && ori_color.b > 0.95);
+	bool is_white = (ori_color.r > 0.99 && ori_color.g > 0.99 && ori_color.b > 0.99);
 	bool is_yellow = (hueAngle > 0.111) && (hueAngle < 0.166);
 	bool is_red = ori_color.r > 0.9 && ori_color.g < 0.05 && ori_color.b < 0.05;
 	

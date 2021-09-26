@@ -49,6 +49,8 @@ namespace main()
 		team modify enemy collisionRule never
 		team add red
 		team modify red color red
+		team add blue
+		team modify blue color blue
 		
 		scoreboard objectives add number dummy
 		scoreboard objectives add health dummy
