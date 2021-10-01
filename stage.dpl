@@ -124,10 +124,11 @@ namespace stage()
 			
 			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=sword_dance_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~ 0
 			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
-			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
-			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
 			
 			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/slash/slash_countdown
+			
+			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
+			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
 		}
 		
 		folder wing()

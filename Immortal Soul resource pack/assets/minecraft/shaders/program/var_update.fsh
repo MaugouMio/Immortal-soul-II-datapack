@@ -12,12 +12,14 @@ uniform vec2 InSize;
 out vec4 fragColor;
 
 #define BEAM_TIME 1.5
+#define SLASH_TIME 1.3
 
 #define PI 3.1415926535897932384626433832795
 
 #define VAR_FPS_TEST 0.0
 #define VAR_FPS 1.0
 #define VAR_BEAM_FRAME 2.0
+#define VAR_SLASH_FRAME 3.0
 
 int imod(int num, int m) {
 	return num - (num / m * m);
@@ -65,6 +67,17 @@ void update_beam(float fps) {
 		setVar(0, VAR_BEAM_FRAME);
 }
 
+void update_slash(float fps) {
+	int nextFrame = getVar(DiffuseSampler, VAR_SLASH_FRAME) + 1;
+	if (nextFrame == 1)
+		return;
+	
+	if (nextFrame < SLASH_TIME * fps)
+		setVar(nextFrame, VAR_SLASH_FRAME);
+	else
+		setVar(0, VAR_SLASH_FRAME);
+}
+
 void main() {
 	vec4 PrevTexel = texture2D(DiffuseSampler, texCoord);
 	fragColor = PrevTexel;
@@ -75,8 +88,11 @@ void main() {
 	
 	update_fps();
 	update_beam(fps);
+	update_slash(fps);
 	
 	vec4 judgeTexel = texture2D(JudgeSampler, vec2(0.5, 0.45));
 	if (judgeTexel.r > 0.976 && judgeTexel.g < 0.35 && judgeTexel.b < 0.35)
 		setVar(1, VAR_BEAM_FRAME);
+	else if (judgeTexel.r < 0.35 && judgeTexel.g < 0.35 && judgeTexel.b > 0.95)
+		setVar(1, VAR_SLASH_FRAME);
 }

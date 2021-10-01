@@ -11,13 +11,12 @@ uniform sampler2D VariableSampler;
 out vec2 texCoord;
 out vec2 oneTexel;
 
-#define BEAM_TIME 1.0
-
 #define PI 3.1415926535897932384626433832795
 
 #define VAR_FPS_TEST 0.0
 #define VAR_FPS 1.0
 #define VAR_BEAM_FRAME 2.0
+#define VAR_SLASH_FRAME 3.0
 
 int getVar(sampler2D sampler, float id) {
 	vec4 var_color = texture(sampler, vec2((id + 0.5) * 0.01, 0.0));

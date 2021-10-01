@@ -18,6 +18,7 @@ out vec4 fragColor;
 #define VAR_FPS_TEST 0.0
 #define VAR_FPS 1.0
 #define VAR_BEAM_FRAME 2.0
+#define VAR_SLASH_FRAME 3.0
 
 int imod(int num, int m) {
 	return num - (num / m * m);
@@ -140,6 +141,53 @@ void darkenEffect(float anim_time, vec4 JudgeTexel, vec4 CurrTexel)
 	}
 }
 
+void splitEffect(float slash_time, vec4 CurrTexel)
+{
+	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+	float white_range = 0.001;
+	float mid_dist = abs(texCoord.x - 0.5);
+	
+	if (slash_time < 1.2) {
+		float offset = min(slash_time, 0.1) * 0.5;
+		if (texCoord.x < 0.499) {
+			if (texCoord.y < 1.0 - offset)
+				color = texture(DiffuseSampler, vec2(texCoord.x, texCoord.y + offset));
+		}
+		else if (texCoord.x > 0.501) {
+			if (texCoord.y > offset)
+				color = texture(DiffuseSampler, vec2(texCoord.x, texCoord.y - offset));
+		}
+		
+		if (slash_time < 1.0) {
+			if (mid_dist < white_range)
+				color = vec4(1.0, 1.0, 1.0, 1.0);
+			
+			if (mid_dist > white_range && mid_dist < white_range + 0.005) {
+				float alpha = 0.6 - (mid_dist - white_range) * 100.0;
+				color = blendOver(vec4(1.0, 0.0, 0.0, alpha), color);
+			}
+		}
+		else {
+			white_range = (slash_time - 1.0) * 5.0;
+			if (mid_dist < white_range)
+				color = vec4(1.0, 1.0, 1.0, 1.0);
+			
+			float fade_range = min(slash_time - 1.0, 0.1);
+			if (mid_dist > white_range && mid_dist < white_range + fade_range) {
+				float alpha = (fade_range - mid_dist + white_range) * 10.0;
+				float red_scale = (fade_range - mid_dist + white_range) / fade_range;
+				color = blendOver(vec4(1.0, red_scale, red_scale, alpha), color);
+			}
+		}
+	}
+	else {
+		float alpha = (1.5 - slash_time) * 3.333;
+		color = blendOver(vec4(1.0, 1.0, 1.0, alpha), CurrTexel);
+	}
+	
+	fragColor = color;
+}
+
 void main() {
 	vec4 PrevTexel = texture(PrevSampler, texCoord);
 	vec4 CurrTexel = texture(DiffuseSampler, texCoord);
@@ -151,11 +199,16 @@ void main() {
 		fps = 60;
 	
 	int beam_frame = getVar(VariableSampler, VAR_BEAM_FRAME);
+	int slash_frame = getVar(VariableSampler, VAR_SLASH_FRAME);
 	if (beam_frame > 1) {
 		float anim_time = float(beam_frame) / float(fps);
 		if (anim_time < 0.5)
 			darkenEffect(anim_time, JudgeTexel, CurrTexel);
 		else
 			beamEffect(anim_time - 0.5, CurrTexel, JudgeTexel);
+	}
+	else if (slash_frame > 1) {
+		float slash_time = float(slash_frame) / float(fps);
+		splitEffect(slash_time, CurrTexel);
 	}
 }
