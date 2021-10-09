@@ -536,11 +536,13 @@ namespace stage()
 					# 暫時關閉ZONE
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players set #ANIM_LOCK number 1
+					scoreboard players set #WING_OPEN number 11
 					# 準備姿勢
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 10
 					data modify entity @s Pose.RightArm set value [300f,330f,345f]
 					data modify entity @s Pose.LeftArm set value [45f,205f,15f]
 					# 腳邊旋風 & 身邊閃電特效
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;11,11,11,11],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:13}}],Tags:["object"]}
 					
 					# 計算右手姿勢 (300->260, --, 345->367)
 					scoreboard players set #R_ARM_X number 3000
@@ -596,6 +598,7 @@ namespace stage()
 					data modify @s Pose.LeftArm set value [350f,200f,30f]
 					
 					particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
+					kill 0000000b-0000-000b-0000-000b0000000b
 					execute as 0000000a-0000-000a-0000-000a0000000a at @s run function ARG(_PATH)slash
 					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ^ ^ ^4
 					tag @a remove slash_target
@@ -603,11 +606,18 @@ namespace stage()
 				
 				func slash()
 				{
-					# 斬擊音效
-					# 斬擊特效
+					playsound minecraft:enemy.sword.slash player @a
+					execute positioned ~ ~1 ~ run function ARG(_PATH)slash_effect
 					execute as @a[scores={player=1..},distance=..3] run function ARG(_PATH)damage
 					
 					schedule function ARG(_PATH)activate_shader/run 1t
+				}
+				
+				func slash_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:slash/0"}',CustomNameVisible:1,Duration:5,Tags:['{"text":"","font":"font_animation:slash/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 4
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 				
 				func damage()
@@ -628,7 +638,7 @@ namespace stage()
 					
 					func set()
 					{
-						effect clear @s minecraft:glowing
+						effect give @s minecraft:night_vision 1000000 0 true
 						team leave @s
 						# tp @s 小黑屋
 					}
@@ -640,6 +650,7 @@ namespace stage()
 					
 					func player_reset()
 					{
+						effect clear @s minecraft:night_vision
 						effect clear @s minecraft:glowing
 						kill @s
 						tag @s remove already_dead
@@ -650,6 +661,23 @@ namespace stage()
 			folder flaw()
 			{
 				func cast()
+				{
+					scoreboard players set #RAND_RESULT number -1
+					# 暫時關閉ZONE
+					scoreboard players set #ZONE_ACTIVE number 0
+					scoreboard players set #ANIM_LOCK number 1
+					
+					execute at @r[scores={player=1..}] run function ARG(_PATH)positioned_effect
+					schedule function ARG(_PATH)attack 10t
+				}
+				
+				func positioned_effect()
+				{
+					# 命中範圍提示特效
+					tp @s ^ ^ ^-1.5 ~ ~
+				}
+				
+				func attack()
 				{
 					
 				}

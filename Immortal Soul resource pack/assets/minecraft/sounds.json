@@ -140,6 +140,14 @@
       }
     ]
   },
+  "enemy.sword.slash": {
+    "sounds": [
+      {
+        "name": "enemy/sword/slash",
+        "stream": true
+      }
+    ]
+  },
   "enemy.target_attack": {
     "sounds": [
       {
