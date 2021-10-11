@@ -31,6 +31,10 @@
 		{"predicate": {"custom_model_data": 31},"model": "item/enemy/bullet"},
 		{"predicate": {"custom_model_data": 32},"model": "item/enemy/sword/sd1"},
 		{"predicate": {"custom_model_data": 33},"model": "item/enemy/sword/sd2"},
-		{"predicate": {"custom_model_data": 34},"model": "item/enemy/sword/sd3"}
+		{"predicate": {"custom_model_data": 34},"model": "item/enemy/sword/sd3"},
+		{"predicate": {"custom_model_data": 35},"model": "item/enemy/sword/flaw_aim"},
+		{"predicate": {"custom_model_data": 36},"model": "item/enemy/sword/f1"},
+		{"predicate": {"custom_model_data": 37},"model": "item/enemy/sword/f2"},
+		{"predicate": {"custom_model_data": 38},"model": "item/enemy/sword/f3"}
 	]
 }

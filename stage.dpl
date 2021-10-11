@@ -667,19 +667,38 @@ namespace stage()
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players set #ANIM_LOCK number 1
 					
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [240f,350f,80f]
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm set value [70f,30f,0f]
+					data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value 7
+					
 					execute at @r[scores={player=1..}] run function ARG(_PATH)positioned_effect
 					schedule function ARG(_PATH)attack 10t
 				}
 				
 				func positioned_effect()
 				{
-					# 命中範圍提示特效
-					tp @s ^ ^ ^-1.5 ~ ~
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;12,12,12,12],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14}}]}
+					scoreboard players set 0000000c-0000-000c-0000-000c0000000c number 36
+					scoreboard players set 0000000c-0000-000c-0000-000c0000000c life -100000
+					
+					execute rotated ~ 0 run tp @s ^ ^-0.4 ^-1.5 ~ ~
 				}
 				
 				func attack()
 				{
+					scoreboard players set 0000000c-0000-000c-0000-000c0000000c life 0
+					execute as 0000000c-0000-000c-0000-000c0000000c store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
 					
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)attack_effect
+					
+					# 給半徑3格沒跳起來的玩家傷害
+				}
+				
+				func attack_effect()
+				{
+					# 播斬擊音效
+					data modify entity @s Pose.RightArm set value [30f,350f,100f]
+					tp @s ^ ^ ^1.5
 				}
 			}
 			
