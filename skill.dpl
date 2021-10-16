@@ -91,7 +91,9 @@ namespace skill()
 	func boss_damage()
 	{
 		execute store result bossbar minecraft:boss value run scoreboard players get @s health
-		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value 16711680
+		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value 16752800
+		data modify entity @s HandItems[0].tag.CustomPotionColor set value 16752800
+		data modify entity @s HandItems[1].tag.CustomPotionColor set value 16752800
 		schedule function ARG(_PATH)boss_hurt_reset 10t
 
 		execute if score @s health matches ..0 run function stage:end
@@ -100,6 +102,8 @@ namespace skill()
 	func boss_hurt_reset()
 	{
 		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value -1
+		data modify entity @s HandItems[0].tag.CustomPotionColor set value -1
+		data modify entity @s HandItems[1].tag.CustomPotionColor set value -1
 	}
 		
 	func reset_action()
