@@ -119,6 +119,7 @@ namespace stage()
 			scoreboard players set #SWORD_DANCE number 0
 			scoreboard players set #WING_OPEN number 0
 			scoreboard players set #SLASH_COUNTDOWN number 0
+			scoreboard players set #CHOP_COUNTDOWN number 0
 		}
 		
 		func main()
@@ -130,6 +131,7 @@ namespace stage()
 			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
 			
 			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/slash/slash_countdown
+			execute if score #CHOP_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/chop/chop_countdown
 			
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
 			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
@@ -609,7 +611,7 @@ namespace stage()
 				{
 					tag @s add slash_target
 					```
-					print('summon armor_stand ~ %.1f ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;10,10,10,10],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:11,CustomPotionColor:-1}}]}' %GROUND_Y[0])
+					print('summon armor_stand ~ %.1f ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;10,10,10,10],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:11,CustomPotionColor:-1}}],Tags:["object"]}' %GROUND_Y[0])
 					```
 				}
 				
@@ -789,7 +791,90 @@ namespace stage()
 			{
 				func cast()
 				{
+					# 暫時關閉ZONE
+					scoreboard players set #ZONE_ACTIVE number 0
+					scoreboard players set #ANIM_LOCK number 1
+					# 準備姿勢
+					data modify entity @s ArmorItems[3].tag.CustomModelData set value 10
+					data modify entity @s Pose.RightArm set value [300f,330f,346f]
+					data modify entity @s Pose.LeftArm set value [45f,205f,15f]
+					data modify entity @s NoGravity set value 1
+					# 計算右手姿勢 (300->260, --, 346->367)
+					scoreboard players set #R_ARM_X number 3000
+					scoreboard players set #R_ARM_DIFF_X number -80
+					scoreboard players set #R_ARM_Z number 3460
+					scoreboard players set #R_ARM_DIFF_Z number 42
+					# 計算左手姿勢 (45->70, --, --)
+					scoreboard players set #L_ARM_X number 45
+					scoreboard players set #L_ARM_DIFF_X number 5
 					
+					scoreboard players set #CHOP_COUNTDOWN number 10
+					
+					# 攻擊半徑只有三格，所以三格內沒玩家就要往前一步再攻擊(近距離最遠4格)，這邊抓2格內沒玩家就前進，距離3格的會比較在攻擊中心
+					execute unless entity @a[scores={player=1..},distance=..2,limit=1] facing entity @p[scores={player=1..}] feet rotated ~ 0 run tp @s ^ ^ ^1
+					execute at @s facing entity @p[scores={player=1..}] feet rotated ~ 0 run summon armor_stand ^ ^ ^1.5 {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;13,13,13,13],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:39}}],Tags:["object"]}
+				}
+				
+				func chop_countdown()
+				{
+					execute if score #CHOP_COUNTDOWN number matches 2..6 run function ARG(_PATH)calc_pose
+					
+					scoreboard players remove #CHOP_COUNTDOWN number 1
+					execute if score #CHOP_COUNTDOWN number matches 0 run function ARG(_PATH)attack
+				}
+				
+				func calc_pose()
+				{
+					# 右手
+					execute store result entity @s Pose.RightArm[0] float 0.1 run scoreboard players operation #R_ARM_X number += #R_ARM_DIFF_X number
+					execute store result entity @s Pose.RightArm[2] float 0.1 run scoreboard players operation #R_ARM_Z number += #R_ARM_DIFF_Z number
+					# 左手
+					execute store result entity @s Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number += #L_ARM_DIFF_X number
+				}
+				
+				func attack()
+				{
+					tp @s ~ ~-0.45 ~
+					# 更換劈砍姿勢模型
+					function ARG(_PATH)sword_wave/start
+					playsound minecraft:skill.basic2 player @a
+					
+					execute at 0000000d-0000-000d-0000-000d0000000d as @a[scores={player=1..}] if predicate stage:chop_range run effect give @s instant_damage 1 0 true
+					kill 0000000d-0000-000d-0000-000d0000000d
+				}
+				
+				folder sword_wave()
+				{
+					func start()
+					{
+						data modify entity @s ArmorItems[3].tag.CustomModelData set value 7
+						data modify entity @s HandItems[0].tag.CustomModelData set value 15
+						data modify @s Pose.RightArm set value [330f,350f,310f]
+						data modify @s Pose.LeftArm set value [100f,220f,300f]
+						
+						schedule function ARG(_PATH)anim1 1t
+					}
+					
+					func anim1()
+					{
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 16
+						schedule function ARG(_PATH)anim2 1t
+					}
+					
+					func anim2()
+					{
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
+						schedule function ARG(__PATH)end 1t
+					}
+				}
+				
+				func end()
+				{
+					# 繼續啟用ZONE的效果
+					scoreboard players set #ZONE_ACTIVE number 1
+					scoreboard players set #ANIM_LOCK number 0
+					scoreboard players set #REVERT_ACTION number 1
+					schedule function ARG(__PATH)revert_action 1s
 				}
 			}
 			
