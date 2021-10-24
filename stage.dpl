@@ -17,8 +17,8 @@ namespace stage()
 		scoreboard players operation #ZONE_RECOVER number = #ZONE_MAX number
 		scoreboard players operation #ZONE_RECOVER number /= #140 number
 		
-		data modify storage stage:stage1 DefaultPose set value [300f,335f,0f]
-		data modify storage stage:stage1 ZonePose set value [[300f,0f,40f],[300f,0f,75f],[311f,22f,174f]]
+		data modify storage stage:stage1 DefaultPose set value [324f,80f,0f]
+		data modify storage stage:stage1 ZonePose set value [[280,350f,40f],[280f,15f,80f],[300f,20f,130f]]
 		
 		bossbar add boss "BOSS"
 		bossbar set minecraft:boss color red
@@ -87,7 +87,7 @@ namespace stage()
 			bossbar set minecraft:zone visible true
 			function ARG(_PATH)skills/zone/reset
 			# tp @a x y z rx ry
-			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:3,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:[RightArm:[300f,0f,40f],LeftArm:[350f,0f,350f]],Tags:["boss","object"],UUID:[I;1,1,1,1]}
+			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:[RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]],Tags:["boss","object"],UUID:[I;1,1,1,1]}
 			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
 			# 飛劍
 			# summon armor_stand x y z {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect","object"],UUID:[I;2,2,2,2]}
@@ -198,8 +198,9 @@ namespace stage()
 			func reset_pose()
 			{
 				data modify entity @s ArmorItems[3].tag.CustomModelData set value 2
+				data modify entity @s HandItems[0].tag.CustomModelData set value 14
 				data modify entity @s Pose.RightArm set from storage stage:stage1 DefaultPose
-				data modify entity @s Pose.LeftArm set value [10f,0f,350f]
+				data modify entity @s Pose.LeftArm set value [355f,0f,350f]
 			}
 				
 			func revert_action()
@@ -279,9 +280,6 @@ namespace stage()
 					execute if entity @s[tag=beam_hit] run function ARG(__PATH)reset_pose
 					execute if entity @s[tag=!beam_hit] run function ARG(_PATH)decrease
 					scoreboard players set #IGNORE_DAMAGE number 1
-					
-					# 換回平常站立姿勢模型
-					execute if score #ZONE_ACTIVE number matches 1 if score #REVERT_ACTION number matches 1 run function ARG(__PATH)revert_action
 				}
 				
 				func decrease()
@@ -290,6 +288,7 @@ namespace stage()
 					execute if score @s display_number matches ..110 run playsound minecraft:enemy.sword.strike_small player @a ~ ~ ~ 3 1 0
 					execute if score @s display_number matches 111.. run playsound minecraft:enemy.sword.strike_big player @a ~ ~ ~ 3 1 0
 					
+					data modify entity @s HandItems[0].tag.CustomModelData set value 3
 					data modify entity @s Pose.RightArm set from storage stage:stage1 ZonePose[0]
 					data modify storage stage:stage1 ZonePose append from storage stage:stage1 ZonePose[0]
 					data remove storage stage:stage1 ZonePose[0]
@@ -308,8 +307,11 @@ namespace stage()
 				func break()
 				{
 					# 更換暈眩姿勢模型
+					```
+					print(f"tp @s ~ {GROUND_Y[0] - 0.45} ~")
+					```
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 9
-					data modify entity @s Pose.RightArm set value [85f,150f,0f]
+					data modify entity @s Pose.RightArm set value [87f,150f,0f]
 					data modify entity @s Pose.LeftArm set value [95f,210f,0f]
 					particle flash ~ ~ ~ 0 0 0 1 2
 					
@@ -400,7 +402,7 @@ namespace stage()
 					{
 						scoreboard players set #WING_OPEN number 1
 						function stage:stage1/wing/fly
-						tp @s ~ ~-0.4 ~
+						tp @s ~ ~-0.45 ~
 						# 計算右手姿勢
 						execute store result score #R_ARM_X number run data get entity @s Pose.RightArm[0] 10
 						execute store result score #R_ARM_Y number run data get entity @s Pose.RightArm[1] 10
@@ -414,10 +416,10 @@ namespace stage()
 						scoreboard players operation #R_ARM_DIFF_X number /= #5 number
 						scoreboard players operation #R_ARM_DIFF_Y number /= #5 number
 						scoreboard players operation #R_ARM_DIFF_Z number /= #5 number
-						# 計算左手姿勢 (10->-70, 0->30, --)
-						scoreboard players set #L_ARM_X number 10
+						# 計算左手姿勢 (-5->70, 0->30, --)
+						scoreboard players set #L_ARM_X number -5
 						scoreboard players set #L_ARM_Y number 0
-						scoreboard players set #L_ARM_DIFF_X number -16
+						scoreboard players set #L_ARM_DIFF_X number 15
 						scoreboard players set #L_ARM_DIFF_Y number 6
 						
 						function ARG(_PATH)anim
@@ -483,7 +485,7 @@ namespace stage()
 				{
 					execute as @a[tag=sword_dance_target,limit=1] run function ARG(_PATH)damage
 					# 切換揮刀模型
-					data modify entity @s Pose.RightArm set value [30f,350f,100f]
+					function ARG(_PATH)sword_wave/start
 					
 					scoreboard players set 00000003-0000-0003-0000-000300000003 life 0
 					execute as 00000003-0000-0003-0000-000300000003 store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
@@ -512,10 +514,37 @@ namespace stage()
 				func counter()
 				{
 					# 切換揮刀模型
-					data modify entity @s Pose.RightArm set value [30f,350f,100f]
+					function ARG(_PATH)sword_wave/start
 					execute at @a[tag=sword_dance_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
 					
 					function ARG(_PATH)end
+				}
+				
+				folder sword_wave()
+				{
+					func start()
+					{
+						data modify entity @s ArmorItems[3].tag.CustomModelData set value 7
+						data modify entity @s HandItems[0].tag.CustomModelData set value 15
+						data modify entity @s Pose.RightArm set value [30f,350f,100f]
+					
+						title @a[tag=sword_dance_target] title ""
+						tag @a remove sword_dance_target
+						
+						schedule function ARG(_PATH)anim1 1t
+					}
+					
+					func anim1()
+					{
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 16
+						schedule function ARG(_PATH)anim2 1t
+					}
+					
+					func anim2()
+					{
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
+						schedule function ARG(__PATH)end 1t
+					}
 				}
 				
 				func set_counter_effect()
@@ -541,9 +570,6 @@ namespace stage()
 					schedule function ARG(__PATH)revert_action 1s
 					scoreboard players set #SWORD_DANCE number 0
 					scoreboard players set #ANIM_LOCK number 0
-					
-					title @a[tag=sword_dance_target] title ""
-					tag @a remove sword_dance_target
 				}
 			}
 			
@@ -558,17 +584,17 @@ namespace stage()
 					scoreboard players set #WING_OPEN number 11
 					# 準備姿勢
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 10
-					data modify entity @s Pose.RightArm set value [300f,330f,345f]
+					data modify entity @s Pose.RightArm set value [300f,330f,346f]
 					data modify entity @s Pose.LeftArm set value [45f,205f,15f]
 					data modify entity @s NoGravity set value 1
 					# 腳邊旋風 & 身邊閃電特效
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;11,11,11,11],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:13}}],Tags:["object"]}
 					
-					# 計算右手姿勢 (300->260, --, 345->367)
+					# 計算右手姿勢 (300->260, --, 346->367)
 					scoreboard players set #R_ARM_X number 3000
 					scoreboard players set #R_ARM_DIFF_X number -80
-					scoreboard players set #R_ARM_Z number 3450
-					scoreboard players set #R_ARM_DIFF_Z number 44
+					scoreboard players set #R_ARM_Z number 3460
+					scoreboard players set #R_ARM_DIFF_Z number 42
 					# 計算左手姿勢 (45->70, --, --)
 					scoreboard players set #L_ARM_X number 45
 					scoreboard players set #L_ARM_DIFF_X number 5
@@ -720,15 +746,42 @@ namespace stage()
 				
 				func attack_effect()
 				{
+					function ARG(_PATH)sword_wave/start
+					playsound minecraft:skill.rush_attack player @a
+					tp @s ^ ^ ^1.5
+				}
+				
+				folder sword_wave()
+				{
+					func start()
+					{
+						data modify entity @s ArmorItems[3].tag.CustomModelData set value 7
+						data modify entity @s HandItems[0].tag.CustomModelData set value 15
+						data modify entity @s Pose.RightArm set value [30f,350f,100f]
+						
+						schedule function ARG(_PATH)anim1 1t
+					}
+					
+					func anim1()
+					{
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 16
+						schedule function ARG(_PATH)anim2 1t
+					}
+					
+					func anim2()
+					{
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
+						schedule function ARG(__PATH)end 1t
+					}
+				}
+				
+				func end()
+				{
 					# 繼續啟用ZONE的效果
 					scoreboard players set #ZONE_ACTIVE number 1
-					scoreboard players set #ANIM_LOCK number 0
 					scoreboard players set #REVERT_ACTION number 1
 					schedule function ARG(__PATH)revert_action 1s
-					
-					playsound minecraft:skill.rush_attack player @a
-					data modify entity @s Pose.RightArm set value [30f,350f,100f]
-					tp @s ^ ^ ^1.5
+					scoreboard players set #ANIM_LOCK number 0
 				}
 			}
 			
