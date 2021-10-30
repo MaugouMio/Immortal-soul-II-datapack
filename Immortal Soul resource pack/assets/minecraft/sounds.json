@@ -148,6 +148,22 @@
       }
     ]
   },
+  "enemy.sword.sanction_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/sword/sanction_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.sword.sanction": {
+    "sounds": [
+      {
+        "name": "enemy/sword/sanction",
+        "stream": true
+      }
+    ]
+  },
   "enemy.target_attack": {
     "sounds": [
       {
