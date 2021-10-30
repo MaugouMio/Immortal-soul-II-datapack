@@ -5,7 +5,7 @@
     "distance": {
       "horizontal": {
         "min": 0.0,
-        "max": 3.0
+        "max": 5.0
       }
     }
   }

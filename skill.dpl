@@ -101,6 +101,11 @@ namespace skill()
 	
 	func boss_hurt_reset()
 	{
+		execute as @e[type=#skill:hostile,tag=boss] run function ARG(_PATH)reset_boss_color
+	}
+	
+	func reset_boss_color()
+	{
 		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value -1
 		data modify entity @s HandItems[0].tag.CustomPotionColor set value -1
 		data modify entity @s HandItems[1].tag.CustomPotionColor set value -1

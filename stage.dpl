@@ -13,12 +13,12 @@ namespace stage()
 		scoreboard players set #PLAYER_MODE number 1
 		scoreboard players set #SELECTED_STAGE number 1
 		scoreboard players set #ZONE_MAX number 7800
-		# 破壞後7秒回復
+		# 破壞後5秒回復
 		scoreboard players operation #ZONE_RECOVER number = #ZONE_MAX number
-		scoreboard players operation #ZONE_RECOVER number /= #140 number
+		scoreboard players operation #ZONE_RECOVER number /= #100 number
 		
 		data modify storage stage:stage1 DefaultPose set value [324f,80f,0f]
-		data modify storage stage:stage1 ZonePose set value [[280,350f,40f],[280f,15f,80f],[300f,20f,130f]]
+		data modify storage stage:stage1 ZonePose set value [[280f,350f,40f],[280f,15f,80f],[300f,20f,130f]]
 		
 		bossbar add boss "BOSS"
 		bossbar set minecraft:boss color red
@@ -28,14 +28,16 @@ namespace stage()
 	
 	func main()
 	{
-		execute if score #CURRENT_STAGE number matches 1 run function ARG(_PATH)stage1/main
-		execute if score #CURRENT_STAGE number matches 2 run function ARG(_PATH)stage2/main
-		execute if score #CURRENT_STAGE number matches 3 run function ARG(_PATH)stage3/main
+		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/main
+		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/main
+		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/main
 	}
 	
 	# activated by sign click
 	func start()
 	{
+		function main:effect
+		
 		scoreboard players set @s player 1
 		scoreboard players set @s weapon_mode 1
 		item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
@@ -68,6 +70,9 @@ namespace stage()
 	{
 		bossbar set minecraft:boss visible false
 		kill @e[tag=object]
+		clear @a
+		scoreboard players set @a weapon_mode 1
+		title @a actionbar ""
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/end
 		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/end
@@ -80,14 +85,16 @@ namespace stage()
 		func start()
 		{
 			bossbar set minecraft:boss max 3300
-			bossbar set minecraft:boss value 3300
+			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
 			bossbar set minecraft:boss name {"translate":"Sacred Knight","color":"white","bold":true}
 			
 			bossbar set minecraft:zone players @a
 			bossbar set minecraft:zone visible true
 			function ARG(_PATH)skills/zone/reset
-			# tp @a x y z rx ry
-			# execute positioned x y z run function ARG(_PATH)summon_boss
+			```
+			print(f"tp @a 128 {GROUND_Y[0]} 0 180 50")
+			print(f"execute positioned 128 {GROUND_Y[0]} -8 run function ARG(_PATH)summon_boss")
+			```
 			
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/fly_sword/start 3s
@@ -95,17 +102,18 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			summon armor_stand ~ ~ ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:[RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]],Tags:["boss","object"],UUID:[I;1,1,1,1]}
+			summon armor_stand ~ ~ ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","object"],UUID:[I;1,1,1,1]}
 			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
+			execute store result score 00000001-0000-0001-0000-000100000001 health run bossbar get minecraft:boss max
 			# 飛劍
-			summon armor_stand ~2 ~ ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect","object"],UUID:[I;2,2,2,2]}
+			summon armor_stand ~2 ~ ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect","object"],UUID:[I;2,2,2,2],Rotation:[180f,0f]}
 			# 翅膀裝飾
-			summon husk ~1.63135 ~-1.2 ~-0.76071 {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
-			summon husk ~1.13278 ~-1.1 ~-1.39886 {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
-			summon husk ~0.40491 ~-1 ~-1.75387 {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
-			summon husk ~-0.40491 ~-1 ~-1.75387 {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
-			summon husk ~-1.13278 ~-1.1 ~-1.39886 {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
-			summon husk ~-1.63135 ~-1.2 ~-0.76071 {Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
+			summon husk ~1.63135 ~-1.2 ~-0.76071 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
+			summon husk ~1.13278 ~-1.1 ~-1.39886 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
+			summon husk ~0.40491 ~-1 ~-1.75387 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
+			summon husk ~-0.40491 ~-1 ~-1.75387 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
+			summon husk ~-1.13278 ~-1.1 ~-1.39886 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
+			summon husk ~-1.63135 ~-1.2 ~-0.76071 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
 			effect give @e[type=husk,tag=wing] invisibility 1000000 0 true
 		}
 		
@@ -122,6 +130,7 @@ namespace stage()
 			
 			bossbar set minecraft:zone visible false
 			scoreboard players set #ZONE_ACTIVE number 0
+			scoreboard players set #ZONE_BREAK number 0
 			scoreboard players set #FLYING_SWORD number 0
 			scoreboard players set #SWORD_DANCE number 0
 			scoreboard players set #WING_OPEN number 0
@@ -131,7 +140,9 @@ namespace stage()
 		
 		func main()
 		{
-			execute if score #ZONE_ACTIVE number matches 1 if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
+			execute unless score #ANIM_LOCK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s facing entity @p[scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
+			
+			execute if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
 			
 			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=sword_dance_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~ 0
@@ -143,7 +154,7 @@ namespace stage()
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
 			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
 			
-			execute if score #WING_OPEN number matches -1 at 0000000e-0000-000e-0000-000e0000000e run function ARG(_PATH)skills/sanction/check_pass
+			execute if score #WING_OPEN number matches -1 as 0000000e-0000-000e-0000-000e0000000e at @s run function ARG(_PATH)skills/sanction/follow
 		}
 		
 		folder wing()
@@ -201,9 +212,9 @@ namespace stage()
 			
 			func far_judge()
 			{
-				execute if score @s health matches ..1000 if score #RAND_RESULT number matches 80..99 run function ARG(_PATH)slash/cast
-				execute if score #RAND_RESULT number matches 0..19 run function ARG(_PATH)sword_dance/cast
-				execute if score #RAND_RESULT number matches 20..59 run function ARG(_PATH)sanction/cast
+				execute if score @s health matches ..1000 if score #RAND_RESULT number matches 20..39 run function ARG(_PATH)slash/cast
+				execute if score #RAND_RESULT number matches 100 run function ARG(_PATH)sword_dance/cast
+				execute if score #RAND_RESULT number matches 0..99 run function ARG(_PATH)sanction/cast
 			}
 			
 			func reset_pose()
@@ -267,8 +278,8 @@ namespace stage()
 			{
 				func recover()
 				{
-					execute if score #ZONE_ACTIVE number matches 0 run scoreboard players operation #ZONE number += #ZONE_RECOVER number
-					execute if score #ZONE_ACTIVE number matches 1 run scoreboard players add #ZONE number 20
+					execute if score #ZONE_BREAK number matches 1 run scoreboard players operation #ZONE number += #ZONE_RECOVER number
+					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 12
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number < #ZONE_MAX number
 					
 					execute if score #ZONE_ACTIVE number matches 0 if score #ZONE number >= #ZONE_MAX number run function ARG(_PATH)reset
@@ -283,6 +294,7 @@ namespace stage()
 					execute at 00000001-0000-0001-0000-000100000001 run particle flash ~ ~ ~ 0 0 0 1 1
 					
 					scoreboard players set #ZONE_ACTIVE number 1
+					scoreboard players set #ZONE_BREAK number 0
 				}
 				
 				func hit()
@@ -304,7 +316,7 @@ namespace stage()
 					data modify storage stage:stage1 ZonePose append from storage stage:stage1 ZonePose[0]
 					data remove storage stage:stage1 ZonePose[0]
 					
-					execute positioned ~ ~0.5 ~ run function ARG(_PATH)strike_effect
+					execute positioned ^ ^0.5 ^0.5 run function ARG(_PATH)strike_effect
 					execute if score #ZONE number matches ..0 run function ARG(_PATH)break
 					
 					execute if score #ZONE_ACTIVE number matches 1 run schedule function ARG(_PATH)auto_reset_pose 2s
@@ -312,7 +324,7 @@ namespace stage()
 				
 				func auto_reset_pose()
 				{
-					execute if score #ZONE_ACTIVE number matches 1 unless score #ANIM_LOCK number matches 1 run function ARG(__PATH)reset_pose
+					execute if score #ZONE_ACTIVE number matches 1 unless score #ANIM_LOCK number matches 1 as 00000001-0000-0001-0000-000100000001 run function ARG(__PATH)reset_pose
 				}
 				
 				func break()
@@ -325,10 +337,12 @@ namespace stage()
 					data modify entity @s Pose.RightArm set value [87f,150f,0f]
 					data modify entity @s Pose.LeftArm set value [95f,210f,0f]
 					particle flash ~ ~ ~ 0 0 0 1 2
+					playsound minecraft:enemy.sword.strike_big player @a ~ ~ ~ 3 1 0
 					
 					bossbar set minecraft:zone color blue
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players set #ZONE number 0
+					scoreboard players set #ZONE_BREAK number 1
 					
 					schedule clear ARG(_PATH)auto_reset_pose
 				}
@@ -345,8 +359,9 @@ namespace stage()
 			{
 				func move()
 				{
+					# tp 看起來會有延遲，讓他攻擊晚一點到
+					execute at @s as @a[scores={player=1..},distance=..1,tag=!sword_hit] unless score @s beamtime matches 0.. run function ARG(_PATH)hit
 					tp @s ^ ^ ^-0.5
-					execute at @s as @a[scores={player=1..},distance=..1,tag=!sword_hit] run function ARG(_PATH)hit
 					execute at @s unless block ~ ~ ~ #skill:canpass run function ARG(_PATH)stop
 				}
 				
@@ -362,19 +377,30 @@ namespace stage()
 					tag @a remove sword_hit
 					
 					scoreboard players set #FLYING_SWORD number 0
-					schedule function ARG(_PATH)aim 1s
+					schedule function ARG(_PATH)aim 5t
 				}
 				
 				func aim()
 				{
-					execute as @e[type=armor_stand,tag=fly_sword,limit=1] at @s facing entity @p[scores={player=1..}] eyes run tp @s ~ ~ ~ ~180 0
-					schedule function ARG(_PATH)start 1s
+					execute at 00000002-0000-0002-0000-000200000002 as @p[scores={player=1..}] run function ARG(_PATH)aim_effect
+					schedule function ARG(_PATH)start 10t
+				}
+				
+				func aim_effect()
+				{
+					execute facing entity @s eyes run tp 00000002-0000-0002-0000-000200000002 ~ ~ ~ ~180 0
+					```
+					# 一次移動最多10格，有在範圍內再提示就好
+					print('execute at @s[distance=..10] run summon armor_stand ~ %.2f ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:17}}],Tags:["object"],UUID:[I;15,15,15,15]}' %GROUND_Y[0])
+					```
+					execute as 0000000f-0000-000f-0000-000f0000000f at @s facing entity 00000002-0000-0002-0000-000200000002 eyes run tp @s ~ ~ ~ ~ 0
 				}
 				
 				func start()
 				{
+					kill 0000000f-0000-000f-0000-000f0000000f
 					scoreboard players set #FLYING_SWORD number 1
-					schedule function ARG(_PATH)stop 2s
+					schedule function ARG(_PATH)stop 1s
 				}
 			}
 			
@@ -494,7 +520,7 @@ namespace stage()
 				
 				func attack()
 				{
-					execute as @a[tag=sword_dance_target,limit=1] run function ARG(_PATH)damage
+					execute as @a[tag=sword_dance_target,limit=1] unless score @s beamtime matches 0.. run function ARG(_PATH)damage
 					# 切換揮刀模型
 					function ARG(_PATH)sword_wave/start
 					
@@ -752,7 +778,7 @@ namespace stage()
 					execute as 0000000c-0000-000c-0000-000c0000000c store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
 					
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)attack_effect
-					execute as @a[scores={player=1..}] at 0000000c-0000-000c-0000-000c0000000c if predicate stage:flaw_range run effect give @s instant_damage 1 0 true
+					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. at 0000000c-0000-000c-0000-000c0000000c if predicate stage:flaw_range run effect give @s instant_damage 1 0 true
 				}
 				
 				func attack_effect()
@@ -848,7 +874,7 @@ namespace stage()
 					function ARG(_PATH)sword_wave/start
 					playsound minecraft:skill.basic2 player @a
 					
-					execute at 0000000d-0000-000d-0000-000d0000000d as @a[scores={player=1..}] if predicate stage:chop_range run effect give @s instant_damage 1 0 true
+					execute at 0000000d-0000-000d-0000-000d0000000d as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:chop_range run effect give @s instant_damage 1 0 true
 					kill 0000000d-0000-000d-0000-000d0000000d
 				}
 				
@@ -893,41 +919,64 @@ namespace stage()
 				{
 					function ARG(_PATH)flip
 					```
-					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={player=1..}] at @s positioned ~ {GROUND_Y[0] + 0.7} ~ run function ARG(_PATH)surround")
-					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={player=1..}] at @s positioned ~ {GROUND_Y[0] - 0.7} ~ run function ARG(_PATH)surround")
+					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] + 0.7} ~ run function ARG(_PATH)surround")
+					print(f"execute if score #SANCTION_FLIP number matches 1 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] - 0.7} ~ run function ARG(_PATH)surround")
 					```
-					schedule function ARG(_PATH)sting 10t
+					execute if score #SANCTION_FLIP number matches 0 run schedule function ARG(_PATH)sting 20t
+					execute if score #SANCTION_FLIP number matches 1 run schedule function ARG(_PATH)sting 18t
 				}
 				
 				func flip() from random().generate(0, 1, "#SANCTION_FLIP number");
 				
 				func surround()
 				{
+					tag @s add sanction_target
+					
 					playsound minecraft:enemy.sword.sanction_prepare player @a
 					scoreboard players set #WING_OPEN number -1
 					summon marker ~ ~0.7 ~ {UUID:[I;14,14,14,14],Tags:["object"]}
 					
-					execute rotated ~30 0 positioned ^ ^ ^2 run tp 00000004-0000-0004-0000-000400000004 ~ ~ ~ ~ ~
-					execute rotated ~90 0 positioned ^ ^ ^2 run tp 00000005-0000-0005-0000-000500000005 ~ ~ ~ ~ ~
-					execute rotated ~150 0 positioned ^ ^ ^2 run tp 00000006-0000-0006-0000-000600000006 ~ ~ ~ ~ ~
-					execute rotated ~210 0 positioned ^ ^ ^2 run tp 00000007-0000-0007-0000-000700000007 ~ ~ ~ ~ ~
-					execute rotated ~270 0 positioned ^ ^ ^2 run tp 00000008-0000-0008-0000-000800000008 ~ ~ ~ ~ ~
-					execute rotated ~330 0 positioned ^ ^ ^2 run tp 00000009-0000-0009-0000-000900000009 ~ ~ ~ ~ ~
+					execute as 0000000e-0000-000e-0000-000e0000000e at @s run function ARG(_PATH)set_sword
 				}
 				
-				func check_pass()
+				func set_sword()
 				{
-					execute as @a[scores={player=1..}] if predicate stage:sanction_pass positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~0.2 ~ unless entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 0 true
+					execute rotated ~30 0 run tp 00000004-0000-0004-0000-000400000004 ^ ^ ^4 ~ ~
+					execute rotated ~90 0 run tp 00000005-0000-0005-0000-000500000005 ^ ^ ^4 ~ ~
+					execute rotated ~150 0 run tp 00000006-0000-0006-0000-000600000006 ^ ^ ^4 ~ ~
+					execute rotated ~210 0 run tp 00000007-0000-0007-0000-000700000007 ^ ^ ^4 ~ ~
+					execute rotated ~270 0 run tp 00000008-0000-0008-0000-000800000008 ^ ^ ^4 ~ ~
+					execute rotated ~330 0 run tp 00000009-0000-0009-0000-000900000009 ^ ^ ^4 ~ ~
+					tp @s ~ ~ ~ ~4 ~
+				}
+				
+				func follow()
+				{
+					execute as @a[tag=sanction_target,limit=1] run function ARG(_PATH)horizonal_move
+					execute at @s run function ARG(_PATH)set_sword
+				}
+				
+				func horizonal_move()
+				{
+					data modify entity 0000000e-0000-000e-0000-000e0000000e Pos[0] set from entity @s Pos[0]
+					data modify entity 0000000e-0000-000e-0000-000e0000000e Pos[2] set from entity @s Pos[2]
 				}
 				
 				func sting()
 				{
-					execute at 0000000e-0000-000e-0000-000e0000000e run playsound minecraft:enemy.sword.sanction player @a
-					
-					execute as @e[type=husk,tag=wing] at @s run tp @s ^ ^ ^-4
-					execute at 0000000e-0000-000e-0000-000e0000000e as @a[scores={player=1..}] if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~0.2 ~ unless entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 0 true
+					execute as @e[type=husk,tag=wing] at @s run tp @s ^ ^ ^-8
+					execute as 0000000e-0000-000e-0000-000e0000000e at @s run function ARG(_PATH)effect
+					scoreboard players set #WING_OPEN number -2
+					tag @a remove sanction_target
 					
 					schedule function ARG(_PATH)reset_wing 1s
+				}
+				
+				func effect()
+				{
+					playsound minecraft:enemy.sword.sanction player @a
+					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~-0.8 ~ if entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 0 true
+					kill @s
 				}
 				
 				func reset_wing()
