@@ -1,19 +1,17 @@
 [
   {
-    "function": "minecraft:set_attributes",
-    "modifiers": [
+    "function": "minecraft:set_stew_effect",
+    "effects": [
       {
-        "attribute": "minecraft:generic.max_health",
-        "name": "random",
-        "amount": {
+        "type": "minecraft:instant_health",
+        "duration": {
           "min": {
             "type": "minecraft:score",
             "target": {
               "type": "minecraft:fixed",
               "name": "#RAND_MIN"
             },
-            "score": "number",
-            "scale": 0.0001
+            "score": "number"
           },
           "max": {
             "type": "minecraft:score",
@@ -21,12 +19,9 @@
               "type": "minecraft:fixed",
               "name": "#RAND_MAX"
             },
-            "score": "number",
-            "scale": 0.0001
+            "score": "number"
           }
-        },
-        "operation": "addition",
-        "slot": "mainhand"
+        }
       }
     ]
   }

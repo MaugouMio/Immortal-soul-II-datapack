@@ -21,9 +21,8 @@ namespace random()
 			raise ValueError("Argument 'result' must be an '<entity> <scoreboard objective>' string.")
 		```
 		
-		item replace block 0 0 0 container.0 with minecraft:potion
 		item modify block 0 0 0 container.0 random:rand
-		execute store result score ARG(result) run data get block 0 0 0 Items[0].tag.AttributeModifiers[0].Amount 10000
+		execute store result score ARG(result) run data get block 0 0 0 Items[0].tag.Effects[0].EffectDuration
 	}
 	
 	func rand_rate()
@@ -35,8 +34,7 @@ namespace random()
 	
 	func get_rand()
 	{
-		item replace block 0 0 0 container.0 with minecraft:potion
 		item modify block 0 0 0 container.0 random:rand
-		execute store result score #RAND_RESULT number run data get block 0 0 0 Items[0].tag.AttributeModifiers[0].Amount 10000
+		execute store result score #RAND_RESULT number run data get block 0 0 0 Items[0].tag.Effects[0].EffectDuration
 	}
 }
