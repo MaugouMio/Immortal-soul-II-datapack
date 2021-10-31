@@ -72,7 +72,7 @@ namespace skill()
 		
 		scoreboard players set #IGNORE_DAMAGE number 0
 		# 真白的劍舞技能施放中
-		execute if score #SELECTED_STAGE number matches 1 if score #BOSS_SKILL number matches 1 run function stage:stage1/skills/dodge/try
+		execute if score #SELECTED_STAGE number matches 1 if score #SWORD_DANCE number matches 1.. run function stage:stage1/skills/dodge/try
 		# 有ZONE的只有真白，沒有小怪，不用判定boss標籤
 		execute if score #IGNORE_DAMAGE number matches 0 if score #ZONE_ACTIVE number matches 1 run function stage:stage1/skills/zone/hit
 		execute if score #IGNORE_DAMAGE number matches 0 run function ARG(_PATH)deal_damage
@@ -587,8 +587,8 @@ namespace skill()
 		func damage()
 		{
 			# 真白劍舞的反擊
-			execute if score #SWORD_DANCE number matches 2 run function stage:stage1/skills/sword_dance/counter
 			execute unless score #SWORD_DANCE number matches 2 run function ARG(_PATH)do_damage
+			execute if score #SWORD_DANCE number matches 2 run function stage:stage1/skills/sword_dance/counter
 		}
 		
 		func do_damage()
