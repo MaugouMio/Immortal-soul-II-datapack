@@ -3,7 +3,7 @@ import utils, skill, stage
 description = "Immortal Soul II datapack"
 
 ```
-constants = [-1, 1, 3, 5, 10, 100, 140]
+constants = [-1, 1, 3, 5, 10, 20, 100, 140]
 constants = set(constants)
 ```
 
