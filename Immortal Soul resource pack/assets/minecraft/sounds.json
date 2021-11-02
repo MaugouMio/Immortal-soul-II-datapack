@@ -112,7 +112,13 @@
     "sounds": [
       {
         "name": "enemy/sword/strike_small",
-        "stream": true
+        "stream": true,
+		"weight": 2
+      },
+      {
+        "name": "enemy/sword/strike_small2",
+        "stream": true,
+		"weight": 1
       }
     ]
   },
