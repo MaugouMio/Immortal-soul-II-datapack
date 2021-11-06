@@ -154,6 +154,22 @@
       }
     ]
   },
+  "enemy.sword.slash_wind": {
+    "sounds": [
+      {
+        "name": "enemy/sword/slash_wind",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.sword.slash_hint": {
+    "sounds": [
+      {
+        "name": "enemy/sword/slash_hint",
+        "stream": true
+      }
+    ]
+  },
   "enemy.sword.sanction_prepare": {
     "sounds": [
       {

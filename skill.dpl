@@ -509,7 +509,7 @@ namespace skill()
 				execute store result score @s cd_right run schedule function skill:edge/reset_right 6t append
 			}
 			
-			folder move() from for_loop().for(4, "if block ^ ^ ^0.5 #skill:canpass positioned ^ ^ ^0.5")
+			folder move() from for_loop().for(5, "if block ^ ^ ^0.5 #skill:canpass positioned ^ ^ ^0.5")
 			{
 				func execute()
 				{
@@ -818,7 +818,7 @@ namespace skill()
 				{
 					data modify storage skill:main beam_bar set value []
 					scoreboard players set #BEAM_CD number 31
-					schedule function ARG(_PATH)countdown 1s
+					schedule function ARG(_PATH)countdown 3s
 				}
 				
 				func countdown()

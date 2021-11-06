@@ -223,6 +223,7 @@ namespace stage()
 			func near_judge()
 			{
 				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
+				# function ARG(_PATH)slash/cast
 				execute if score #RAND_RESULT number matches 0..49 run function ARG(_PATH)flaw/cast
 				execute if score #RAND_RESULT number matches 50..99 run function ARG(_PATH)chop/cast
 			}
@@ -230,6 +231,7 @@ namespace stage()
 			func far_judge()
 			{
 				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
+				# function ARG(_PATH)slash/cast
 				execute if score #RAND_RESULT number matches 0..29 run function ARG(_PATH)sword_dance/cast
 				execute if score #RAND_RESULT number matches 30..99 run function ARG(_PATH)sanction/cast
 			}
@@ -651,11 +653,13 @@ namespace stage()
 					scoreboard players set #ANIM_LOCK number 1
 					scoreboard players set #WING_OPEN number 11
 					# 準備姿勢
+					data modify entity @s HandItems[0].tag.CustomModelData set value 3
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 10
 					data modify entity @s Pose.RightArm set value [300f,330f,346f]
 					data modify entity @s Pose.LeftArm set value [45f,205f,15f]
 					data modify entity @s NoGravity set value 1
 					# 腳邊旋風 & 身邊閃電特效
+					playsound minecraft:enemy.sword.slash_wind player @a ~ ~ ~ 3 1 0
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;11,11,11,11],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:13}}],Tags:["object","effect"]}
 					
 					# 計算右手姿勢 (300->260, --, 346->367)
@@ -671,22 +675,25 @@ namespace stage()
 					function ARG(_PATH)rand_slash_time
 				}
 				
-				func rand_slash_time() from random().generate(60, 100, "#SLASH_COUNTDOWN number");
+				func rand_slash_time() from random().generate(35, 45, "#SLASH_COUNTDOWN number");
 				
 				func mark()
 				{
 					tag @s add slash_target
 					```
-					print('summon armor_stand ~ %.1f ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;10,10,10,10],ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:11,CustomPotionColor:-1}}],Tags:["object","effect"]}' %GROUND_Y[0])
+					print('summon armor_stand ~ %.1f ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,UUID:[I;10,10,10,10],Tags:["object","effect"],Passengers:[{id:"minecraft:item",Item:{id:"minecraft:potion",Count:1b,tag:{CustomModelData:11,CustomPotionColor:-1}},PickupDelay:32767,HasVisualFire:1b,UUID:[I;17,17,17,17],Tags:["object","effect"]}]}' %GROUND_Y[0])
 					```
 				}
 				
 				func slash_countdown()
 				{
+					execute facing entity @a[tag=slash_target,limit=1] feet run function stage:stage1/face_player
+					
 					execute if score #SLASH_COUNTDOWN number matches 2..6 run function ARG(_PATH)calc_pose
-					execute if score #SLASH_COUNTDOWN number matches 8 run data modify entity 0000000a-0000-000a-0000-000a0000000a ArmorItems[3].tag.CustomPotionColor set value 16711680
+					execute if score #SLASH_COUNTDOWN number matches 14 run data modify entity 00000011-0000-0011-0000-001100000011 Item.tag.CustomPotionColor set value 16711680
+					execute if score #SLASH_COUNTDOWN number matches 14 run playsound minecraft:enemy.sword.slash_hint player @a ~ ~ ~ 3 1 0
 					```
-					print(f"execute if score #SLASH_COUNTDOWN number matches 8.. at @a[tag=slash_target,limit=1] positioned ~ {GROUND_Y[0]} ~ run tp 0000000a-0000-000a-0000-000a0000000a ~ ~ ~ ~ 0")
+					print(f"execute if score #SLASH_COUNTDOWN number matches 15.. at @a[tag=slash_target,limit=1] positioned ~ {GROUND_Y[0]} ~ run tp 0000000a-0000-000a-0000-000a0000000a ~ ~ ~ ~ 0")
 					```
 					
 					scoreboard players remove #SLASH_COUNTDOWN number 1
@@ -712,14 +719,17 @@ namespace stage()
 					schedule clear ARG(__PATH)zone/auto_reset_pose
 					
 					# 更換劈砍姿勢模型
-					data modify @s ArmorItems[3].tag.CustomModelData set value 12
-					data modify @s Pose.RightArm set value [350f,350f,320f]
-					data modify @s Pose.LeftArm set value [350f,200f,30f]
+					data modify entity @s HandItems[0].tag.CustomModelData set value 14
+					data modify entity @s ArmorItems[3].tag.CustomModelData set value 12
+					data modify entity @s Pose.RightArm set value [350f,350f,320f]
+					data modify entity @s Pose.LeftArm set value [350f,200f,30f]
 					
 					particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
 					kill 0000000b-0000-000b-0000-000b0000000b
 					execute as 0000000a-0000-000a-0000-000a0000000a at @s run function ARG(_PATH)slash
 					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ^ ^-0.4 ^4
+					kill 0000000a-0000-000a-0000-000a0000000a
+					kill 00000011-0000-0011-0000-001100000011
 					tag @a remove slash_target
 				}
 				
@@ -727,9 +737,9 @@ namespace stage()
 				{
 					playsound minecraft:enemy.sword.slash player @a
 					execute positioned ~ ~1 ~ run function ARG(_PATH)slash_effect
-					execute as @a[scores={player=1..}] if predicate stage:slash_range run function ARG(_PATH)damage
+					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:slash_range run function ARG(_PATH)damage
 					
-					schedule function ARG(_PATH)activate_shader/run 1t
+					schedule function ARG(_PATH)activate_shader/run 3t
 				}
 				
 				func slash_effect()
@@ -742,6 +752,9 @@ namespace stage()
 				func damage()
 				{
 					function skill:reset_action
+					# scoreboard players reset @s player
+					# clear @s
+					
 					team join blue @s
 					effect give @s minecraft:glowing 1000000 0 true
 					tag @s add already_dead
@@ -771,7 +784,7 @@ namespace stage()
 					{
 						effect clear @s minecraft:night_vision
 						effect clear @s minecraft:glowing
-						kill @s
+						effect give @s instant_damage 1 10 true
 						tag @s remove already_dead
 					}
 				}
