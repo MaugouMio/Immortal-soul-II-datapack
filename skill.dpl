@@ -80,6 +80,9 @@ namespace skill()
 	
 	func deal_damage()
 	{
+		# 領域狀態傷害減半
+		execute if score #ZONE number matches 1.. unless score #ZONE_BREAK number matches 1 run scoreboard players operation @s display_number /= #2 number
+		
 		scoreboard players operation @s health -= @s display_number
 		scoreboard players operation @s display_number /= #10 number
 		function number:display
@@ -332,7 +335,7 @@ namespace skill()
 				playsound minecraft:skill.basic1 player @a
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
 
-				scoreboard players set #DAMAGE_SCALE number 10
+				scoreboard players set #DAMAGE_SCALE number 8
 				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
 				
 				scoreboard players set @s last_hand 1
@@ -348,7 +351,7 @@ namespace skill()
 				playsound minecraft:skill.basic1 player @a
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
 
-				scoreboard players set #DAMAGE_SCALE number 10
+				scoreboard players set #DAMAGE_SCALE number 8
 				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
 				
 				scoreboard players set @s last_hand 0
@@ -364,8 +367,8 @@ namespace skill()
 				playsound minecraft:skill.basic2 player @a
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 5 force
 
-				scoreboard players set #DAMAGE_SCALE number 20
-				execute if score #BOTH_HAND number matches 1 run scoreboard players add #DAMAGE_SCALE number 20
+				scoreboard players set #DAMAGE_SCALE number 16
+				execute if score #BOTH_HAND number matches 1 run scoreboard players add #DAMAGE_SCALE number 16
 				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,tag=!effect,distance=..3] at @s run function skill:edge/damage
 			}
 			
@@ -422,14 +425,14 @@ namespace skill()
 			
 			func start_drop()
 			{
-				scoreboard players set #DAMAGE_SCALE number 10
+				scoreboard players set #DAMAGE_SCALE number 8
 				scoreboard players set #GRAVITY number 0
 				function ARG(_PATH)drop_loop
 			}
 			
 			func drop_loop()
 			{
-				scoreboard players add #DAMAGE_SCALE number 10
+				scoreboard players add #DAMAGE_SCALE number 8
 				scoreboard players add #GRAVITY number 2
 				scoreboard players operation #DAMAGE_SCALE number += #GRAVITY number
 				
@@ -474,7 +477,7 @@ namespace skill()
 				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:14}}]}
 				playsound minecraft:skill.double player @a
 
-				scoreboard players set #DAMAGE_SCALE number 15
+				scoreboard players set #DAMAGE_SCALE number 12
 				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)double_damage
 			}
 			
@@ -522,7 +525,7 @@ namespace skill()
 			{
 				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
 				
-				scoreboard players set #DAMAGE_SCALE number 25
+				scoreboard players set #DAMAGE_SCALE number 20
 				execute as @e[type=#skill:hostile,tag=!effect,distance=..5] at @s run function ARG(_PATH)rush_damage
 				playsound minecraft:skill.rush_attack player @a
 			}
@@ -555,7 +558,7 @@ namespace skill()
 				summon minecraft:armor_stand ~ ~ ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:20}}]}
 				playsound minecraft:skill.double player @a
 
-				scoreboard players set #DAMAGE_SCALE number 25
+				scoreboard players set #DAMAGE_SCALE number 20
 				execute as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)jump_damage
 			}
 			
@@ -771,6 +774,7 @@ namespace skill()
 				playsound minecraft:skill.blast player @a ~ ~ ~ 3 1 0
 				scoreboard players set #DAMAGE_SCALE number 210
 				execute as @e[type=armor_stand,tag=blast_target] at @s run function ARG(_PATH)show_beam
+				execute as @e[type=#skill:hostile,tag=!effect] at @s if entity @e[type=armor_stand,tag=blast_target,distance=..2,limit=1] run function ARG(_PATH)damage
 			}
 			
 			func reset()
@@ -802,7 +806,6 @@ namespace skill()
 			{
 				data modify entity @s[tag=!blast_start] ArmorItems[3].tag.CustomModelData set value 27
 				data modify entity @s[tag=blast_start] ArmorItems[3].tag.CustomModelData set value 28
-				execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function ARG(_PATH)damage
 			}
 			
 			func damage()
