@@ -1,0 +1,13 @@
+{
+	"providers": [
+		{
+			"type": "bitmap",
+			"file": "skill:font/zone.png",
+			"ascent": 64,
+			"height": 128,
+			"chars": [
+				"0"
+			]
+		}
+	]
+}

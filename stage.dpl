@@ -115,6 +115,7 @@ namespace stage()
 		func summon_boss()
 		{
 			summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,DisabledSlots:4144959,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}
+			summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"0","font":"skill:zone"}',Tags:["effect","object"],UUID:[I;18,18,18,18]}
 			summon marker ~ ~ ~ {Tags:["object"],UUID:[I;16,16,16,16]}
 			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
 			execute store result score 00000001-0000-0001-0000-000100000001 health run bossbar get minecraft:boss max
@@ -155,6 +156,7 @@ namespace stage()
 		
 		func main()
 		{
+			execute at 00000001-0000-0001-0000-000100000001 positioned ~ ~0.8 ~ run tp 00000012-0000-0012-0000-001200000012 ~ ~ ~
 			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #ZONE_BREAK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s facing entity @p[scores={player=1..}] feet run function ARG(_PATH)face_player
 			
 			execute if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
