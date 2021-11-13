@@ -109,7 +109,7 @@ namespace stage()
 			```
 			
 			schedule function ARG(_PATH)skills/loop 7s
-			schedule function ARG(_PATH)skills/fly_sword/start 3s
+			schedule function ARG(_PATH)skills/fly_sword/start 2s
 		}
 		
 		func summon_boss()
@@ -338,6 +338,7 @@ namespace stage()
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number = #ZONE_MAX number
 					
 					execute if score #ZONE_BREAK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(__PATH)inner_revert_action
+					execute if score #ZONE_BREAK number matches 1 run function ARG(__PATH)fly_sword/aim
 					data modify entity 00000012-0000-0012-0000-001200000012 CustomNameVisible set value 1b
 					
 					scoreboard players set #ZONE_ACTIVE number 1
@@ -399,6 +400,7 @@ namespace stage()
 					scoreboard players set #ZONE_BREAK number 1
 					
 					schedule clear ARG(_PATH)auto_reset_pose
+					function ARG(__PATH)fly_sword/pause
 				}
 				
 				func strike_effect()
@@ -469,6 +471,17 @@ namespace stage()
 					kill 0000000f-0000-000f-0000-000f0000000f
 					scoreboard players set #FLYING_SWORD number 1
 					schedule function ARG(_PATH)stop 1s
+				}
+				
+				# 暫時中斷飛劍使用
+				func pause()
+				{
+					kill 0000000f-0000-000f-0000-000f0000000f
+					scoreboard players set #FLYING_SWORD number 0
+					
+					schedule clear ARG(_PATH)start
+					schedule clear ARG(_PATH)aim
+					schedule clear ARG(_PATH)stop
 				}
 			}
 			
