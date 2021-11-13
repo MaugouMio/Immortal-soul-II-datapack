@@ -80,11 +80,12 @@ namespace skill()
 	
 	func deal_damage()
 	{
-		# 領域狀態傷害減半
-		execute if score #ZONE number matches 1.. unless score #ZONE_BREAK number matches 1 run scoreboard players operation @s display_number /= #2 number
+		# 領域狀態傷害 20%
+		execute if score #ZONE number matches 1.. unless score #ZONE_BREAK number matches 1 run scoreboard players operation @s display_number /= #5 number
 		
 		scoreboard players operation @s health -= @s display_number
 		scoreboard players operation @s display_number /= #10 number
+		scoreboard players operation @s display_number > #1 number
 		function number:display
 
 		execute unless entity @s[tag=boss] store result entity @s Health float 0.1 run scoreboard players get @s health

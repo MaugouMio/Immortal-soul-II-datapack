@@ -172,6 +172,7 @@ namespace stage()
 			execute if score #WING_OPEN number matches 1..10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/open_wing/anim
 			
 			execute if score #WING_OPEN number matches -1 as 0000000e-0000-000e-0000-000e0000000e at @s run function ARG(_PATH)skills/sanction/follow
+			execute if score #SANCTION_ANIM number matches 0.. as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)skills/sanction/hand_anim/run
 		}
 		
 		func face_player()
@@ -401,6 +402,7 @@ namespace stage()
 					
 					schedule clear ARG(_PATH)auto_reset_pose
 					function ARG(__PATH)fly_sword/pause
+					function ARG(__PATH)sanction/shutdown
 				}
 				
 				func strike_effect()
@@ -838,7 +840,7 @@ namespace stage()
 					{
 						effect clear @s minecraft:night_vision
 						effect clear @s minecraft:glowing
-						effect give @s instant_damage 1 10 true
+						effect give @s instant_damage 1 2 true
 						tag @s remove already_dead
 					}
 				}
@@ -1061,6 +1063,66 @@ namespace stage()
 					```
 					execute if score #SANCTION_FLIP number matches 0 run schedule function ARG(_PATH)sting 20t
 					execute if score #SANCTION_FLIP number matches 1 run schedule function ARG(_PATH)sting 18t
+					
+					function ARG(_PATH)hand_anim/raise/start
+				}
+				
+				# 原則上左手平常都是擺著(放技能才會動，但是技能之間不重疊)
+				folder hand_anim()
+				{
+					func run()
+					{
+						scoreboard players add #SANCTION_ANIM number 1
+						
+						execute if score #SANCTION_ANIM number matches 1..5 run function ARG(_PATH)raise/loop
+						execute if score #SANCTION_ANIM number matches 11..12 run function ARG(_PATH)swing/loop
+					}
+					
+					folder raise()
+					{
+						func start()
+						{
+							# 5 tick (355->265, -, 350->360)
+							scoreboard players set #SANCTION_ANIM number 0
+							
+							scoreboard players set #L_ARM_X number 355
+							scoreboard players set #L_ARM_Z number 350
+							
+							scoreboard players set #L_ARM_DIFF_X number -18
+							scoreboard players set #L_ARM_DIFF_Z number 2
+						}
+						
+						func loop()
+						{
+							execute store result entity @s Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number += #L_ARM_DIFF_X number
+							execute store result entity @s Pose.LeftArm[2] float 1 run scoreboard players operation #L_ARM_Z number += #L_ARM_DIFF_Z number
+							
+							execute if score #SANCTION_ANIM number matches 5 run scoreboard players reset #SANCTION_ANIM number
+						}
+					}
+					
+					folder swing()
+					{
+						func start()
+						{
+							# 2 tick (265->275, 360->300, -)
+							scoreboard players set #SANCTION_ANIM number 10
+							
+							scoreboard players set #L_ARM_X number 265
+							scoreboard players set #L_ARM_Y number 360
+							
+							scoreboard players set #L_ARM_DIFF_X number 5
+							scoreboard players set #L_ARM_DIFF_Y number -30
+						}
+						
+						func loop()
+						{
+							execute store result entity @s Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number += #L_ARM_DIFF_X number
+							execute store result entity @s Pose.LeftArm[1] float 1 run scoreboard players operation #L_ARM_Y number += #L_ARM_DIFF_Y number
+							
+							execute if score #SANCTION_ANIM number matches 12 run scoreboard players reset #SANCTION_ANIM number
+						}
+					}
 				}
 				
 				func flip() from random().generate(0, 1, "#SANCTION_FLIP number");
@@ -1106,6 +1168,7 @@ namespace stage()
 					scoreboard players set #WING_OPEN number -2
 					tag @a remove sanction_target
 					
+					function ARG(_PATH)hand_anim/swing/start
 					schedule function ARG(_PATH)reset_wing 1s
 				}
 				
@@ -1119,6 +1182,18 @@ namespace stage()
 				func reset_wing()
 				{
 					scoreboard players set #WING_OPEN number 0
+					# 順便重置左手位置
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm set value [355f,0f,350f]
+				}
+				
+				func shutdown()
+				{
+					kill 0000000e-0000-000e-0000-000e0000000e
+					tag @a remove sanction_target
+					
+					scoreboard players reset #SANCTION_ANIM number
+					scoreboard players set #WING_OPEN number 0
+					schedule clear ARG(_PATH)reset_wing
 				}
 			}
 		}
