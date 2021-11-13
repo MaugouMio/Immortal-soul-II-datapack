@@ -231,9 +231,22 @@ namespace stage()
 			func rand_skill()
 			{
 				function random:rand_rate
-				execute store success score #NEAR_SKILL number if entity @a[scores={player=1..},distance=..5,limit=1]
+				
+				scoreboard players set #NEAR_SKILL number 0
+				execute if entity @a[scores={player=1..},distance=..5,limit=1] run scoreboard players add #NEAR_SKILL number 1
+				execute if entity @a[scores={player=1..},distance=5.01..,limit=1] run scoreboard players add #NEAR_SKILL number 2
+				
 				execute if score #NEAR_SKILL number matches 1 run function ARG(_PATH)near_judge
-				execute if score #NEAR_SKILL number matches 0 run function ARG(_PATH)far_judge
+				execute if score #NEAR_SKILL number matches 2 run function ARG(_PATH)far_judge
+				execute unless score #NEAR_SKILL number matches 1..2 run function ARG(_PATH)rand_range
+			}
+			
+			func rand_range()
+			{
+				execute if score #RAND_RESULT number matches ..49 run function ARG(_PATH)near_judge
+				execute if score #RAND_RESULT number matches 50.. run function ARG(_PATH)far_judge
+				# 重骰一次避免隨機距離跟放的招相關
+				function random:rand_rate
 			}
 			
 			func near_judge()
