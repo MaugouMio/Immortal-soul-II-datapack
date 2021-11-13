@@ -326,7 +326,7 @@ namespace stage()
 				func recover()
 				{
 					execute if score #ZONE_BREAK number matches 1 run scoreboard players operation #ZONE number += #ZONE_RECOVER number
-					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 10
+					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 8
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number < #ZONE_MAX number
 					
 					execute if score #ZONE_BREAK number matches 1 if score #ZONE number >= #ZONE_MAX number run function ARG(_PATH)reset
@@ -338,6 +338,7 @@ namespace stage()
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number = #ZONE_MAX number
 					
 					execute if score #ZONE_BREAK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(__PATH)inner_revert_action
+					data modify entity 00000012-0000-0012-0000-001200000012 CustomNameVisible set value 1b
 					
 					scoreboard players set #ZONE_ACTIVE number 1
 					scoreboard players set #ZONE_BREAK number 0
@@ -378,10 +379,13 @@ namespace stage()
 				
 				func break()
 				{
-					# 更換暈眩姿勢模型
 					```
 					print(f"tp @s ~ {GROUND_Y[0] - 0.45} ~")
+					print(f"execute positioned ~ {GROUND_Y[0] + 0.35} ~ run function ARG(_PATH)zone_break_effect")
+					print(f"execute positioned ~ {GROUND_Y[0]} ~ run function ARG(_PATH)zone_expand_effect")
 					```
+					data modify entity 00000012-0000-0012-0000-001200000012 CustomNameVisible set value 0b
+					
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 9
 					data modify entity @s Pose.RightArm set value [87f,150f,0f]
 					data modify entity @s Pose.LeftArm set value [95f,210f,0f]
@@ -401,6 +405,20 @@ namespace stage()
 				{
 					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:strike/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:strike/0"}', 'new_font_anim']}
 					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+				
+				func zone_break_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:zone_break/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:zone_break/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+				
+				func zone_expand_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:zone_expand/9"}',CustomNameVisible:1,Duration:101,Tags:['{"text":"","font":"font_animation:zone_expand/9"}', '{"text":"","font":"font_animation:zone_expand/8"}', '{"text":"","font":"font_animation:zone_expand/7"}', '{"text":"","font":"font_animation:zone_expand/6"}', '{"text":"","font":"font_animation:zone_expand/5"}', '{"text":"","font":"font_animation:zone_expand/4"}', '{"text":"","font":"font_animation:zone_expand/3"}', '{"text":"","font":"font_animation:zone_expand/2"}', '{"text":"","font":"font_animation:zone_expand/1"}', '{"text":"","font":"font_animation:zone_expand/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 100
 					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 			}

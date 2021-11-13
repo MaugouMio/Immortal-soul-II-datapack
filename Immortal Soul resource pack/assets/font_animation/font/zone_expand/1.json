@@ -1,0 +1,94 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 45,
+            "height": 90,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 46,
+            "height": 92,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 47,
+            "height": 94,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 48,
+            "height": 96,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 49,
+            "height": 98,
+            "chars": [
+                "4"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 50,
+            "height": 100,
+            "chars": [
+                "5"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 51,
+            "height": 102,
+            "chars": [
+                "6"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 52,
+            "height": 104,
+            "chars": [
+                "7"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 53,
+            "height": 106,
+            "chars": [
+                "8"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "skill:font/zone.png",
+            "ascent": 54,
+            "height": 108,
+            "chars": [
+                "9"
+            ]
+        }
+    ]
+}

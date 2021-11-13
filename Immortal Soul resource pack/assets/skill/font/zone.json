@@ -8,6 +8,24 @@
 			"chars": [
 				"0"
 			]
+		},
+		{
+			"type": "bitmap",
+			"file": "skill:font/zone1.png",
+			"ascent": 64,
+			"height": 128,
+			"chars": [
+				"1"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "skill:font/zone2.png",
+			"ascent": 64,
+			"height": 128,
+			"chars": [
+				"2"
+			]
 		}
 	]
 }
