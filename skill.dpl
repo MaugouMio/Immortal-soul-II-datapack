@@ -308,6 +308,8 @@ namespace skill()
 				scoreboard players set @s slashtime 1
 
 				execute if score @s slash matches 5 rotated ~ 0 if block ^ ^ ^0.5 #skill:canpass run tp @p ^ ^ ^0.5
+				# 防卡牆校正
+				execute if score @s slash matches 5 at @s rotated ~ 0 unless block ^ ^ ^0.36 #skill:canpass run tp @s ^ ^ ^-0.36
 
 				execute if score @s slash matches ..4 run function ARG(_PATH)basic1
 				execute if score @s slash matches 5 run function ARG(_PATH)basic3
@@ -320,6 +322,8 @@ namespace skill()
 				scoreboard players set @s slashtime 1
 
 				execute if score @s slash matches 5 rotated ~ 0 if block ^ ^ ^0.5 #skill:canpass run tp @p ^ ^ ^0.5
+				# 防卡牆校正
+				execute if score @s slash matches 5 at @s rotated ~ 0 unless block ^ ^ ^0.36 #skill:canpass run tp @s ^ ^ ^-0.36
 
 				execute if score @s slash matches ..4 run function ARG(_PATH)basic2
 				# 雙手最後一刀的狀態下，右手會讓 slash = 5，所以這個function進不來，不用擔心 basic3 重複執行
@@ -426,15 +430,15 @@ namespace skill()
 			
 			func start_drop()
 			{
-				scoreboard players set #DAMAGE_SCALE number 8
+				scoreboard players set #DAMAGE_SCALE number 6
 				scoreboard players set #GRAVITY number 0
 				function ARG(_PATH)drop_loop
 			}
 			
 			func drop_loop()
 			{
-				scoreboard players add #DAMAGE_SCALE number 8
-				scoreboard players add #GRAVITY number 2
+				scoreboard players add #DAMAGE_SCALE number 6
+				scoreboard players add #GRAVITY number 1
 				scoreboard players operation #DAMAGE_SCALE number += #GRAVITY number
 				
 				execute positioned ~ ~-1 ~ unless block ~ ~ ~ #skill:canpass run function ARG(_PATH)drop_attack
@@ -542,8 +546,10 @@ namespace skill()
 			func sneaktime()
 			{
 				execute if score @s sneaktime matches ..2 rotated ~ 0 run function ARG(_PATH)move/run
+				# 防卡牆校正
+				execute if score @s sneaktime matches ..2 at @s rotated ~ 0 unless block ^ ^ ^0.36 #skill:canpass run tp @s ^ ^ ^-0.36
+				
 				execute if score @s sneaktime matches 1 run playsound minecraft:skill.flash player @a
-
 				execute if score @s sneaktime matches 2 at @s run function ARG(_PATH)rush_attack
 
 				scoreboard players add @s sneaktime 1
@@ -784,6 +790,7 @@ namespace skill()
 				effect clear @s glowing
 				effect clear @s slowness
 				scoreboard players reset @s beamtime
+				scoreboard players reset @s shooting
 				kill @e[type=armor_stand,tag=blast_target]
 				kill 00000000-0000-0002-0000-000000000002
 			}
@@ -821,7 +828,7 @@ namespace skill()
 				func start()
 				{
 					data modify storage skill:main beam_bar set value []
-					scoreboard players set #BEAM_CD number 31
+					scoreboard players set #BEAM_CD number 30
 					schedule function ARG(_PATH)countdown 3s
 				}
 				
@@ -832,7 +839,7 @@ namespace skill()
 					execute if score #BEAM_CD number matches 0 run scoreboard players set #BEAM_ANIMATION number -1
 					execute if score #BEAM_CD number matches 0 run scoreboard players reset #BEAM_CD number
 					
-					execute if score #BEAM_CD number matches 0.. run schedule function ARG(_PATH)countdown 1s
+					execute if score #BEAM_CD number matches 0.. run schedule function ARG(_PATH)countdown 3s
 				}
 			}
 			
@@ -877,7 +884,9 @@ namespace skill()
 				execute unless block ~ ~-1 ~ #skill:canpass run scoreboard players reset @s escape_used
 				
 				execute if score @s escape_used matches 6 positioned ^ ^0.5 ^ run function ARG(_PATH)shoot
-				execute if score @s escape_used matches 6..9 if block ^ ^ ^-1 #skill:canpass positioned ^ ^ ^-1 if block ~ ~1 ~ #skill:canpass run tp @s ^ ^ ^-1
+				execute if score @s escape_used matches 6..9 positioned ^ ^ ^-1 if block ~ ~1 ~ #skill:canpass run tp @s ^ ^ ^-1
+				# 防卡牆校正
+				execute if score @s escape_used matches 6..9 at @s rotated ~ 0 unless block ^ ^ ^-0.36 #skill:canpass run tp @s ^ ^ ^0.36
 				effect clear @s[scores={escape_used=12}] minecraft:levitation
 			}
 			

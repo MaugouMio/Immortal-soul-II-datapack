@@ -1,4 +1,4 @@
-import utils
+import utils, loop
 
 ```
 GROUND_Y = [4.0, 4.0, 4.0]
@@ -58,7 +58,9 @@ namespace stage()
 		execute if score #PLAYER_MODE number matches 3 as @p[scores={player=0},gamemode=adventure] run function ARG(_PATH)set_player2
 		gamemode spectator @a[scores={player=0}]
 		# reset beam CD
-		function skill:gun/beam/timer/start
+		data modify storage skill:main beam_bar set value ["4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4"]
+		scoreboard players set #BEAM_CD number 10
+		schedule function ARG(_PATH)countdown 3s
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start
 		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start
@@ -152,6 +154,10 @@ namespace stage()
 			scoreboard players set #SLASH_COUNTDOWN number 0
 			scoreboard players set #CHOP_COUNTDOWN number 0
 			scoreboard players set #BACKSTEP number 0
+			
+			kill 00000013-0000-0013-0000-001300000013
+			
+			effect give @a instant_health 1 10 true
 		}
 		
 		func main()
@@ -340,7 +346,7 @@ namespace stage()
 				func recover()
 				{
 					execute if score #ZONE_BREAK number matches 1 run scoreboard players operation #ZONE number += #ZONE_RECOVER number
-					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 8
+					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 9
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number < #ZONE_MAX number
 					
 					execute if score #ZONE_BREAK number matches 1 if score #ZONE number >= #ZONE_MAX number run function ARG(_PATH)reset
@@ -434,7 +440,7 @@ namespace stage()
 				
 				func zone_expand_effect()
 				{
-					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:zone_expand/9"}',CustomNameVisible:1,Duration:101,Tags:['{"text":"","font":"font_animation:zone_expand/9"}', '{"text":"","font":"font_animation:zone_expand/8"}', '{"text":"","font":"font_animation:zone_expand/7"}', '{"text":"","font":"font_animation:zone_expand/6"}', '{"text":"","font":"font_animation:zone_expand/5"}', '{"text":"","font":"font_animation:zone_expand/4"}', '{"text":"","font":"font_animation:zone_expand/3"}', '{"text":"","font":"font_animation:zone_expand/2"}', '{"text":"","font":"font_animation:zone_expand/1"}', '{"text":"","font":"font_animation:zone_expand/0"}', 'new_font_anim']}
+					summon minecraft:area_effect_cloud ~ ~ ~ {UUID:[I;19,19,19,19],CustomName:'{"text":"0","font":"font_animation:zone_expand/9"}',CustomNameVisible:1,Duration:101,Tags:['{"text":"","font":"font_animation:zone_expand/9"}', '{"text":"","font":"font_animation:zone_expand/8"}', '{"text":"","font":"font_animation:zone_expand/7"}', '{"text":"","font":"font_animation:zone_expand/6"}', '{"text":"","font":"font_animation:zone_expand/5"}', '{"text":"","font":"font_animation:zone_expand/4"}', '{"text":"","font":"font_animation:zone_expand/3"}', '{"text":"","font":"font_animation:zone_expand/2"}', '{"text":"","font":"font_animation:zone_expand/1"}', '{"text":"","font":"font_animation:zone_expand/0"}', 'new_font_anim']}
 					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 100
 					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
@@ -447,7 +453,7 @@ namespace stage()
 					# tp 看起來會有延遲，讓他攻擊晚一點到
 					execute at @s as @a[scores={player=1..},distance=..1,tag=!sword_hit] unless score @s beamtime matches 0.. run function ARG(_PATH)hit
 					tp @s ^ ^ ^-0.5
-					execute at @s unless block ~ ~ ~ #skill:canpass run function ARG(_PATH)stop
+					execute at @s unless block ^ ^ ^-0.5 #skill:canpass run function ARG(_PATH)stop
 				}
 				
 				func hit()
@@ -639,7 +645,9 @@ namespace stage()
 					data modify entity 00000001-0000-0001-0000-000100000001 Motion set from entity 00000000-0000-0003-0000-000000000003 Pos
 					kill 00000000-0000-0003-0000-000000000003
 					
-					tp 00000001-0000-0001-0000-000100000001 ^ ^ ^1.5 ~ ~
+					execute if block ^ ^ ^1.5 #skill:canpass run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^1.5 ~ ~
+					execute unless block ^ ^ ^1.5 #skill:canpass if block ^ ^ ^1 #skill:canpass run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^1 ~ ~
+					execute unless block ^ ^ ^1.5 #skill:canpass unless block ^ ^ ^1 #skill:canpass if block ^ ^ ^0.5 #skill:canpass run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^0.5 ~ ~
 				}
 				
 				func counter()
@@ -796,10 +804,20 @@ namespace stage()
 					particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
 					kill 0000000b-0000-000b-0000-000b0000000b
 					execute as 0000000a-0000-000a-0000-000a0000000a at @s run function ARG(_PATH)slash
-					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ^ ^-0.4 ^4
+					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ~ ~ ~ ~ ~
+					execute at @s run function ARG(_PATH)move/run
+					
 					kill 0000000a-0000-000a-0000-000a0000000a
 					kill 00000011-0000-0011-0000-001100000011
 					tag @a remove slash_target
+				}
+			
+				folder move() from for_loop().for(8, "if block ^ ^ ^0.5 #skill:canpass positioned ^ ^ ^0.5")
+				{
+					func execute()
+					{
+						tp @s ~ ~ ~
+					}
 				}
 				
 				func slash()
@@ -896,6 +914,7 @@ namespace stage()
 					execute if block ^ ^ ^-3 #skill:canpass run tp @s ^ ^ ^-3 ~ 0
 					execute unless block ^ ^ ^-3 #skill:canpass if block ^ ^ ^-2 #skill:canpass run tp @s ^ ^ ^-2 ~ 0
 					execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass if block ^ ^ ^-1 #skill:canpass run tp @s ^ ^ ^-1 ~ 0
+					execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass unless block ^ ^ ^-1 #skill:canpass run tp @s ^ ^ ^-0.5 ~ 0
 				}
 				
 				func update_display_rotation()
@@ -909,8 +928,15 @@ namespace stage()
 					execute as 0000000c-0000-000c-0000-000c0000000c store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
 					
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)attack_effect
-					execute as 00000001-0000-0001-0000-000100000001 at 0000000c-0000-000c-0000-000c0000000c facing entity @s feet rotated ~ 0 run tp @s ^ ^ ^0.8 ~180 ~
+					execute as 00000001-0000-0001-0000-000100000001 at 0000000c-0000-000c-0000-000c0000000c facing entity @s feet rotated ~ 0 run function ARG(_PATH)attack_move
 					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. at 0000000c-0000-000c-0000-000c0000000c if predicate stage:flaw_range run effect give @s instant_damage 1 0 true
+				}
+				
+				func attack_move()
+				{
+					execute if block ^ ^ ^0.8 #skill:canpass run tp @s ^ ^ ^0.8 ~180 ~
+					execute unless block ^ ^ ^0.8 #skill:canpass if block ^ ^ ^0.4 #skill:canpass run tp @s ^ ^ ^0.4 ~180 ~
+					execute unless block ^ ^ ^0.8 #skill:canpass unless block ^ ^ ^0.4 #skill:canpass run tp @s ~ ~ ~ ~180 ~
 				}
 				
 				func attack_effect()
