@@ -38,7 +38,7 @@ namespace stage()
 	
 	func check_end()
 	{
-		scoreboard players reset @s player
+		scoreboard players set @s player 0
 		scoreboard players reset @s death
 		gamemode spectator @s
 		execute unless entity @a[scores={player=1..}] run function ARG(_PATH)end
@@ -86,6 +86,7 @@ namespace stage()
 		kill @e[tag=object]
 		clear @a
 		scoreboard players set @a weapon_mode 1
+		scoreboard players set @a player 0
 		title @a actionbar ""
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/end
@@ -607,7 +608,7 @@ namespace stage()
 					func end()
 					{
 						particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
-						playsound minecraft:entity.wither.shoot player @a ~ ~ ~ 2 1.3 0
+						playsound minecraft:entity.wither.shoot player @a ~ ~ ~ 3 1.3 0
 						
 						data modify entity @s ArmorItems[3].tag.CustomModelData set value 8
 						data modify entity @s NoGravity set value 1
@@ -647,7 +648,7 @@ namespace stage()
 					
 					scoreboard players set 00000003-0000-0003-0000-000300000003 life 0
 					execute as 00000003-0000-0003-0000-000300000003 store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
-					playsound minecraft:enemy.sword.dance_attack player @a
+					playsound minecraft:enemy.sword.dance_attack player @a ~ ~ ~ 3 1 0
 					
 					function ARG(_PATH)end
 				}
@@ -854,7 +855,7 @@ namespace stage()
 				
 				func slash()
 				{
-					playsound minecraft:enemy.sword.slash player @a
+					playsound minecraft:enemy.sword.slash player @a ~ ~ ~ 3 1 0
 					execute positioned ~ ~1 ~ run function ARG(_PATH)slash_effect
 					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:slash_range run function ARG(_PATH)damage
 					
@@ -974,7 +975,7 @@ namespace stage()
 				func attack_effect()
 				{
 					function ARG(_PATH)sword_wave/start
-					playsound minecraft:skill.rush_attack player @a
+					playsound minecraft:skill.rush_attack player @a ~ ~ ~ 3 1 0
 				}
 				
 				folder sword_wave()
@@ -1095,7 +1096,7 @@ namespace stage()
 					execute at 0000000d-0000-000d-0000-000d0000000d facing entity @s feet rotated ~180 0 run tp @s ^ ^-0.15 ^-1
 					# 更換劈砍姿勢模型
 					function ARG(_PATH)sword_wave/start
-					playsound minecraft:skill.basic2 player @a
+					playsound minecraft:skill.basic2 player @a ~ ~ ~ 3 1 0
 					
 					execute at 0000000d-0000-000d-0000-000d0000000d as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:chop_range run effect give @s instant_damage 1 1 true
 					kill 0000000d-0000-000d-0000-000d0000000d
@@ -1225,7 +1226,7 @@ namespace stage()
 				{
 					tag @s add sanction_target
 					
-					playsound minecraft:enemy.sword.sanction_prepare player @a
+					playsound minecraft:enemy.sword.sanction_prepare player @a ~ ~ ~ 3 1 0
 					scoreboard players set #WING_OPEN number -1
 					summon marker ~ ~0.7 ~ {UUID:[I;14,14,14,14],Tags:["object"]}
 					
@@ -1268,7 +1269,7 @@ namespace stage()
 				
 				func effect()
 				{
-					playsound minecraft:enemy.sword.sanction player @a
+					playsound minecraft:enemy.sword.sanction player @a ~ ~ ~ 3 1 0
 					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~-0.8 ~ if entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 1 true
 					kill @s
 				}

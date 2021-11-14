@@ -181,7 +181,15 @@ namespace skill()
 				scoreboard players set #FOUND_TEAMMATE number 0
 				
 				scoreboard players operation #WEAPON_MODE number = @s weapon_mode
+				execute store result score #IS_SWORD_DANCE_TARGET number if entity @s[tag=sword_dance_target]
+				execute store result score #IS_SLASH_TARGET number if entity @s[tag=slash_target]
+				execute store result score #IS_SANCTION_TARGET number if entity @s[tag=sanction_target]
 				execute as @p[gamemode=spectator] run function ARG(_PATH)up
+				
+				tag @s remove sword_dance_target
+				tag @s remove slash_target
+				tag @s remove sanction_target
+				title @s title ""
 				
 				# no teammates found, run single player logic
 				execute if score #FOUND_TEAMMATE number matches 0 run function ARG(__PATH)single
@@ -193,18 +201,32 @@ namespace skill()
 				execute at @s as @a[gamemode=adventure] run function ARG(_PATH)down
 				tp @s ~ ~ ~ ~ ~
 				gamemode adventure @s
+				scoreboard players set @s player 1
+				
+				execute if score #IS_SWORD_DANCE_TARGET number matches 1 run function ARG(_PATH)switch_sd_target
+				execute if score #IS_SLASH_TARGET number matches 1 run tag @s add slash_target
+				execute if score #IS_SANCTION_TARGET number matches 1 run tag @s add sanction_target
+				effect give @s invisibility 1 0 true
 				
 				execute store result score @s weapon_mode run scoreboard players operation #WEAPON_MODE number *= #-1 number
-				execute if score @s weapon_mode matches 1 run function ARG(_PATH)change_edge
-				execute if score @s weapon_mode matches -1 run function ARG(_PATH)change_gun
+				execute if score @s weapon_mode matches 1 run function ARG(__PATH)change_edge
+				execute if score @s weapon_mode matches -1 run function ARG(__PATH)change_gun
 				
 				scoreboard players set #FOUND_TEAMMATE number 1
+			}
+			
+			func switch_sd_target()
+			{
+				tag @s add sword_dance_target
+				execute if score #SWORD_DANCE number matches 2 run title @s times 0 10000 0
+				execute if score #SWORD_DANCE number matches 2 run title @s title {"text":"1","font":"ui:main"}
 			}
 			
 			func down()
 			{
 				tp @s ~ ~ ~ ~ ~
 				gamemode spectator @s
+				scoreboard players set @s player 0
 				function skill:reset_action
 				title @s actionbar ""
 			}
@@ -237,10 +259,36 @@ namespace skill()
 			
 			func do_swap()
 			{
+				execute if entity @a[tag=sword_dance_target] run function ARG(_PATH)swap_tag/run
 				execute if score @s player matches 1 at @s run tp @a[scores={player=2},limit=1] ~ ~ ~ ~ ~
 				execute if score @s player matches 2 at @s run tp @a[scores={player=1},limit=1] ~ ~ ~ ~ ~
 				execute at @s run function ARG(__PATH)effect
 				tp @s ~ ~ ~ ~ ~
+			}
+			
+			folder swap_tag()
+			{
+				func run()
+				{
+					scoreboard players reset #SWAP_TO_OTHER number 0
+					execute if entity @s[tag=sword_dance_target] run function ARG(_PATH)to_other
+					execute if entity @s[tag=!sword_dance_target] run function ARG(_PATH)to_self
+					
+					execute if score #SWAP_TO_OTHER number matches 1 run tag @s remove sword_dance_target
+				}
+				
+				func to_other()
+				{
+					scoreboard players reset #SWAP_TO_OTHER number 1
+					execute if score @s player matches 1 run tag @a[scores={player=2},limit=1] add sword_dance_target
+					execute if score @s player matches 2 run tag @a[scores={player=1},limit=1] add sword_dance_target
+				}
+				
+				func to_self()
+				{
+					tag @a remove sword_dance_target
+					tag @s add sword_dance_target
+				}
 			}
 		}
 		
@@ -309,7 +357,7 @@ namespace skill()
 
 				execute if score @s slash matches 5 rotated ~ 0 if block ^ ^ ^0.5 #skill:canpass run tp @p ^ ^ ^0.5
 				# 防卡牆校正
-				execute if score @s slash matches 5 at @s rotated ~ 0 unless block ^ ^ ^0.36 #skill:canpass run tp @s ^ ^ ^-0.36
+				execute if score @s slash matches 5 at @s rotated ~ 0 unless block ^ ^ ^0.4 #skill:canpass run tp @s ^ ^ ^-0.4
 
 				execute if score @s slash matches ..4 run function ARG(_PATH)basic1
 				execute if score @s slash matches 5 run function ARG(_PATH)basic3
@@ -323,7 +371,7 @@ namespace skill()
 
 				execute if score @s slash matches 5 rotated ~ 0 if block ^ ^ ^0.5 #skill:canpass run tp @p ^ ^ ^0.5
 				# 防卡牆校正
-				execute if score @s slash matches 5 at @s rotated ~ 0 unless block ^ ^ ^0.36 #skill:canpass run tp @s ^ ^ ^-0.36
+				execute if score @s slash matches 5 at @s rotated ~ 0 unless block ^ ^ ^0.4 #skill:canpass run tp @s ^ ^ ^-0.4
 
 				execute if score @s slash matches ..4 run function ARG(_PATH)basic2
 				# 雙手最後一刀的狀態下，右手會讓 slash = 5，所以這個function進不來，不用擔心 basic3 重複執行
@@ -557,7 +605,7 @@ namespace skill()
 			{
 				execute if score @s sneaktime matches ..2 rotated ~ 0 run function ARG(_PATH)move/run
 				# 防卡牆校正
-				execute if score @s sneaktime matches ..2 at @s rotated ~ 0 unless block ^ ^ ^0.36 #skill:canpass run tp @s ^ ^ ^-0.36
+				execute if score @s sneaktime matches ..2 at @s rotated ~ 0 unless block ^ ^ ^0.4 #skill:canpass run tp @s ^ ^ ^-0.4
 				
 				execute if score @s sneaktime matches 1 run playsound minecraft:skill.flash player @a
 				execute if score @s sneaktime matches 2 at @s run function ARG(_PATH)rush_attack
@@ -896,9 +944,9 @@ namespace skill()
 				execute unless block ~ ~-1 ~ #skill:canpass run scoreboard players reset @s escape_used
 				
 				execute if score @s escape_used matches 6 positioned ^ ^0.5 ^ run function ARG(_PATH)shoot
-				execute if score @s escape_used matches 6..9 positioned ^ ^ ^-1 if block ~ ~1 ~ #skill:canpass run tp @s ^ ^ ^-1
+				execute if score @s escape_used matches 6..9 positioned ^ ^ ^-1 if block ~ ~1 ~ #skill:canpass run tp @s ~ ~ ~
 				# 防卡牆校正
-				execute if score @s escape_used matches 6..9 at @s rotated ~ 0 unless block ^ ^ ^-0.36 #skill:canpass run tp @s ^ ^ ^0.36
+				execute if score @s escape_used matches 6..9 at @s rotated ~ 0 unless block ^ ^ ^-0.4 #skill:canpass run tp @s ^ ^ ^0.4
 				effect clear @s[scores={escape_used=12}] minecraft:levitation
 			}
 			
