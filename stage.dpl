@@ -141,8 +141,10 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/fly_sword/aim
 			schedule clear ARG(_PATH)skills/fly_sword/start
 			schedule clear ARG(_PATH)skills/revert_action
-			schedule clear ARG(_PATH)skills/sanction/sting
-			schedule clear ARG(_PATH)skills/sanction/reset_wing
+			function ARG(_PATH)skills/sword_dance/shutdown
+			function ARG(_PATH)skills/flaw/shutdown
+			function ARG(_PATH)skills/chop/shutdown
+			function ARG(_PATH)skills/sanction/shutdown
 			
 			bossbar set minecraft:zone visible false
 			scoreboard players set #ZONE number 0
@@ -154,6 +156,8 @@ namespace stage()
 			scoreboard players set #SLASH_COUNTDOWN number 0
 			scoreboard players set #CHOP_COUNTDOWN number 0
 			scoreboard players set #BACKSTEP number 0
+			scoreboard players set #ANIM_LOCK number 0
+			scoreboard players set #REVERT_ACTION number 0
 			
 			kill 00000013-0000-0013-0000-001300000013
 			
@@ -230,6 +234,9 @@ namespace stage()
 		{
 			func loop()
 			{
+				# 有要後退先後退
+				execute if score #BACKSTEP number matches 1 as 00000001-0000-0001-0000-000100000001 at @s rotated ~ 0 run function ARG(__PATH)backstep
+				
 				schedule function ARG(_PATH)loop 5s
 				execute if score #ZONE_ACTIVE number matches 1 unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)rand_skill
 			}
@@ -734,6 +741,13 @@ namespace stage()
 					scoreboard players set #BACKSTEP number 1
 					scoreboard players set #ANIM_LOCK number 0
 				}
+				
+				func shutdown()
+				{
+					schedule clear ARG(_PATH)sword_wave/anim1
+					schedule clear ARG(_PATH)sword_wave/anim2
+					schedule clear ARG(_PATH)end
+				}
 			}
 			
 			folder slash()
@@ -997,6 +1011,15 @@ namespace stage()
 					schedule clear ARG(__PATH)zone/auto_reset_pose
 					scoreboard players set #ANIM_LOCK number 0
 				}
+				
+				func shutdown()
+				{
+					schedule clear ARG(_PATH)attack
+					schedule clear ARG(_PATH)update_display_rotation
+					schedule clear ARG(_PATH)sword_wave/anim1
+					schedule clear ARG(_PATH)sword_wave/anim2
+					schedule clear ARG(_PATH)end
+				}
 			}
 			
 			folder chop()
@@ -1112,6 +1135,14 @@ namespace stage()
 					scoreboard players set #REVERT_ACTION number 1
 					schedule function ARG(__PATH)revert_action 1s
 					schedule clear ARG(__PATH)zone/auto_reset_pose
+				}
+				
+				func shutdown()
+				{
+					schedule clear ARG(_PATH)cast_follow_skill
+					schedule clear ARG(_PATH)sword_wave/anim1
+					schedule clear ARG(_PATH)sword_wave/anim2
+					schedule clear ARG(_PATH)end
 				}
 			}
 			
