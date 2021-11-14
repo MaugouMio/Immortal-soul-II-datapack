@@ -60,7 +60,7 @@ namespace stage()
 		# reset beam CD
 		data modify storage skill:main beam_bar set value ["4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4"]
 		scoreboard players set #BEAM_CD number 10
-		schedule function ARG(_PATH)countdown 3s
+		schedule function skill:gun/beam/timer/countdown 3s
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start
 		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start
@@ -257,7 +257,7 @@ namespace stage()
 			
 			func near_judge()
 			{
-				execute if score @s health matches ..3500 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
+				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
 				# function ARG(_PATH)slash/cast
 				
 				# 近距離有機率3秒就放下一招
@@ -269,7 +269,7 @@ namespace stage()
 			
 			func far_judge()
 			{
-				execute if score @s health matches ..3500 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
+				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
 				# function ARG(_PATH)slash/cast
 				
 				# 制裁有機率連放下一招
@@ -345,8 +345,11 @@ namespace stage()
 			{
 				func recover()
 				{
+					execute if score #FAST_RECOVER number matches 1.. run scoreboard players remove #FAST_RECOVER number 1
+					
 					execute if score #ZONE_BREAK number matches 1 run scoreboard players operation #ZONE number += #ZONE_RECOVER number
-					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 9
+					execute unless score #ZONE_BREAK number matches 1 run scoreboard players add #ZONE number 3
+					execute unless score #ZONE_BREAK number matches 1 unless score #FAST_RECOVER number matches 1.. run scoreboard players add #ZONE number 22
 					execute store result bossbar minecraft:zone value run scoreboard players operation #ZONE number < #ZONE_MAX number
 					
 					execute if score #ZONE_BREAK number matches 1 if score #ZONE number >= #ZONE_MAX number run function ARG(_PATH)reset
@@ -367,6 +370,13 @@ namespace stage()
 				
 				func hit()
 				{
+					execute if score #DIFFICULTY number matches 1 run scoreboard players set #FAST_RECOVER number 100
+					execute if score #DIFFICULTY number matches 2 run scoreboard players set #FAST_RECOVER number 60
+					execute if score #DIFFICULTY number matches 3 run scoreboard players set #FAST_RECOVER number 40
+					execute if score #DIFFICULTY number matches 4 run scoreboard players set #FAST_RECOVER number 30
+					# 子彈影響快速回復的時間較少
+					execute if score @s display_number matches ..50 run scoreboard players operation #FAST_RECOVER number /= #2 number
+					
 					execute facing entity @p[scores={player=1..}] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
 					execute if score #REVERT_ACTION number matches 1 run function ARG(__PATH)revert_action
 					
@@ -510,9 +520,11 @@ namespace stage()
 			{
 				func cast()
 				{
-					# 暫時關閉ZONE
+					# 暫時關閉ZONE，延後快速回復
 					scoreboard players set #ZONE_ACTIVE number 0
+					scoreboard players add #FAST_RECOVER number 15
 					execute as @r[scores={player=1..},limit=1,distance=5..] at @s run function ARG(_PATH)mark
+					execute facing entity @a[tag=sword_dance_target,limit=1] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
 					
 					scoreboard players set #ANIM_LOCK number 1
 					function ARG(_PATH)open_wing/start
@@ -603,6 +615,9 @@ namespace stage()
 					# 約 8 tick 的反應時間
 					execute if score #SWORD_DANCE number matches 2 at @s if entity @a[tag=sword_dance_target,distance=..1,limit=1] run function ARG(_PATH)attack
 					execute if score #SWORD_DANCE number matches 1 at @s if entity @a[tag=sword_dance_target,distance=..7,limit=1] run function ARG(_PATH)prepare
+					
+					# 追蹤過程持續延後快速回復
+					scoreboard players add #FAST_RECOVER number 1
 				}
 				
 				func prepare()
@@ -634,7 +649,7 @@ namespace stage()
 				{
 					# 讓 BOSS 穿過玩家 1.5 格
 					execute facing entity @s feet positioned as @s run function ARG(_PATH)set_boss_motion
-					effect give @s minecraft:instant_damage 1 1 true
+					effect give @s minecraft:instant_damage 1 2 true
 					execute at @s run particle flash ~ ~1 ~ 0 0 0 1 1
 				}
 				
@@ -655,6 +670,7 @@ namespace stage()
 					# 切換揮刀模型
 					execute at @a[tag=sword_dance_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
 					function ARG(_PATH)sword_wave/start
+					schedule function stage:stage1/skills/loop 11t
 					
 					scoreboard players set 00000003-0000-0003-0000-000300000003 life 0
 					scoreboard players set 00000003-0000-0003-0000-000300000003 number 23
@@ -750,9 +766,11 @@ namespace stage()
 					
 					execute as @r[scores={player=1..}] at @s run function ARG(_PATH)mark
 					function ARG(_PATH)rand_slash_time
+					# 過程中不要快速回復
+					scoreboard players operation #FAST_RECOVER number += #SLASH_COUNTDOWN number
 				}
 				
-				func rand_slash_time() from random().generate(35, 45, "#SLASH_COUNTDOWN number");
+				func rand_slash_time() from random().generate(40, 50, "#SLASH_COUNTDOWN number");
 				
 				func mark()
 				{
@@ -1009,8 +1027,14 @@ namespace stage()
 					scoreboard players set #CHOP_COUNTDOWN number 14
 					
 					# 攻擊半徑只有三格，所以三格內沒玩家就要往前一點再攻擊(近距離最遠5格)
-					execute unless entity @a[scores={player=1..},distance=..3,limit=1] facing entity @p[scores={player=1..}] feet rotated ~ 0 positioned ^ ^ ^2 run summon armor_stand ^ ^ ^1.5 {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;13,13,13,13],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:39}}],Tags:["object","effect"]}
-					execute unless entity 0000000d-0000-000d-0000-000d0000000d facing entity @p[scores={player=1..}] feet rotated ~ 0 run summon armor_stand ^ ^ ^1.5 {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;13,13,13,13],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:39}}],Tags:["object","effect"]}
+					execute unless entity @a[scores={player=1..},distance=..3,limit=1] facing entity @p[scores={player=1..}] feet rotated ~ 0 positioned ^ ^ ^2 run function ARG(_PATH)set_target
+					execute unless entity 0000000d-0000-000d-0000-000d0000000d facing entity @p[scores={player=1..}] feet rotated ~ 0 run function ARG(_PATH)set_target
+				}
+				
+				func set_target()
+				{
+					execute positioned as @s run tp @s ~ ~ ~ ~ ~
+					summon armor_stand ^ ^ ^1.5 {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;13,13,13,13],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:39}}],Tags:["object","effect"]}
 				}
 				
 				func follow_skill()
@@ -1214,7 +1238,7 @@ namespace stage()
 				func effect()
 				{
 					playsound minecraft:enemy.sword.sanction player @a
-					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~-0.8 ~ if entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 0 true
+					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~-0.8 ~ if entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 1 true
 					kill @s
 				}
 				
@@ -1232,6 +1256,7 @@ namespace stage()
 					
 					scoreboard players reset #SANCTION_ANIM number
 					scoreboard players set #WING_OPEN number 0
+					schedule clear ARG(_PATH)sting
 					schedule clear ARG(_PATH)reset_wing
 				}
 			}

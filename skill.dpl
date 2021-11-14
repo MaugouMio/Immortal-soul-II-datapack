@@ -342,6 +342,8 @@ namespace skill()
 
 				scoreboard players set #DAMAGE_SCALE number 8
 				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
+				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
+				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 				
 				scoreboard players set @s last_hand 1
 			}
@@ -358,6 +360,8 @@ namespace skill()
 
 				scoreboard players set #DAMAGE_SCALE number 8
 				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
+				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
+				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 				
 				scoreboard players set @s last_hand 0
 			}
@@ -375,6 +379,8 @@ namespace skill()
 				scoreboard players set #DAMAGE_SCALE number 16
 				execute if score #BOTH_HAND number matches 1 run scoreboard players add #DAMAGE_SCALE number 16
 				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,tag=!effect,distance=..3] at @s run function skill:edge/damage
+				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
+				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 			}
 			
 			func slashtime()
@@ -453,6 +459,7 @@ namespace skill()
 				execute align y rotated ~ 0 run summon armor_stand ^ ^0.2 ^3 {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:11}}]}
 				playsound minecraft:skill.drop_attack player @a
 
+				# 本身範圍就比劍舞格擋距離大，不用額外判斷
 				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)drop_damage
 			}
 			
@@ -484,6 +491,8 @@ namespace skill()
 
 				scoreboard players set #DAMAGE_SCALE number 12
 				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)double_damage
+				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
+				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 			}
 			
 			func double_damage()
@@ -531,6 +540,7 @@ namespace skill()
 				summon minecraft:armor_stand ~ ~-0.3 ~ {Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:17}}]}
 				
 				scoreboard players set #DAMAGE_SCALE number 20
+				# 加上移動距離後比劍舞判定距離長，不用額外判定
 				execute as @e[type=#skill:hostile,tag=!effect,distance=..5] at @s run function ARG(_PATH)rush_damage
 				playsound minecraft:skill.rush_attack player @a
 			}
@@ -567,6 +577,8 @@ namespace skill()
 
 				scoreboard players set #DAMAGE_SCALE number 20
 				execute as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)jump_damage
+				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
+				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 			}
 			
 			func jump_damage()
@@ -790,7 +802,7 @@ namespace skill()
 				effect clear @s glowing
 				effect clear @s slowness
 				scoreboard players reset @s beamtime
-				scoreboard players reset @s shooting
+				function ARG(__PATH)reset_stat
 				kill @e[type=armor_stand,tag=blast_target]
 				kill 00000000-0000-0002-0000-000000000002
 			}
@@ -984,7 +996,7 @@ namespace skill()
 	
 		func use()
 		{
-			attribute @s minecraft:generic.movement_speed modifier add 36a5b73d-2fe3-4601-bddd-ae65698a062c use_gun 3 multiply_base
+			attribute @s minecraft:generic.movement_speed modifier add 36a5b73d-2fe3-4601-bddd-ae65698a062c use_gun 1 multiply_base
 			scoreboard players add @s gun_load 1
 			
 			execute unless score @s shooting matches ..1 run scoreboard players reset @s aiming
