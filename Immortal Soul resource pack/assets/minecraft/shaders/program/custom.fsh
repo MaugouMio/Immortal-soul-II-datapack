@@ -192,7 +192,7 @@ void main() {
 	vec4 PrevTexel = texture(PrevSampler, texCoord);
 	vec4 CurrTexel = texture(DiffuseSampler, texCoord);
 	vec4 JudgeTexel = texture(JudgeSampler, texCoord);
-	fragColor = vec4(CurrTexel.rgb, 1.0);
+	fragColor = vec4(0.0, 0.0, 0.0, 0.0);
 	
 	int fps = getVar(VariableSampler, VAR_FPS) * 5 / 4;
 	if (fps == 0)
