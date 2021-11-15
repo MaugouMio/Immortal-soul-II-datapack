@@ -41,12 +41,16 @@ namespace stage()
 		scoreboard players set @s player 0
 		scoreboard players reset @s death
 		gamemode spectator @s
-		execute unless entity @a[scores={player=1..}] run function ARG(_PATH)end
+		execute unless entity @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)end
 	}
 	
-	# activated by sign click
+	# 點告示牌觸發，需先決定好2P(只要設定player分數為2就好)
 	func start()
 	{
+		# 人數模式設定成指定模式
+		scoreboard players operation #PLAYER_MODE number = #PLAYER_MODE_SET number
+		
+		clear @s
 		function main:effect
 		
 		scoreboard players set @s player 1
@@ -54,9 +58,8 @@ namespace stage()
 		item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
 		item replace entity @s weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
 		
-		# swap mode
-		execute if score #PLAYER_MODE number matches 3 as @p[scores={player=0},gamemode=adventure] run function ARG(_PATH)set_player2
 		gamemode spectator @a[scores={player=0}]
+		execute unless score #PLAYER_MODE number matches 3 run gamemode spectator @a[scores={player=2}]
 		# reset beam CD
 		data modify storage skill:main beam_bar set value ["4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4"]
 		scoreboard players set #BEAM_CD number 10
@@ -70,12 +73,15 @@ namespace stage()
 		bossbar set minecraft:boss visible true
 		
 		effect give @a instant_health 1 5 true
+		execute as @a[scores={player=2}] run function ARG(_PATH)set_player2
 		execute store result score @a[scores={player=1..}] game_id run scoreboard players add #GLOBAL game_id 1
 	}
 	
 	func set_player2()
 	{
-		scoreboard players set @s player 2
+		clear @s
+		function main:effect
+		
 		scoreboard players set @s weapon_mode -1
 		item replace entity @s weapon.mainhand with minecraft:spyglass{display:{Name:'{"translate":"Supreme Pulse","bold":true,"italic":false}'},weapon:1b}
 	}
@@ -168,7 +174,7 @@ namespace stage()
 		func main()
 		{
 			execute at 00000001-0000-0001-0000-000100000001 positioned ~ ~0.8 ~ run tp 00000012-0000-0012-0000-001200000012 ~ ~ ~
-			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #ZONE_BREAK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s facing entity @p[scores={player=1..}] feet run function ARG(_PATH)face_player
+			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #ZONE_BREAK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s facing entity @p[scores={player=1..},gamemode=adventure] feet run function ARG(_PATH)face_player
 			
 			execute if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
@@ -247,8 +253,8 @@ namespace stage()
 				function random:rand_rate
 				
 				scoreboard players set #NEAR_SKILL number 0
-				execute if entity @a[scores={player=1..},distance=..5,limit=1] run scoreboard players add #NEAR_SKILL number 1
-				execute if entity @a[scores={player=1..},distance=5.01..,limit=1] run scoreboard players add #NEAR_SKILL number 2
+				execute if entity @a[scores={player=1..},gamemode=adventure,distance=..5,limit=1] run scoreboard players add #NEAR_SKILL number 1
+				execute if entity @a[scores={player=1..},gamemode=adventure,distance=5.01..,limit=1] run scoreboard players add #NEAR_SKILL number 2
 				
 				execute if score #NEAR_SKILL number matches 1 run function ARG(_PATH)near_judge
 				execute if score #NEAR_SKILL number matches 2 run function ARG(_PATH)far_judge
@@ -385,7 +391,7 @@ namespace stage()
 					# 子彈影響快速回復的時間較少
 					execute if score @s display_number matches ..50 run scoreboard players operation #FAST_RECOVER number /= #2 number
 					
-					execute facing entity @p[scores={player=1..}] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
+					execute facing entity @p[scores={player=1..},gamemode=adventure] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
 					execute if score #REVERT_ACTION number matches 1 run function ARG(__PATH)revert_action
 					
 					execute if entity @s[tag=beam_hit] at @s run function ARG(__PATH)dodge/try
@@ -469,7 +475,7 @@ namespace stage()
 				func move()
 				{
 					# tp 看起來會有延遲，讓他攻擊晚一點到
-					execute at @s as @a[scores={player=1..},distance=..1,tag=!sword_hit] unless score @s beamtime matches 0.. run function ARG(_PATH)hit
+					execute at @s as @a[scores={player=1..},gamemode=adventure,distance=..1,tag=!sword_hit] unless score @s beamtime matches 0.. run function ARG(_PATH)hit
 					tp @s ^ ^ ^-0.5
 					execute at @s unless block ^ ^ ^-0.5 #skill:canpass run function ARG(_PATH)stop
 				}
@@ -491,7 +497,7 @@ namespace stage()
 				
 				func aim()
 				{
-					execute at 00000002-0000-0002-0000-000200000002 as @p[scores={player=1..}] run function ARG(_PATH)aim_effect
+					execute at 00000002-0000-0002-0000-000200000002 as @p[scores={player=1..},gamemode=adventure] run function ARG(_PATH)aim_effect
 					schedule function ARG(_PATH)start 10t
 				}
 				
@@ -531,7 +537,7 @@ namespace stage()
 					# 暫時關閉ZONE，延後快速回復
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players add #FAST_RECOVER number 15
-					execute as @r[scores={player=1..},limit=1,distance=5..] at @s run function ARG(_PATH)mark
+					execute as @r[scores={player=1..},gamemode=adventure,limit=1,distance=5..] at @s run function ARG(_PATH)mark
 					execute facing entity @a[tag=sword_dance_target,limit=1] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
 					
 					scoreboard players set #ANIM_LOCK number 1
@@ -779,7 +785,7 @@ namespace stage()
 					scoreboard players set #L_ARM_X number 45
 					scoreboard players set #L_ARM_DIFF_X number 5
 					
-					execute as @r[scores={player=1..}] at @s run function ARG(_PATH)mark
+					execute as @r[scores={player=1..},gamemode=adventure] at @s run function ARG(_PATH)mark
 					function ARG(_PATH)rand_slash_time
 					# 過程中不要快速回復
 					scoreboard players operation #FAST_RECOVER number += #SLASH_COUNTDOWN number
@@ -857,7 +863,7 @@ namespace stage()
 				{
 					playsound minecraft:enemy.sword.slash player @a ~ ~ ~ 3 1 0
 					execute positioned ~ ~1 ~ run function ARG(_PATH)slash_effect
-					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:slash_range run function ARG(_PATH)damage
+					execute as @a[scores={player=1..},gamemode=adventure] unless score @s beamtime matches 0.. if predicate stage:slash_range run function ARG(_PATH)damage
 					
 					schedule function ARG(_PATH)activate_shader/run 3t
 				}
@@ -923,7 +929,7 @@ namespace stage()
 					data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value 7
 					data modify entity 00000001-0000-0001-0000-000100000001 NoGravity set value 1
 					```
-					print('execute at @r[scores={player=1..},distance=..5,limit=1] positioned ~ %.2f ~ run function ARG(_PATH)positioned_effect' %GROUND_Y[0])
+					print('execute at @r[scores={player=1..},gamemode=adventure,distance=..5,limit=1] positioned ~ %.2f ~ run function ARG(_PATH)positioned_effect' %GROUND_Y[0])
 					```
 					schedule function ARG(_PATH)attack 15t
 				}
@@ -962,7 +968,7 @@ namespace stage()
 					
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)attack_effect
 					execute as 00000001-0000-0001-0000-000100000001 at 0000000c-0000-000c-0000-000c0000000c facing entity @s feet rotated ~ 0 run function ARG(_PATH)attack_move
-					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. at 0000000c-0000-000c-0000-000c0000000c if predicate stage:flaw_range run effect give @s instant_damage 1 0 true
+					execute as @a[scores={player=1..},gamemode=adventure] unless score @s beamtime matches 0.. at 0000000c-0000-000c-0000-000c0000000c if predicate stage:flaw_range run effect give @s instant_damage 1 0 true
 				}
 				
 				func attack_move()
@@ -1051,8 +1057,8 @@ namespace stage()
 					scoreboard players set #CHOP_COUNTDOWN number 14
 					
 					# 攻擊半徑只有三格，所以三格內沒玩家就要往前一點再攻擊(近距離最遠5格)
-					execute unless entity @a[scores={player=1..},distance=..3,limit=1] facing entity @p[scores={player=1..}] feet rotated ~ 0 positioned ^ ^ ^2 run function ARG(_PATH)set_target
-					execute unless entity 0000000d-0000-000d-0000-000d0000000d facing entity @p[scores={player=1..}] feet rotated ~ 0 run function ARG(_PATH)set_target
+					execute unless entity @a[scores={player=1..},gamemode=adventure,distance=..3,limit=1] facing entity @p[scores={player=1..},gamemode=adventure] feet rotated ~ 0 positioned ^ ^ ^2 run function ARG(_PATH)set_target
+					execute unless entity 0000000d-0000-000d-0000-000d0000000d facing entity @p[scores={player=1..},gamemode=adventure] feet rotated ~ 0 run function ARG(_PATH)set_target
 				}
 				
 				func set_target()
@@ -1071,7 +1077,7 @@ namespace stage()
 				
 				func cast_follow_skill()
 				{
-					execute as 00000001-0000-0001-0000-000100000001 at @s if entity @a[scores={player=1..},distance=..5,limit=1] run function ARG(__PATH)flaw/cast
+					execute as 00000001-0000-0001-0000-000100000001 at @s if entity @a[scores={player=1..},gamemode=adventure,distance=..5,limit=1] run function ARG(__PATH)flaw/cast
 				}
 				
 				func chop_countdown()
@@ -1098,7 +1104,7 @@ namespace stage()
 					function ARG(_PATH)sword_wave/start
 					playsound minecraft:skill.basic2 player @a ~ ~ ~ 3 1 0
 					
-					execute at 0000000d-0000-000d-0000-000d0000000d as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:chop_range run effect give @s instant_damage 1 1 true
+					execute at 0000000d-0000-000d-0000-000d0000000d as @a[scores={player=1..},gamemode=adventure] unless score @s beamtime matches 0.. if predicate stage:chop_range run effect give @s instant_damage 1 1 true
 					kill 0000000d-0000-000d-0000-000d0000000d
 				}
 				
@@ -1270,7 +1276,7 @@ namespace stage()
 				func effect()
 				{
 					playsound minecraft:enemy.sword.sanction player @a ~ ~ ~ 3 1 0
-					execute as @a[scores={player=1..}] unless score @s beamtime matches 0.. if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~-0.8 ~ if entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 1 true
+					execute as @a[scores={player=1..},gamemode=adventure] unless score @s beamtime matches 0.. if predicate stage:sanction_range positioned ~-10 ~0.2 ~-10 if entity @s[dx=20,dy=0,dz=20] positioned ~ ~-0.8 ~ if entity @s[dx=20,dy=0,dz=20] run effect give @s instant_damage 1 1 true
 					kill @s
 				}
 				

@@ -184,7 +184,8 @@ namespace skill()
 				execute store result score #IS_SWORD_DANCE_TARGET number if entity @s[tag=sword_dance_target]
 				execute store result score #IS_SLASH_TARGET number if entity @s[tag=slash_target]
 				execute store result score #IS_SANCTION_TARGET number if entity @s[tag=sanction_target]
-				execute as @p[gamemode=spectator] run function ARG(_PATH)up
+				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run function ARG(_PATH)up
+				execute if score @s player matches 2 as @a[scores={player=1},limit=1] run function ARG(_PATH)up
 				
 				tag @s remove sword_dance_target
 				tag @s remove slash_target
@@ -198,21 +199,30 @@ namespace skill()
 			
 			func up()
 			{
-				execute at @s as @a[gamemode=adventure] run function ARG(_PATH)down
+				execute if score @s player matches 1 at @s as @a[scores={player=2},limit=1] run function ARG(_PATH)down
+				execute if score @s player matches 2 at @s as @a[scores={player=1},limit=1] run function ARG(_PATH)down
+				
 				tp @s ~ ~ ~ ~ ~
 				gamemode adventure @s
-				scoreboard players set @s player 1
 				
 				execute if score #IS_SWORD_DANCE_TARGET number matches 1 run function ARG(_PATH)switch_sd_target
 				execute if score #IS_SLASH_TARGET number matches 1 run tag @s add slash_target
 				execute if score #IS_SANCTION_TARGET number matches 1 run tag @s add sanction_target
+				
+				# 修正觀察者切回來是透明的問題用
 				effect give @s invisibility 1 0 true
+				schedule function ARG(_PATH)reset_invisibility 3t
 				
 				execute store result score @s weapon_mode run scoreboard players operation #WEAPON_MODE number *= #-1 number
 				execute if score @s weapon_mode matches 1 run function ARG(__PATH)change_edge
 				execute if score @s weapon_mode matches -1 run function ARG(__PATH)change_gun
 				
 				scoreboard players set #FOUND_TEAMMATE number 1
+			}
+			
+			func reset_invisibility()
+			{
+				effect clear @a invisibility
 			}
 			
 			func switch_sd_target()
@@ -226,7 +236,6 @@ namespace skill()
 			{
 				tp @s ~ ~ ~ ~ ~
 				gamemode spectator @s
-				scoreboard players set @s player 0
 				function skill:reset_action
 				title @s actionbar ""
 			}
