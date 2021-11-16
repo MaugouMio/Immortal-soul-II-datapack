@@ -191,7 +191,7 @@ namespace stage()
 			execute if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
 			
-			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=sword_dance_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~180 0
+			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=boss_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~180 0
 			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
 			
 			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/slash/slash_countdown
@@ -550,7 +550,7 @@ namespace stage()
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players add #FAST_RECOVER number 15
 					execute as @r[scores={player=1..},gamemode=adventure,limit=1,distance=5..] at @s run function ARG(_PATH)mark
-					execute facing entity @a[tag=sword_dance_target,limit=1] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
+					execute facing entity @a[tag=boss_target,limit=1] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
 					
 					scoreboard players set #ANIM_LOCK number 1
 					function ARG(_PATH)open_wing/start
@@ -563,7 +563,7 @@ namespace stage()
 					summon minecraft:armor_stand ~ ~ ~ {UUID:[I;3,3,3,3],Invisible:1,NoGravity:1,Invulnerable:1,Marker:1,Fire:100s,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 					scoreboard players set 00000003-0000-0003-0000-000300000003 number 32
 					scoreboard players set 00000003-0000-0003-0000-000300000003 life -100000
-					tag @s add sword_dance_target
+					tag @s add boss_target
 				}
 				
 				func mark_effect()
@@ -636,11 +636,11 @@ namespace stage()
 				
 				func trace()
 				{
-					execute facing entity @a[tag=sword_dance_target,limit=1] feet run tp @s ^ ^ ^0.7 ~ ~
+					execute facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.7 ~ ~
 					
 					# 約 8 tick 的反應時間
-					execute if score #SWORD_DANCE number matches 2 at @s if entity @a[tag=sword_dance_target,distance=..1,limit=1] run function ARG(_PATH)attack
-					execute if score #SWORD_DANCE number matches 1 at @s if entity @a[tag=sword_dance_target,distance=..7,limit=1] run function ARG(_PATH)prepare
+					execute if score #SWORD_DANCE number matches 2 at @s if entity @a[tag=boss_target,distance=..1,limit=1] run function ARG(_PATH)attack
+					execute if score #SWORD_DANCE number matches 1 at @s if entity @a[tag=boss_target,distance=..7,limit=1] run function ARG(_PATH)prepare
 					
 					# 追蹤過程持續延後快速回復
 					scoreboard players add #FAST_RECOVER number 1
@@ -649,8 +649,8 @@ namespace stage()
 				func prepare()
 				{
 					# 反擊ICON
-					title @a[tag=sword_dance_target] times 0 10000 0
-					title @a[tag=sword_dance_target] title {"text":"1","font":"ui:main"}
+					title @a[tag=boss_target] times 0 10000 0
+					title @a[tag=boss_target] title {"text":"1","font":"ui:main"}
 					# 切換攻擊預備動作模型
 					data modify entity @s Pose.RightArm set value [260f,350f,100f]
 					particle flash ~ ~1 ~ 0 0 0 1 1
@@ -660,7 +660,7 @@ namespace stage()
 				
 				func attack()
 				{
-					execute as @a[tag=sword_dance_target,limit=1] unless score @s beamtime matches 0.. run function ARG(_PATH)damage
+					execute as @a[tag=boss_target,limit=1] unless score @s beamtime matches 0.. run function ARG(_PATH)damage
 					# 切換揮刀模型
 					function ARG(_PATH)sword_wave/start
 					
@@ -694,7 +694,7 @@ namespace stage()
 				func counter()
 				{
 					# 切換揮刀模型
-					execute at @a[tag=sword_dance_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
+					execute at @a[tag=boss_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
 					function ARG(_PATH)sword_wave/start
 					schedule function stage:stage1/skills/loop 11t
 					
@@ -711,8 +711,8 @@ namespace stage()
 						data modify entity @s HandItems[0].tag.CustomModelData set value 15
 						data modify entity @s Pose.RightArm set value [30f,350f,100f]
 					
-						title @a[tag=sword_dance_target] title ""
-						tag @a remove sword_dance_target
+						title @a[tag=boss_target] title ""
+						tag @a remove boss_target
 						
 						schedule function ARG(_PATH)anim1 2t
 					}
@@ -807,7 +807,7 @@ namespace stage()
 				
 				func mark()
 				{
-					tag @s add slash_target
+					tag @s add boss_target
 					```
 					print('summon armor_stand ~ %.1f ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,UUID:[I;10,10,10,10],Tags:["object","effect"],Passengers:[{id:"minecraft:item",Item:{id:"minecraft:potion",Count:1b,tag:{CustomModelData:11,CustomPotionColor:-1}},PickupDelay:32767,HasVisualFire:1b,UUID:[I;17,17,17,17],Tags:["object","effect"]}]}' %GROUND_Y[0])
 					```
@@ -815,13 +815,13 @@ namespace stage()
 				
 				func slash_countdown()
 				{
-					execute facing entity @a[tag=slash_target,limit=1] feet run function stage:stage1/face_player
+					execute facing entity @a[tag=boss_target,limit=1] feet run function stage:stage1/face_player
 					
 					execute if score #SLASH_COUNTDOWN number matches 2..6 run function ARG(_PATH)calc_pose
 					execute if score #SLASH_COUNTDOWN number matches 16 run data modify entity 00000011-0000-0011-0000-001100000011 Item.tag.CustomPotionColor set value 16711680
 					execute if score #SLASH_COUNTDOWN number matches 16 run playsound minecraft:enemy.sword.slash_hint player @a ~ ~ ~ 3 1 0
 					```
-					print(f"execute if score #SLASH_COUNTDOWN number matches 17.. at @a[tag=slash_target,limit=1] positioned ~ {GROUND_Y[0]} ~ run tp 0000000a-0000-000a-0000-000a0000000a ~ ~ ~ ~ 0")
+					print(f"execute if score #SLASH_COUNTDOWN number matches 17.. at @a[tag=boss_target,limit=1] positioned ~ {GROUND_Y[0]} ~ run tp 0000000a-0000-000a-0000-000a0000000a ~ ~ ~ ~ 0")
 					```
 					
 					scoreboard players remove #SLASH_COUNTDOWN number 1
@@ -860,7 +860,7 @@ namespace stage()
 					
 					kill 0000000a-0000-000a-0000-000a0000000a
 					kill 00000011-0000-0011-0000-001100000011
-					tag @a remove slash_target
+					tag @a remove boss_target
 				}
 			
 				folder move() from for_loop().for(8, "if block ^ ^ ^0.5 #skill:canpass positioned ^ ^ ^0.5")
@@ -1242,7 +1242,7 @@ namespace stage()
 				
 				func surround()
 				{
-					tag @s add sanction_target
+					tag @s add boss_target
 					
 					playsound minecraft:enemy.sword.sanction_prepare player @a ~ ~ ~ 3 1 0
 					scoreboard players set #WING_OPEN number -1
@@ -1264,7 +1264,7 @@ namespace stage()
 				
 				func follow()
 				{
-					execute as @a[tag=sanction_target,limit=1] run function ARG(_PATH)horizonal_move
+					execute as @a[tag=boss_target,limit=1] run function ARG(_PATH)horizonal_move
 					execute at @s run function ARG(_PATH)set_sword
 				}
 				
@@ -1279,7 +1279,7 @@ namespace stage()
 					execute as @e[type=husk,tag=wing] at @s run tp @s ^ ^ ^-8
 					execute as 0000000e-0000-000e-0000-000e0000000e at @s run function ARG(_PATH)effect
 					scoreboard players set #WING_OPEN number -2
-					tag @a remove sanction_target
+					tag @a remove boss_target
 					
 					function ARG(_PATH)hand_anim/swing/start
 					schedule function ARG(_PATH)reset_wing 1s
@@ -1302,7 +1302,7 @@ namespace stage()
 				func shutdown()
 				{
 					kill 0000000e-0000-000e-0000-000e0000000e
-					tag @a remove sanction_target
+					tag @a remove boss_target
 					
 					scoreboard players reset #SANCTION_ANIM number
 					scoreboard players set #WING_OPEN number 0

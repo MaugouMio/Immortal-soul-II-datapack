@@ -181,15 +181,11 @@ namespace skill()
 				scoreboard players set #FOUND_TEAMMATE number 0
 				
 				scoreboard players operation #WEAPON_MODE number = @s weapon_mode
-				execute store result score #IS_SWORD_DANCE_TARGET number if entity @s[tag=sword_dance_target]
-				execute store result score #IS_SLASH_TARGET number if entity @s[tag=slash_target]
-				execute store result score #IS_SANCTION_TARGET number if entity @s[tag=sanction_target]
+				execute store result score #IS_BOSS_TARGET number if entity @s[tag=boss_target]
 				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run function ARG(_PATH)up
 				execute if score @s player matches 2 as @a[scores={player=1},limit=1] run function ARG(_PATH)up
 				
-				tag @s remove sword_dance_target
-				tag @s remove slash_target
-				tag @s remove sanction_target
+				tag @s remove boss_target
 				title @s title ""
 				
 				# no teammates found, run single player logic
@@ -204,10 +200,7 @@ namespace skill()
 				
 				tp @s ~ ~ ~ ~ ~
 				gamemode adventure @s
-				
-				execute if score #IS_SWORD_DANCE_TARGET number matches 1 run function ARG(_PATH)switch_sd_target
-				execute if score #IS_SLASH_TARGET number matches 1 run tag @s add slash_target
-				execute if score #IS_SANCTION_TARGET number matches 1 run tag @s add sanction_target
+				execute if score #IS_BOSS_TARGET number matches 1 run function ARG(_PATH)switch_target
 				
 				# 修正觀察者切回來是透明的問題用
 				effect give @s invisibility 1 0 true
@@ -225,9 +218,9 @@ namespace skill()
 				effect clear @a invisibility
 			}
 			
-			func switch_sd_target()
+			func switch_target()
 			{
-				tag @s add sword_dance_target
+				tag @s add boss_target
 				execute if score #SWORD_DANCE number matches 2 run title @s times 0 10000 0
 				execute if score #SWORD_DANCE number matches 2 run title @s title {"text":"1","font":"ui:main"}
 			}
