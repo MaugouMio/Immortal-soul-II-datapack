@@ -106,6 +106,12 @@ namespace main()
 			# tp @s x y z rx ry
 			scoreboard players reset @s player
 			function skill:reset_action
+			
+			# 難度設定的能力值
+			attribute @s minecraft:generic.max_health modifier remove c655e15b-1539-43df-80c9-55feb92b4e2b
+			effect clear @s minecraft:regeneration
+			
+			effect give @s minecraft:instant_health 1 10 true
 		}
 	}
 	
