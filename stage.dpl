@@ -95,7 +95,7 @@ namespace stage()
 		
 		execute if score #DIFFICULTY number matches 1 run attribute @s minecraft:generic.max_health modifier add c655e15b-1539-43df-80c9-55feb92b4e2b difficulty 10 add
 		execute if score #DIFFICULTY number matches ..2 run effect give @s minecraft:regeneration 1000000 1 true
-		execute if score #DIFFICULTY number matches 4 run attribute @s minecraft:generic.max_health modifier add c655e15b-1539-43df-80c9-55feb92b4e2b difficulty -7 add
+		execute if score #DIFFICULTY number matches 4 run attribute @s minecraft:generic.max_health modifier add c655e15b-1539-43df-80c9-55feb92b4e2b difficulty -14 add
 	}
 	
 	func end()
@@ -255,6 +255,7 @@ namespace stage()
 			{
 				# 有要後退先後退
 				execute if score #BACKSTEP number matches 1 as 00000001-0000-0001-0000-000100000001 at @s rotated ~ 0 run function ARG(__PATH)backstep
+				execute if score #REVERT_ACTION number matches 1 run function ARG(_PATH)revert_action
 				
 				schedule function ARG(_PATH)loop 5s
 				execute if score #ZONE_ACTIVE number matches 1 unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)rand_skill
@@ -297,9 +298,6 @@ namespace stage()
 			{
 				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
 				# function ARG(_PATH)slash/cast
-				
-				# 制裁有機率連放下一招
-				execute if score #RAND_RESULT number matches 30..64 run schedule function ARG(_PATH)loop 41t
 				
 				execute if score #RAND_RESULT number matches 0..29 run function ARG(_PATH)sword_dance/cast
 				execute if score #RAND_RESULT number matches 30..99 run function ARG(_PATH)sanction/cast
@@ -510,7 +508,8 @@ namespace stage()
 				func aim()
 				{
 					execute at 00000002-0000-0002-0000-000200000002 as @p[scores={player=1..},gamemode=adventure] run function ARG(_PATH)aim_effect
-					schedule function ARG(_PATH)start 10t
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)start 15t
+					execute if score #DIFFICULTY number matches 2.. run schedule function ARG(_PATH)start 10t
 				}
 				
 				func aim_effect()
@@ -636,7 +635,9 @@ namespace stage()
 				
 				func trace()
 				{
-					execute facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.7 ~ ~
+					execute if score #DIFFICULTY number matches 1 facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.55 ~ ~
+					execute if score #DIFFICULTY number matches 2..3 facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.7 ~ ~
+					execute if score #DIFFICULTY number matches 4 facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.8 ~ ~
 					
 					# 約 8 tick 的反應時間
 					execute if score #SWORD_DANCE number matches 2 at @s if entity @a[tag=boss_target,distance=..1,limit=1] run function ARG(_PATH)attack
@@ -801,6 +802,10 @@ namespace stage()
 					function ARG(_PATH)rand_slash_time
 					# 過程中不要快速回復
 					scoreboard players operation #FAST_RECOVER number += #SLASH_COUNTDOWN number
+					
+					execute if score #DIFFICULTY number matches 1..2 run scoreboard players set #SLASH_HINT_TIME number 18
+					execute if score #DIFFICULTY number matches 3 run scoreboard players set #SLASH_HINT_TIME number 16
+					execute if score #DIFFICULTY number matches 4 run scoreboard players set #SLASH_HINT_TIME number 14
 				}
 				
 				func rand_slash_time() from random().generate(40, 50, "#SLASH_COUNTDOWN number");
@@ -818,14 +823,19 @@ namespace stage()
 					execute facing entity @a[tag=boss_target,limit=1] feet run function stage:stage1/face_player
 					
 					execute if score #SLASH_COUNTDOWN number matches 2..6 run function ARG(_PATH)calc_pose
-					execute if score #SLASH_COUNTDOWN number matches 16 run data modify entity 00000011-0000-0011-0000-001100000011 Item.tag.CustomPotionColor set value 16711680
-					execute if score #SLASH_COUNTDOWN number matches 16 run playsound minecraft:enemy.sword.slash_hint player @a ~ ~ ~ 3 1 0
+					execute if score #SLASH_COUNTDOWN number = #SLASH_HINT_TIME number run function ARG(_PATH)set_hint
 					```
-					print(f"execute if score #SLASH_COUNTDOWN number matches 17.. at @a[tag=boss_target,limit=1] positioned ~ {GROUND_Y[0]} ~ run tp 0000000a-0000-000a-0000-000a0000000a ~ ~ ~ ~ 0")
+					print(f"execute if score #SLASH_COUNTDOWN number > #SLASH_HINT_TIME number at @a[tag=boss_target,limit=1] positioned ~ {GROUND_Y[0]} ~ run tp 0000000a-0000-000a-0000-000a0000000a ~ ~ ~ ~ 0")
 					```
 					
 					scoreboard players remove #SLASH_COUNTDOWN number 1
 					execute if score #SLASH_COUNTDOWN number matches 0 run function ARG(_PATH)end
+				}
+				
+				func set_hint()
+				{
+					data modify entity 00000011-0000-0011-0000-001100000011 Item.tag.CustomPotionColor set value 16711680
+					playsound minecraft:enemy.sword.slash_hint player @a ~ ~ ~ 3 1 0
 				}
 				
 				func calc_pose()
@@ -943,7 +953,9 @@ namespace stage()
 					```
 					print('execute at @r[scores={player=1..},gamemode=adventure,distance=..5,limit=1] positioned ~ %.2f ~ run function ARG(_PATH)positioned_effect' %GROUND_Y[0])
 					```
-					schedule function ARG(_PATH)attack 15t
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)attack 17t
+					execute if score #DIFFICULTY number matches 2..3 run schedule function ARG(_PATH)attack 15t
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)attack 13t
 				}
 				
 				func positioned_effect()
@@ -1066,7 +1078,9 @@ namespace stage()
 					scoreboard players set #L_ARM_X number 45
 					scoreboard players set #L_ARM_DIFF_X number 5
 					
-					scoreboard players set #CHOP_COUNTDOWN number 14
+					execute if score #DIFFICULTY number matches 1 run scoreboard players set #CHOP_COUNTDOWN number 16
+					execute if score #DIFFICULTY number matches 2..3 run scoreboard players set #CHOP_COUNTDOWN number 14
+					execute if score #DIFFICULTY number matches 4 run scoreboard players set #CHOP_COUNTDOWN number 12
 					
 					# 攻擊半徑只有三格，所以三格內沒玩家就要往前一點再攻擊(近距離最遠5格)
 					execute unless entity @a[scores={player=1..},gamemode=adventure,distance=..3,limit=1] facing entity @p[scores={player=1..},gamemode=adventure] feet rotated ~ 0 positioned ^ ^ ^2 run function ARG(_PATH)set_target
@@ -1081,7 +1095,10 @@ namespace stage()
 				
 				func follow_skill()
 				{
-					schedule function ARG(_PATH)cast_follow_skill 20t
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)cast_follow_skill 22t
+					execute if score #DIFFICULTY number matches 2..3 run schedule function ARG(_PATH)cast_follow_skill 20t
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)cast_follow_skill 18t
+					
 					schedule function ARG(__PATH)loop 120t
 					schedule clear ARG(__PATH)revert_action
 					scoreboard players set #REVERT_ACTION number 0
@@ -1174,10 +1191,32 @@ namespace stage()
 					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] + 0.7} ~ run function ARG(_PATH)surround")
 					print(f"execute if score #SANCTION_FLIP number matches 1 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] - 0.7} ~ run function ARG(_PATH)surround")
 					```
-					execute if score #SANCTION_FLIP number matches 0 run schedule function ARG(_PATH)sting 20t
-					execute if score #SANCTION_FLIP number matches 1 run schedule function ARG(_PATH)sting 18t
+					execute if score #DIFFICULTY number matches 1 run function ARG(_PATH)schedule_sting/easy
+					execute if score #DIFFICULTY number matches 2..3 run function ARG(_PATH)schedule_sting/normal
+					execute if score #DIFFICULTY number matches 4 run function ARG(_PATH)schedule_sting/hell
 					
 					function ARG(_PATH)hand_anim/raise/start
+				}
+				
+				folder schedule_sting()
+				{
+					func easy()
+					{
+						execute if score #SANCTION_FLIP number matches 0 run schedule function ARG(__PATH)sting 25t
+						execute if score #SANCTION_FLIP number matches 1 run schedule function ARG(__PATH)sting 23t
+					}
+					
+					func normal()
+					{
+						execute if score #SANCTION_FLIP number matches 0 run schedule function ARG(__PATH)sting 20t
+						execute if score #SANCTION_FLIP number matches 1 run schedule function ARG(__PATH)sting 18t
+					}
+					
+					func hell()
+					{
+						execute if score #SANCTION_FLIP number matches 0 run schedule function ARG(__PATH)sting 19t
+						execute if score #SANCTION_FLIP number matches 1 run schedule function ARG(__PATH)sting 17t
+					}
 				}
 				
 				# 原則上左手平常都是擺著(放技能才會動，但是技能之間不重疊)
@@ -1280,6 +1319,10 @@ namespace stage()
 					execute as 0000000e-0000-000e-0000-000e0000000e at @s run function ARG(_PATH)effect
 					scoreboard players set #WING_OPEN number -2
 					tag @a remove boss_target
+					
+					# 制裁有機率連放下一招
+					function random:rand_rate
+					execute if score #RAND_RESULT number matches ..49 run schedule function ARG(__PATH)loop 21t
 					
 					function ARG(_PATH)hand_anim/swing/start
 					schedule function ARG(_PATH)reset_wing 1s
