@@ -1356,25 +1356,37 @@ namespace stage()
 		}
 	}
 	
-	# 至尊魔導
+	# 呪縛巫女
 	folder stage2()
 	{
 		func start()
 		{
-			bossbar set minecraft:boss name {"translate":"Arch Magician","color":"white","bold":true}
-			# tp @a x y z rx ry
-			# summon ...
+			bossbar set minecraft:boss max 50000
+			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
+			bossbar set minecraft:boss name {"translate":"Cursed Miko","color":"white","bold":true}
+			```
+			print(f"tp @a 128 {GROUND_Y[1]} 0 180 50")
+			print(f"execute positioned 128 {GROUND_Y[0]} -8 run function ARG(_PATH)summon_boss")
+			```
 			schedule function ARG(_PATH)skills/loop 7s
+			schedule function ARG(_PATH)skills/dust/shoot 8s
+		}
+		
+		func summon_boss()
+		{
+			
 		}
 		
 		func end()
 		{
 			schedule clear ARG(_PATH)skills/loop
+			schedule clear ARG(_PATH)skills/dust/shoot
+			schedule clear ARG(_PATH)skills/dust/real_summon
 		}
 		
 		func main()
 		{
-			
+			execute as @e[type=armor_stand,tag=dust_bullet] at @s run function ARG(_PATH)skills/dust/bullet/move
 		}
 		
 		folder skills()
@@ -1382,6 +1394,54 @@ namespace stage()
 			func loop()
 			{
 				schedule function ARG(_PATH)loop 7s
+				```
+				print(f"execute at @r positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)dust/summon")
+				```
+			}
+			
+			folder dust()
+			{
+				func summon()
+				{
+					# 向上飄出的生成特效
+					summon armor_stand ~ ~-1.5 ~ {CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object"],UUID:[I;20,20,20,20]}
+					tp 00000014-0000-0014-0000-001400000014 ~ ~ ~
+					schedule function ARG(_PATH)real_summon 1s
+				}
+				
+				func real_summon()
+				{
+					execute at 00000014-0000-0014-0000-001400000014 run summon area_effect_cloud ~ ~-0.5 ~ {Duration:2100000000,CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object","dust"]}
+					kill 00000014-0000-0014-0000-001400000014
+				}
+				
+				func shoot()
+				{
+					execute as @e[type=area_effect_cloud,tag=dust] at @s run function ARG(_PATH)bullet/summon
+					schedule function ARG(_PATH)shoot 1s
+				}
+				
+				folder bullet()
+				{
+					func summon()
+					{
+						summon armor_stand ~ ~0.75 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","dust_bullet","new_bullet"]}
+						execute as @e[type=armor_stand,tag=new_bullet,limit=1] at @s run function ARG(_PATH)setting
+					}
+					
+					func setting()
+					{
+						execute facing entity @p[scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
+						tag @s remove new_bullet
+					}
+					
+					func move()
+					{
+						tp @s ^ ^ ^0.5
+						execute positioned ~-0.75 ~-0.75 ~-0.75 as @a[scores={player=1..},dx=0,dy=0,dz=0] positioned ~0.5 ~0.5 ~0.5 if entity @s[dx=0,dy=0,dz=0] run effect give @s blindness 2 0 true
+						execute unless block ~ ~ ~ #skill:canpass run kill @s
+					}
+				}
 			}
 		}
 	}

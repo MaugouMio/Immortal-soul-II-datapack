@@ -8,6 +8,15 @@
 			"chars": [
 				"0"
 			]
+		},
+		{
+			"type": "bitmap",
+			"file": "skill:font/dust.png",
+			"ascent": 24,
+			"height": 48,
+			"chars": [
+				"1"
+			]
 		}
 	]
 }
