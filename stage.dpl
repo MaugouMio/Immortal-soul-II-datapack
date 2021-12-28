@@ -515,11 +515,21 @@ namespace stage()
 				func aim_effect()
 				{
 					execute facing entity @s eyes run tp 00000002-0000-0002-0000-000200000002 ~ ~ ~ ~180 0
-					```
 					# 一次移動最多10格，有在範圍內再提示就好
-					print('execute at @s[distance=..10] run summon armor_stand ~ %.2f ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:17}}],Tags:["object","effect"],UUID:[I;15,15,15,15]}' %GROUND_Y[0])
+					execute at @s[distance=..10] run function ARG(_PATH)summon_hint
+					execute as 0000000f-0000-000f-0000-000f0000000f at @s facing entity 00000002-0000-0002-0000-000200000002 feet run tp @s ~ ~ ~ ~ 0
+				}
+				
+				func summon_hint()
+				{
+					summon marker ~ ~ ~ {UUID:[I;21,21,21,21]}
+					execute as 00000015-0000-0015-0000-001500000015 facing entity 00000002-0000-0002-0000-000200000002 feet run tp @s ~ ~ ~ ~ 0
+					execute store result score #ROTATION_X number run data get entity 00000015-0000-0015-0000-001500000015 Rotation[0]
+					kill 00000015-0000-0015-0000-001500000015
 					```
-					execute as 0000000f-0000-000f-0000-000f0000000f at @s facing entity 00000002-0000-0002-0000-000200000002 eyes run tp @s ~ ~ ~ ~ 0
+					for i in range(-7, 8):
+						print('execute if score #ROTATION_X number matches %d..%d run summon armor_stand ~ %.2f ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:17}}],Tags:["object","effect"],UUID:[I;15,15,15,15],Rotation:[%df,0f]}' %(i*24-11, i*24+12, GROUND_Y[0], i*24+60))
+					```
 				}
 				
 				func start()
