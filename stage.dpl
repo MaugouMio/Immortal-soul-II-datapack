@@ -1384,7 +1384,7 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			
+			# summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,DisabledSlots:4144959,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}
 		}
 		
 		func end()
@@ -1403,10 +1403,52 @@ namespace stage()
 		{
 			func loop()
 			{
-				schedule function ARG(_PATH)loop 7s
+				schedule function ARG(_PATH)loop 5s
+				execute store result score #EXIST_CLONE number if entity @e[type=armor_stand,tag=clone,limit=1]
+				execute if score #EXIST_CLONE number matches 1.. as @e[type=armor_stand,tag=clone] at @s run function ARG(_PATH)flame/cast
+				execute unless score #EXIST_CLONE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)rand_skill
 				```
 				print(f"execute at @r positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)dust/summon")
 				```
+			}
+			
+			func rand_skill()
+			{
+				function random:rand_rate
+				
+				scoreboard players set #NEAR_SKILL number 0
+				execute if entity @a[scores={player=1..},gamemode=adventure,distance=..5,limit=1] run scoreboard players add #NEAR_SKILL number 1
+				execute if entity @a[scores={player=1..},gamemode=adventure,distance=5.01..,limit=1] run scoreboard players add #NEAR_SKILL number 2
+				
+				execute if score #NEAR_SKILL number matches 1 run function ARG(_PATH)near_judge
+				execute if score #NEAR_SKILL number matches 2 run function ARG(_PATH)far_judge
+				execute unless score #NEAR_SKILL number matches 1..2 run function ARG(_PATH)rand_range
+			}
+			
+			func rand_range()
+			{
+				execute if score #RAND_RESULT number matches ..49 run function ARG(_PATH)near_judge
+				execute if score #RAND_RESULT number matches 50.. run function ARG(_PATH)far_judge
+				# 重骰一次避免隨機距離跟放的招相關
+				function random:rand_rate
+			}
+			
+			func near_judge()
+			{
+				execute if score @s health matches ..35000 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
+				# function ARG(_PATH)slash/cast
+				
+				execute if score #RAND_RESULT number matches 0..49 run function ARG(_PATH)barrier/cast
+				execute if score #RAND_RESULT number matches 50..99 run function ARG(_PATH)chop/cast
+			}
+			
+			func far_judge()
+			{
+				execute if score @s health matches ..35000 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
+				# function ARG(_PATH)slash/cast
+				
+				execute if score #RAND_RESULT number matches 0..29 run function ARG(_PATH)flame/cast
+				execute if score #RAND_RESULT number matches 30..99 run function ARG(_PATH)thunder/cast
 			}
 			
 			folder dust()
@@ -1415,13 +1457,13 @@ namespace stage()
 				{
 					# 向上飄出的生成特效
 					summon armor_stand ~ ~-1.5 ~ {CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object"],UUID:[I;20,20,20,20]}
-					tp 00000014-0000-0014-0000-001400000014 ~ ~ ~
+					tp 00000014-0000-0014-0000-001400000014 ~ ~0.5 ~
 					schedule function ARG(_PATH)real_summon 1s
 				}
 				
 				func real_summon()
 				{
-					execute at 00000014-0000-0014-0000-001400000014 run summon area_effect_cloud ~ ~-0.5 ~ {Duration:2100000000,CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object","dust"]}
+					execute at 00000014-0000-0014-0000-001400000014 run summon area_effect_cloud ~ ~ ~ {Duration:2100000000,CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object","dust"]}
 					kill 00000014-0000-0014-0000-001400000014
 				}
 				
@@ -1435,20 +1477,20 @@ namespace stage()
 				{
 					func summon()
 					{
-						summon armor_stand ~ ~0.75 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","dust_bullet","new_bullet"]}
+						summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","dust_bullet","new_bullet"]}
 						execute as @e[type=armor_stand,tag=new_bullet,limit=1] at @s run function ARG(_PATH)setting
 					}
 					
 					func setting()
 					{
-						execute facing entity @p[scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
+						execute facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
 						tag @s remove new_bullet
 					}
 					
 					func move()
 					{
 						tp @s ^ ^ ^0.5
-						execute positioned ~-0.75 ~-0.75 ~-0.75 as @a[scores={player=1..},dx=0,dy=0,dz=0] positioned ~0.5 ~0.5 ~0.5 if entity @s[dx=0,dy=0,dz=0] run effect give @s blindness 2 0 true
+						execute positioned ~-0.75 ~-0.75 ~-0.75 as @a[scores={player=1..},gamemode=adventure,dx=0,dy=0,dz=0] positioned ~0.5 ~0.5 ~0.5 if entity @s[dx=0,dy=0,dz=0] run effect give @s blindness 2 0 true
 						execute unless block ~ ~ ~ #skill:canpass run kill @s
 					}
 				}

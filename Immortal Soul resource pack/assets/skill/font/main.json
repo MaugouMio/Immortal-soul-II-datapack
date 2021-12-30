@@ -12,8 +12,8 @@
 		{
 			"type": "bitmap",
 			"file": "skill:font/dust.png",
-			"ascent": 24,
-			"height": 48,
+			"ascent": 18,
+			"height": 36,
 			"chars": [
 				"1"
 			]
