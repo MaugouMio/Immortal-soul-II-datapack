@@ -1392,6 +1392,9 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/dust/shoot
 			schedule clear ARG(_PATH)skills/dust/real_summon
+			schedule clear ARG(_PATH)skills/sikigami/reset_cd
+			
+			scoreboard players reset #SIKIGAMI_CD number
 		}
 		
 		func main()
@@ -1406,10 +1409,17 @@ namespace stage()
 				schedule function ARG(_PATH)loop 5s
 				execute store result score #EXIST_CLONE number if entity @e[type=armor_stand,tag=clone,limit=1]
 				execute if score #EXIST_CLONE number matches 1.. as @e[type=armor_stand,tag=clone] at @s run function ARG(_PATH)flame/cast
-				execute unless score #EXIST_CLONE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)rand_skill
+				execute unless score #EXIST_CLONE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_sikigami
 				```
 				print(f"execute at @r positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)dust/summon")
 				```
+			}
+			
+			func check_sikigami()
+			{
+				scoreboard players set #SIKIGAMI_USED number 0
+				execute unless score #SIKIGAMI_CD number matches 1 if score @s health matches ..15000 run function ARG(_PATH)sikigami/cast
+				execute unless score #SIKIGAMI_USED number matches 1 run function ARG(_PATH)rand_skill
 			}
 			
 			func rand_skill()
@@ -1435,20 +1445,18 @@ namespace stage()
 			
 			func near_judge()
 			{
-				execute if score @s health matches ..35000 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
-				# function ARG(_PATH)slash/cast
+				execute if score @s health matches ..35000 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)hell/cast
 				
-				execute if score #RAND_RESULT number matches 0..49 run function ARG(_PATH)barrier/cast
-				execute if score #RAND_RESULT number matches 50..99 run function ARG(_PATH)chop/cast
+				execute if score #RAND_RESULT number matches 0..49 run function ARG(_PATH)sacrifice/cast
+				execute if score #RAND_RESULT number matches 50..99 run function ARG(_PATH)sanka/cast
 			}
 			
 			func far_judge()
 			{
-				execute if score @s health matches ..35000 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
-				# function ARG(_PATH)slash/cast
+				execute if score @s health matches ..35000 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)hell/cast
 				
-				execute if score #RAND_RESULT number matches 0..29 run function ARG(_PATH)flame/cast
-				execute if score #RAND_RESULT number matches 30..99 run function ARG(_PATH)thunder/cast
+				execute if score #RAND_RESULT number matches 0..49 run function ARG(_PATH)flame/cast
+				execute if score #RAND_RESULT number matches 50..99 run function ARG(_PATH)thunder/cast
 			}
 			
 			folder dust()
@@ -1493,6 +1501,61 @@ namespace stage()
 						execute positioned ~-0.75 ~-0.75 ~-0.75 as @a[scores={player=1..},gamemode=adventure,dx=0,dy=0,dz=0] positioned ~0.5 ~0.5 ~0.5 if entity @s[dx=0,dy=0,dz=0] run effect give @s blindness 2 0 true
 						execute unless block ~ ~ ~ #skill:canpass run kill @s
 					}
+				}
+			}
+			
+			folder flame()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder thunder()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder sacrifice()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder sanka()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder hell()
+			{
+				func cast()
+				{
+					scoreboard players reset #RAND_RESULT number
+				}
+			}
+			
+			folder sikigami()
+			{
+				func cast()
+				{
+					scoreboard players set #SIKIGAMI_USED number 1
+					scoreboard players set #SIKIGAMI_CD number 1
+					schedule function ARG(_PATH)reset_cd 90s
+				}
+				
+				func reset_cd()
+				{
+					scoreboard players reset #SIKIGAMI_CD number
 				}
 			}
 		}
