@@ -1,0 +1,85 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/0.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/1.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/2.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/2.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/3.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "4"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/3.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "5"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/4.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "6"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/4.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "7"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/flame/5.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "8"
+            ]
+        }
+    ]
+}

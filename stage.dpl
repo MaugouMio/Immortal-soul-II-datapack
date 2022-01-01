@@ -1392,14 +1392,25 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/dust/shoot
 			schedule clear ARG(_PATH)skills/dust/real_summon
+			schedule clear ARG(_PATH)skills/flame/circle/summon
+			schedule clear ARG(_PATH)skills/flame/bullet/shoot
 			schedule clear ARG(_PATH)skills/sikigami/reset_cd
 			
 			scoreboard players reset #SIKIGAMI_CD number
+			scoreboard players reset #FLAME_BULLET number
 		}
 		
 		func main()
 		{
-			execute as @e[type=armor_stand,tag=dust_bullet] at @s run function ARG(_PATH)skills/dust/bullet/move
+			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
+		}
+		
+		func armor_stand_main()
+		{
+			execute at @s[tag=boss] facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
+			execute at @s[tag=dust_bullet] run function ARG(_PATH)skills/dust/bullet/move
+			execute if entity @s[tag=flame_circle] run function ARG(_PATH)skills/flame/circle/spin
+			execute at @s[tag=flame_bullet] run function ARG(_PATH)skills/flame/bullet/move
 		}
 		
 		folder skills()
@@ -1408,7 +1419,7 @@ namespace stage()
 			{
 				schedule function ARG(_PATH)loop 5s
 				execute store result score #EXIST_CLONE number if entity @e[type=armor_stand,tag=clone,limit=1]
-				execute if score #EXIST_CLONE number matches 1.. as @e[type=armor_stand,tag=clone] at @s run function ARG(_PATH)flame/cast
+				execute if score #EXIST_CLONE number matches 1.. as @e[type=armor_stand,tag=boss] at @s run function ARG(_PATH)flame/cast
 				execute unless score #EXIST_CLONE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_sikigami
 				```
 				print(f"execute at @r positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)dust/summon")
@@ -1464,15 +1475,15 @@ namespace stage()
 				func summon()
 				{
 					# 向上飄出的生成特效
-					summon armor_stand ~ ~-1.5 ~ {CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object"],UUID:[I;20,20,20,20]}
-					tp 00000014-0000-0014-0000-001400000014 ~ ~0.5 ~
+					summon armor_stand ~ ~-1.5 ~ {CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object","effect"],UUID:[I;2,2,2,2]}
+					tp 00000002-0000-0002-0000-000200000002 ~ ~0.5 ~
 					schedule function ARG(_PATH)real_summon 1s
 				}
 				
 				func real_summon()
 				{
-					execute at 00000014-0000-0014-0000-001400000014 run summon area_effect_cloud ~ ~ ~ {Duration:2100000000,CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object","dust"]}
-					kill 00000014-0000-0014-0000-001400000014
+					execute at 00000002-0000-0002-0000-000200000002 run summon area_effect_cloud ~ ~ ~ {Duration:2100000000,CustomNameVisible:1b,CustomName:'{"text":"1","font":"skill:main"}',Tags:["object","dust"]}
+					kill 00000002-0000-0002-0000-000200000002
 				}
 				
 				func shoot()
@@ -1485,7 +1496,7 @@ namespace stage()
 				{
 					func summon()
 					{
-						summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","dust_bullet","new_bullet"]}
+						summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","effect","dust_bullet","new_bullet"]}
 						execute as @e[type=armor_stand,tag=new_bullet,limit=1] at @s run function ARG(_PATH)setting
 					}
 					
@@ -1508,7 +1519,103 @@ namespace stage()
 			{
 				func cast()
 				{
+					# 總動作時間比較長，延後下次技能時間
+					schedule function ARG(__PATH)loop 7s
 					
+					# TODO: 伸手動作
+					playsound minecraft:enemy.miko.flame_cast player @a ~ ~ ~ 3 1 0
+					function ARG(_PATH)circle/summon
+					
+					scoreboard players set #FLAME_BULLET number 20
+					schedule function ARG(_PATH)bullet/shoot 1s
+				}
+				
+				folder circle()
+				{
+					func summon()
+					{
+						```
+						for i in range(-7, 8):
+							print('execute if score entity @s[y_rotation=%d..%d] run summon armor_stand ~ ~ ~ {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,HasVisualFire:1b,Pose:{Head:[90f,0f,0f]},ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:19,CustomPotionColor:0}}],Tags:["object","effect","flame_circle"],Rotation:[%df,0f]}' %(i*24-11, i*24+12, i*24))
+						```
+					}
+					
+					func spin()
+					{
+						execute at @e[type=armor_stand,tag=boss,limit=1,sort=nearest] rotated ~ 0 run tp @s ^ ^ ^1 ~ 0
+						
+						# shader 抓 CustomPotionColor 控制[放大、透明](藍色)、當前面向(綠色)，並自動旋轉
+						execute store result score #SHADER_INFO_COLOR number run data get entity @s Rotation[0] 0.71111
+						scoreboard players add #SHADER_INFO_COLOR number 128
+						scoreboard players operation #SHADER_INFO_COLOR number *= #256 number
+						
+						execute unless score @s life matches 250.. unless score @s number matches 1 run scoreboard players add @s life 25
+						execute if score @s number matches 1 run scoreboard players remove @s life 50
+						execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players operation #SHADER_INFO_COLOR number += @s life
+						
+						execute if score @s life matches 0 run kill @s
+					}
+				}
+				
+				folder bullet()
+				{
+					func shoot()
+					{
+						scoreboard players remove #FLAME_BULLET number 1
+						execute as @e[tag=boss] at @s run function ARG(_PATH)summon
+						execute if score #FLAME_BULLET number matches 1.. run schedule function ARG(_PATH)shoot 4t
+						execute if score #FLAME_BULLET number matches 0 run function ARG(__PATH)end
+					}
+					
+					func summon()
+					{
+						summon armor_stand ^ ^0.7 ^0.5 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"2","font":"skill/main"}',Tags:["object","flame_bullet","new_flame"]}
+						execute as @e[type=armor_stand,tag=new_flame,limit=1] run function ARG(_PATH)setting
+					}
+					
+					func setting()
+					{
+						scoreboard players set @s health 99
+						tp @s ^ ^ ^0.5 ~ 0
+						tag @s remove new_flame
+					}
+					
+					func move()
+					{
+						tp @s ^ ^ ^1
+						scoreboard players set #EXPLODE number 0
+						execute unless block ~ ~ ~ #skill:canpass run scoreboard players set #EXPLODE number 1
+						execute unless score #EXPLODE number matches 1 positioned ~-0.75 ~-0.25 ~-0.75 if entity @e[type=#stage:flame_target,limit=1,dx=0.5,dy=0.5,dz=0.5] run scoreboard players set #EXPLODE number 1
+						
+						execute if score #EXPLODE number matches 1 run function ARG(_PATH)explode
+					}
+					
+					func explode()
+					{
+						function ARG(_PATH)burst_effect
+						playsound minecraft:enemy.miko.flame_burst player @a ~ ~ ~ 3 1 0
+						execute as @e[type=#stage:flame_target,distance=..2] run function ARG(_PATH)damage
+						kill @s
+					}
+					
+					func burst_effect()
+					{
+						summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:flame/0"}',CustomNameVisible:1,Duration:11,Tags:['{"text":"","font":"font_animation:flame/0"}', '{"text":"","font":"font_animation:flame/1"}', 'new_font_anim']}
+						scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 9
+						tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+					}
+					
+					func damage()
+					{
+						execute if entity @s[scores={player=1..},gamemode=adventure] run effect give @s instant_damage 1 0 true
+						kill @s[tag=dust]
+					}
+				}
+				
+				func end()
+				{
+					scoreboard players set @e[type=armor_stand,tag=flame_circle] number 1
+					# schedule function 收手動作 5t
 				}
 			}
 			

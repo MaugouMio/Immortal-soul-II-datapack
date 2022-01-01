@@ -1,0 +1,31 @@
+{
+	"credit": "Made with Blockbench",
+	"texture_size": [64, 64],
+	"textures": {
+		"2": "item/enemy/miko/flame_circle",
+		"particle": "item/enemy/miko/flame_circle",
+		"empty": "item/empty"
+	},
+	"elements": [
+		{
+			"name": "circle",
+			"from": [8, 0, 8],
+			"to": [8, 0, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#empty"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2", "tintindex": 0},
+				"down": {"uv": [0, 16, 16, 0], "texture": "#2", "tintindex": 0}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 1.25, 0],
+			"scale": [1.6, 1, 1.6]
+		}
+	}
+}

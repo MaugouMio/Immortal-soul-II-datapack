@@ -16,6 +16,8 @@ in vec2 texCoord0;
 in vec2 texCoord1;
 in vec4 normal;
 
+in float alpha;
+
 out vec4 fragColor;
 
 vec3 RGBtoHSV(vec3 rgb) {
@@ -62,5 +64,6 @@ void main() {
 		color = color * (1 - anim) + vec4(1, 1, 1, 0.7) * anim;
 	}
 	
+	color = vec4(color.rgb, color.a * alpha);
 	fragColor = linear_fog(color, vertexDistance, FogStart, FogEnd, FogColor);
 }

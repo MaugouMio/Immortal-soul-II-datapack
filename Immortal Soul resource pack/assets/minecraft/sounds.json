@@ -186,6 +186,28 @@
       }
     ]
   },
+  
+  
+  
+  "enemy.miko.flame_cast": {
+    "sounds": [
+      {
+        "name": "enemy/miko/flame_cast",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.flame_burst": {
+    "sounds": [
+      {
+        "name": "enemy/miko/flame_burst",
+        "stream": true
+      }
+    ]
+  },
+  
+  
+  
   "enemy.target_attack": {
     "sounds": [
       {
