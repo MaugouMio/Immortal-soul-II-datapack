@@ -37,6 +37,11 @@
 		{"predicate": {"custom_model_data": 37},"model": "item/enemy/sword/f2"},
 		{"predicate": {"custom_model_data": 38},"model": "item/enemy/sword/f3"},
 		{"predicate": {"custom_model_data": 39},"model": "item/enemy/target"},
-		{"predicate": {"custom_model_data": 40},"model": "item/enemy/miko/ghost"}
+		{"predicate": {"custom_model_data": 40},"model": "item/enemy/miko/ghost"},
+		{"predicate": {"custom_model_data": 41},"model": "item/enemy/miko/thunder_aim"},
+		{"predicate": {"custom_model_data": 42},"model": "item/enemy/miko/thunder_prepare"},
+		{"predicate": {"custom_model_data": 43},"model": "item/enemy/miko/thunder_wave1"},
+		{"predicate": {"custom_model_data": 44},"model": "item/enemy/miko/thunder_wave2"},
+		{"predicate": {"custom_model_data": 45},"model": "item/enemy/miko/thunder_wave3"}
 	]
 }

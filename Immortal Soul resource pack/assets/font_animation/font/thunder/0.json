@@ -1,0 +1,31 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/thunder/0.png",
+            "ascent": 512,
+            "height": 512,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/thunder/1.png",
+            "ascent": 512,
+            "height": 512,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/thunder/2.png",
+            "ascent": 512,
+            "height": 512,
+            "chars": [
+                "2"
+            ]
+        }
+    ]
+}

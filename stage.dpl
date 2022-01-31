@@ -1394,6 +1394,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/dust/real_summon
 			schedule clear ARG(_PATH)skills/flame/circle/summon
 			schedule clear ARG(_PATH)skills/flame/bullet/shoot
+			schedule clear ARG(_PATH)skills/thunder/strike
 			schedule clear ARG(_PATH)skills/sikigami/reset_cd
 			
 			scoreboard players reset #SIKIGAMI_CD number
@@ -1623,7 +1624,51 @@ namespace stage()
 			{
 				func cast()
 				{
+					# TODO: 舉手動作
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:42}}],Tags:["object","effect"],UUID:[I;3,3,3,3]}
+					playsound minecraft:enemy.thunder_prepare player @a ~ ~ ~ 3 1 0
+					execute at @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)summon
+					schedule function ARG(_PATH)strike 20t
+				}
+				
+				func summon()
+				{
+					```
+					for i in range(5):
+						print('summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:41}}],Tags:["object","effect","thunder","new_thunder"]}')
+					print("spreadplayers ~ ~ 5 8 under {int(GROUND_Y[1] + 3)} false @e[type=armor_stand,tag=new_thunder]")
+					```
+					tag @e[type=armor_stand,tag=new_thunder] remove new_thunder
+				}
+				
+				func strike()
+				{
+					kill 00000003-0000-0003-0000-000300000003
+					execute as @e[type=armor_stand,tag=thunder] at @s run function ARG(_PATH)attack
+					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.thunder_strike player @a ~ ~ ~ 16 1 1
+				}
+				
+				func attack()
+				{
+					execute positioned ~ ~-1 ~ run function ARG(_PATH)thunder_effect
+					particle flash ~ ~ ~ 0 0 0 1 1
+					execute as @e[type=#stage:flame_target] if predicate stage:thunder_range run function ARG(_PATH)damage
+					kill @s
+				}
 					
+				func damage()
+				{
+					execute if entity @s[scores={player=1..},gamemode=adventure] run effect give @s instant_damage 1 1 true
+					kill @s[tag=dust]
+				}
+				
+				func thunder_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:thunder/0"}',CustomNameVisible:1,Duration:5,Tags:['{"text":"","font":"font_animation:thunder/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+					
+					summon armor_stand ~ ~ ~ {Invisible:1,Invulnerable:1,NoGravity:1,Marker:1,HasVisualFire:1,Tags:["object","effect","slash","skill_effect"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:43}}]}
 				}
 			}
 			

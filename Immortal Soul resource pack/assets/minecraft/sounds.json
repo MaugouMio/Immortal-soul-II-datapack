@@ -205,6 +205,22 @@
       }
     ]
   },
+  "enemy.miko.thunder_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/miko/thunder_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.thunder_strike": {
+    "sounds": [
+      {
+        "name": "enemy/miko/thunder_strike",
+        "stream": true
+      }
+    ]
+  },
   
   
   
