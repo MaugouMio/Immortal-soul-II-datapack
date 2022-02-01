@@ -1684,7 +1684,62 @@ namespace stage()
 			{
 				func cast()
 				{
+					#TODO: 開扇子遮臉動作
+					```
+					for i in range(5):
+						print('summon armor_stand ~ ~ ~ {Rotation:[%df,0f],Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:46}}],Tags:["object","effect","sakura"]}' %(i * 72))
+					```
+					scoreboard players set #SAKURA_MODEL number 46
+					schedule function ARG(_PATH)sakura_draw 1t
 					
+					schedule function ARG(_PATH)call_teleport 20t
+				}
+				
+				func sakura_draw()
+				{
+					scoreboard players add #SAKURA_MODEL number 1
+					execute as @e[type=armor_stand,tag=sakura] store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get #SAKURA_MODEL number
+					
+					execute if score #SAKURA_MODEL number matches ..50 run schedule function ARG(_PATH)sakura_draw 1t
+				}
+				
+				func call_teleport()
+				{
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)teleport
+				}
+				
+				func teleport()
+				{
+					kill @e[type=armor_stand,tag=sakura]
+					
+					particle firework ~ ~1 ~ 0 0 0 0.2 30
+					particle flash ~ ~1 ~ 0 0 0 1 1
+					#TODO: bling音效
+					
+					scoreboard players set #BULLET_SPLIT number 1
+					function ARG(_PATH)bullet/spawn
+					#TODO: 隨機瞬移
+				}
+				
+				folder bullet()
+				{
+					func spawn()
+					{
+						#TODO: 生成八方位子彈
+						execute as @e[type=armor_stand,tag=new_sanka] run function ARG(_PATH)setting
+					}
+					
+					func setting()
+					{
+						tag @s remove new_sanka
+						scoreboard players operation @s number = #BULLET_SPLIT number
+						scoreboard players set @s life 100
+					}
+					
+					func move()
+					{
+						scoreboard players remove @s life 1
+					}
 				}
 			}
 			

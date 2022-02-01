@@ -42,6 +42,12 @@
 		{"predicate": {"custom_model_data": 42},"model": "item/enemy/miko/thunder_prepare"},
 		{"predicate": {"custom_model_data": 43},"model": "item/enemy/miko/thunder_wave1"},
 		{"predicate": {"custom_model_data": 44},"model": "item/enemy/miko/thunder_wave2"},
-		{"predicate": {"custom_model_data": 45},"model": "item/enemy/miko/thunder_wave3"}
+		{"predicate": {"custom_model_data": 45},"model": "item/enemy/miko/thunder_wave3"},
+		{"predicate": {"custom_model_data": 46},"model": "item/enemy/miko/sakura1"},
+		{"predicate": {"custom_model_data": 47},"model": "item/enemy/miko/sakura2"},
+		{"predicate": {"custom_model_data": 48},"model": "item/enemy/miko/sakura3"},
+		{"predicate": {"custom_model_data": 49},"model": "item/enemy/miko/sakura4"},
+		{"predicate": {"custom_model_data": 50},"model": "item/enemy/miko/sakura5"},
+		{"predicate": {"custom_model_data": 51},"model": "item/enemy/miko/sakura6"}
 	]
 }
