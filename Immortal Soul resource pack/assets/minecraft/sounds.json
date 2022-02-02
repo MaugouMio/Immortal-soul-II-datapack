@@ -221,6 +221,22 @@
       }
     ]
   },
+  "enemy.miko.sanka_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/miko/sanka_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.sanka_shoot": {
+    "sounds": [
+      {
+        "name": "enemy/miko/sanka_shoot",
+        "stream": true
+      }
+    ]
+  },
   
   
   
