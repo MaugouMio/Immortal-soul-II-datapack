@@ -34,8 +34,10 @@ out float alpha;
 void main() {
 	alpha = 1.0;
     gl_Position = ProjMat * ModelViewMat * vec4(Position, 1.0);
+    vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, Normal, Color) * texelFetch(Sampler2, UV2 / 16, 0);
+	
 	vec4 vertexTexel = texture(Sampler0, UV0);
-	if (vertexTexel.a < 0.02 && vertexTexel.a > 0.0) {
+	if (vertexTexel.a < 0.015 && vertexTexel.a > 0.0) {
 		// float vertexId = mod(gl_VertexID, 4.0);
 		float vertexId = 0.0;
 		if (vertexTexel.r > 0.99)
@@ -67,10 +69,31 @@ void main() {
 			float horizonOffset = expand * sin(PI * -0.25 + theta);
 			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * -0.25 + theta), horizonOffset * sin(facing)), 1.0);
 		}
+		
+		vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
+	}
+	else if (vertexTexel.a < 0.025 && vertexTexel.a > 0.015) {
+		float vertexId = mod(gl_VertexID, 4.0);
+		mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
+		
+		float size = Color.b * 51.0;
+		if (vertexId == 0.0) {
+			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, size), 1.0);
+		}
+		else if (vertexId == 1.0) {
+			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, -size), 1.0);
+		}
+		else if (vertexId == 2.0) {
+			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, -size), 1.0);
+		}
+		else {
+			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, size), 1.0);
+		}
+		
+		vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
 	}
 
     vertexDistance = length((ModelViewMat * vec4(Position, 1.0)).xyz);
-    vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, Normal, Color) * texelFetch(Sampler2, UV2 / 16, 0);
     texCoord0 = UV0;
     texCoord1 = UV1;
     texCoord2 = UV2;

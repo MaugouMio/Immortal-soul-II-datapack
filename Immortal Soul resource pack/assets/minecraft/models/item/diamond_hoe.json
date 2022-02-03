@@ -48,6 +48,8 @@
 		{"predicate": {"custom_model_data": 48},"model": "item/enemy/miko/sakura3"},
 		{"predicate": {"custom_model_data": 49},"model": "item/enemy/miko/sakura4"},
 		{"predicate": {"custom_model_data": 50},"model": "item/enemy/miko/sakura5"},
-		{"predicate": {"custom_model_data": 51},"model": "item/enemy/miko/sakura6"}
+		{"predicate": {"custom_model_data": 51},"model": "item/enemy/miko/sakura6"},
+		{"predicate": {"custom_model_data": 52},"model": "item/enemy/miko/skeleton"},
+		{"predicate": {"custom_model_data": 53},"model": "item/enemy/miko/skeleton_bite"}
 	]
 }

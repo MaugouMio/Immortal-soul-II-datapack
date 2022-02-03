@@ -23,6 +23,7 @@
 		{"predicate": {"custom_model_data": 16},"model": "item/enemy/sword/right_arm_wave2"},
 		{"predicate": {"custom_model_data": 17},"model": "item/enemy/sword/sword_pointer"},
 		{"predicate": {"custom_model_data": 18},"model": "item/enemy/sword/boss_chop"},
-		{"predicate": {"custom_model_data": 19},"model": "item/enemy/miko/flame_circle"}
+		{"predicate": {"custom_model_data": 19},"model": "item/enemy/miko/flame_circle"},
+		{"predicate": {"custom_model_data": 20},"model": "item/enemy/miko/torii"}
 	]
 }

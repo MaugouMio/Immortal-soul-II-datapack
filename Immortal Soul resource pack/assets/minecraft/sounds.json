@@ -237,6 +237,22 @@
       }
     ]
   },
+  "enemy.miko.sacrifice": {
+    "sounds": [
+      {
+        "name": "enemy/miko/sacrifice",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.skeleton_bite": {
+    "sounds": [
+      {
+        "name": "enemy/miko/skeleton_bite",
+        "stream": true
+      }
+    ]
+  },
   
   
   

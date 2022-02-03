@@ -2,7 +2,7 @@ import utils, loop
 
 ```
 GROUND_Y = [4.0, 4.0, 4.0]
-STAGE_CENTER = [(128, 0), (128, 0), (128, 0))]
+STAGE_CENTER = [(128, 0), (128, 0), (128, 0)]
 ```
 
 namespace stage()
@@ -1405,6 +1405,7 @@ namespace stage()
 		func main()
 		{
 			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
+			execute as 00000004-0000-0004-0000-000400000004 at @s run function ARG(_PATH)skills/sacrifice/check
 		}
 		
 		func armor_stand_main()
@@ -1628,7 +1629,7 @@ namespace stage()
 				{
 					# TODO: 舉手動作
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:42}}],Tags:["object","effect"],UUID:[I;3,3,3,3]}
-					playsound minecraft:enemy.thunder_prepare player @a ~ ~ ~ 3 1 0
+					playsound minecraft:enemy.miko.thunder_prepare player @a ~ ~ ~ 3 1 0
 					execute at @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)summon
 					schedule function ARG(_PATH)strike 20t
 				}
@@ -1647,7 +1648,7 @@ namespace stage()
 				{
 					kill 00000003-0000-0003-0000-000300000003
 					execute as @e[type=armor_stand,tag=thunder] at @s run function ARG(_PATH)attack
-					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.thunder_strike player @a ~ ~ ~ 16 1 1
+					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.miko.thunder_strike player @a ~ ~ ~ 16 1 1
 				}
 				
 				func attack()
@@ -1678,7 +1679,65 @@ namespace stage()
 			{
 				func cast()
 				{
+					# TODO: 單手抓地動作
+					```
+					print(f"execute at @p[gamemode=adventure,scores={{player=1..}}] positioned ~ {GROUND_Y[1]} ~ run function ARG(_PATH)knock_up")
+					```
+				}
+				
+				func knock_up()
+				{
+					playsound minecraft:enemy.miko.sacrifice player @a 3 1 0
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:20,CustomPotionColor:29}}],Tags:["object","effect"],UUID:[I;4,4,4,4]}
+					summon armor_stand ~ ~-1.9 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:52}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}
 					
+					execute as @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range] run function ARG(_PATH)fly
+					schedule function ARG(_PATH)clear_levitation 1t
+				}
+				
+				func fly()
+				{
+					tp @s @s
+					effect give @s levitation 1 110 true
+				}
+				
+				func clear_levitation()
+				{
+					effect clear @a levitation
+				}
+				
+				func check()
+				{
+					scoreboard players add @s life 1
+					execute if score @s life matches ..19 as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.1 ~
+					execute if score @s life matches 20..99 if entity @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range,limit=1] run function ARG(_PATH)bite
+					execute if score @s life matches 100.. run function ARG(_PATH)sink
+				}
+				
+				func bite()
+				{
+					playsound minecraft:enemy.miko.skeleton_bite player @a 3 1 0
+					data modify entity 00000005-0000-0005-0000-000500000005 ArmorItems[3].tag.CustomModelData set value 53
+					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.5 ~
+					execute at 00000005-0000-0005-0000-000500000005 run particle minecraft:crit ~ ~1.2 ~-1.7 1 0 0 1.7 50
+					
+					effect give @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range] instant_damage 1 1 true
+					
+					scoreboard players set @s life 99
+				}
+				
+				func sink()
+				{
+					tp @s ~ ~-0.1 ~
+					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~-0.1 ~
+					
+					execute if score @s life matches 160 run function ARG(_PATH)clear_effect
+				}
+				
+				func clear_effect()
+				{
+					kill 00000004-0000-0004-0000-000400000004
+					kill 00000005-0000-0005-0000-000500000005
 				}
 			}
 			
@@ -1747,7 +1806,7 @@ namespace stage()
 					{
 						```
 						for i in range(8):
-							print('summon armor_stand ~ ~ ~ {Rotation:[%df,0f],Invisible:1b,Invulnerable:1b,NoGravity:1b,HasVisualFire:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"3","font":"skill/main"}',Tags:["object","effect","sanka_bullet","new_sanka"]}' %(i * 45))
+							print('''summon armor_stand ~ ~ ~ {Rotation:[%df,0f],Invisible:1b,Invulnerable:1b,NoGravity:1b,HasVisualFire:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"3","font":"skill/main"}',Tags:["object","effect","sanka_bullet","new_sanka"]}''' %(i * 45))
 						```
 						execute as @e[type=armor_stand,tag=new_sanka] run function ARG(_PATH)setting
 					}
