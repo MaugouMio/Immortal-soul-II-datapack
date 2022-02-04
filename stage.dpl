@@ -1406,6 +1406,7 @@ namespace stage()
 		{
 			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
 			execute as 00000004-0000-0004-0000-000400000004 at @s run function ARG(_PATH)skills/sacrifice/check
+			execute as 00000007-0000-0007-0000-000700000007 at @s run function ARG(_PATH)skills/hell/check
 		}
 		
 		func armor_stand_main()
@@ -1540,7 +1541,7 @@ namespace stage()
 					{
 						```
 						for i in range(-7, 8):
-							print('execute if score entity @s[y_rotation=%d..%d] run summon armor_stand ~ ~ ~ {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,HasVisualFire:1b,Pose:{Head:[90f,0f,0f]},ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:19,CustomPotionColor:0}}],Tags:["object","effect","flame_circle"],Rotation:[%df,0f]}' %(i*24-11, i*24+12, i*24))
+							print('execute if entity @s[y_rotation=%d..%d] run summon armor_stand ~ ~ ~ {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,HasVisualFire:1b,Pose:{Head:[90f,0f,0f]},ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:19,CustomPotionColor:0}}],Tags:["object","effect","flame_circle"],Rotation:[%df,0f]}' %(i*24-11, i*24+12, i*24))
 						```
 					}
 					
@@ -1687,7 +1688,7 @@ namespace stage()
 				
 				func knock_up()
 				{
-					playsound minecraft:enemy.miko.sacrifice player @a 3 1 0
+					playsound minecraft:enemy.miko.sacrifice player @a ~ ~ ~ 3 1 0
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:20,CustomPotionColor:29}}],Tags:["object","effect"],UUID:[I;4,4,4,4]}
 					summon armor_stand ~ ~-1.9 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:52}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}
 					
@@ -1716,7 +1717,7 @@ namespace stage()
 				
 				func bite()
 				{
-					playsound minecraft:enemy.miko.skeleton_bite player @a 3 1 0
+					playsound minecraft:enemy.miko.skeleton_bite player @a ~ ~ ~ 3 1 0
 					data modify entity 00000005-0000-0005-0000-000500000005 ArmorItems[3].tag.CustomModelData set value 53
 					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.5 ~
 					execute at 00000005-0000-0005-0000-000500000005 run particle minecraft:crit ~ ~1.2 ~-1.7 1 0 0 1.7 50
@@ -1856,6 +1857,67 @@ namespace stage()
 				func cast()
 				{
 					scoreboard players reset #RAND_RESULT number
+					execute positioned ^ ^ ^2 run function ARG(_PATH)summon
+				}
+				
+				func summon()
+				{
+					playsound minecraft:enemy.miko.hell_summon player @a ~ ~ ~ 3 1 0
+					
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:21,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;6,6,6,6]}
+					```
+					for i in range(-7, 8):
+						print('execute if entity @s[y_rotation=%d..%d] run summon armor_stand ~ ~-3.2 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:54}}],Tags:["object","effect","hell_skeleton"],UUID:[I;7,7,7,7],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:230.0f,Pose:{Head:[0.1f,0f,0f]},Rotation:[%df,0f]}' %(i*24-11, i*24+12, i*24))
+					```
+					scoreboard players set #SKULL_ANGLE number 0
+					scoreboard players set #SWAMP_SIZE number 0
+				}
+				
+				func check()
+				{
+					execute unless score @s life matches 40.. run function ARG(_PATH)float
+					execute if score @s life matches 40.. run function ARG(_PATH)chase
+				}
+				
+				func float()
+				{
+					scoreboard players add @s life 1
+					execute if score @s life matches ..8 store result entity 00000006-0000-0006-0000-000600000006 ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players add #SWAMP_SIZE number 3
+					execute if score @s life matches ..20 run tp @s ~ ~0.2 ~ ~ 0
+					execute if score @s life matches 6..20 store result entity @s Pose.Head[0] float 1 run scoreboard players add #SKULL_ANGLE number 6
+					execute if score @s life matches 25..36 store result entity 00000006-0000-0006-0000-000600000006 ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players remove #SWAMP_SIZE number 2
+					execute if score @s life matches 40 run function ARG(_PATH)start_chase
+				}
+				
+				func start_chase()
+				{
+					playsound minecraft:enemy.miko.scream player @a ~ ~ ~ 3 1 0
+					
+					data modify entity @s ArmorItems[3].tag.CustomModelData set value 55
+					tag @s remove effect
+				}
+				
+				func chase()
+				{
+					execute facing entity @p[gamemode=adventure,scores={player=1..}] rotated ~ 0 run tp @s ^ ^ ^1 ~ 0
+					execute positioned ~-1.5 ~-1 ~-1.5 run effect give @a[gamemode=adventure,scores={player=1..},dx=2,dy=3,dz=2] instant_damage 1 1 true
+				}
+				
+				func skull_hurt()
+				{
+					tp @s ^ ^ ^-0.5
+					execute if score @s health matches 1.. store result entity @s Health float 0.1 run scoreboard players get @s health
+					execute if score @s health matches ..0 run function ARG(_PATH)explode
+				}
+				
+				func explode()
+				{
+					particle minecraft:explosion_emitter ~ ~ ~ 0 0 0 1 1
+					particle minecraft:item minecraft:bone_block ~ ~1 ~ 0 0 0 0.4 100
+					playsound minecraft:enemy.miko.skull_break player @a ~ ~ ~ 3 1 0
+					
+					execute positioned ~ ~-0.8 ~ run effect give @a[gamemode=adventure,scores={player=1..},distance=..5] instant_damage 1 1 true
+					kill @s
 				}
 			}
 			

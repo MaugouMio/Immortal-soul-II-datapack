@@ -253,6 +253,30 @@
       }
     ]
   },
+  "enemy.miko.hell_summon": {
+    "sounds": [
+      {
+        "name": "enemy/miko/hell_summon",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.scream": {
+    "sounds": [
+      {
+        "name": "enemy/miko/scream",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.skull_break": {
+    "sounds": [
+      {
+        "name": "enemy/miko/skull_break",
+        "stream": true
+      }
+    ]
+  },
   
   
   

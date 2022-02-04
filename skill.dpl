@@ -88,7 +88,8 @@ namespace skill()
 		scoreboard players operation @s display_number > #1 number
 		function number:display
 
-		execute unless entity @s[tag=boss] store result entity @s Health float 0.1 run scoreboard players get @s health
+		execute if entity @s[tag=!boss,tag=!hell_skeleton] store result entity @s Health float 0.1 run scoreboard players get @s health
+		execute if entity @s[tag=hell_skeleton] run function stage:stage2/skills/hell/skull_hurt
 		execute if entity @s[tag=boss] run function ARG(_PATH)boss_damage
 	}
 	
