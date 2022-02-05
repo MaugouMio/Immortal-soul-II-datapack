@@ -277,6 +277,22 @@
       }
     ]
   },
+  "enemy.miko.block_shoot": {
+    "sounds": [
+      {
+        "name": "enemy/miko/block_shoot",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.smoke_burst": {
+    "sounds": [
+      {
+        "name": "enemy/miko/smoke_burst",
+        "stream": true
+      }
+    ]
+  },
   
   
   

@@ -1,0 +1,67 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/0.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/1.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/2.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/3.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/4.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "4"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/5.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "5"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/sikigami_break/6.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "6"
+            ]
+        }
+    ]
+}

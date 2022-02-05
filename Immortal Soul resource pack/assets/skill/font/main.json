@@ -35,6 +35,15 @@
 			"chars": [
 				"3"
 			]
-		}
+		},
+		{
+			"type": "bitmap",
+			"file": "skill:font/barrier.png",
+			"ascent": 64,
+			"height": 128,
+			"chars": [
+				"4"
+			]
+		},
 	]
 }

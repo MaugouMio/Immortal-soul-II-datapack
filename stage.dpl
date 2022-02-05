@@ -1385,7 +1385,7 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			# summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,DisabledSlots:4144959,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}
+			# summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,DisabledSlots:4144959,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["miko","boss","knockback_resist","object"],UUID:[I;1,1,1,1]}
 		}
 		
 		func end()
@@ -1396,6 +1396,9 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/flame/circle/summon
 			schedule clear ARG(_PATH)skills/flame/bullet/shoot
 			schedule clear ARG(_PATH)skills/thunder/strike
+			schedule clear ARG(_PATH)skills/sacrifice/clear_levitation
+			schedule clear ARG(_PATH)skills/sanka/sakura_draw
+			schedule clear ARG(_PATH)skills/sanka/call_teleport
 			schedule clear ARG(_PATH)skills/sikigami/reset_cd
 			
 			scoreboard players reset #SIKIGAMI_CD number
@@ -1411,7 +1414,7 @@ namespace stage()
 		
 		func armor_stand_main()
 		{
-			execute at @s[tag=boss] facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
+			execute at @s[tag=miko] facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
 			execute at @s[tag=dust_bullet] run function ARG(_PATH)skills/dust/bullet/move
 			execute if entity @s[tag=flame_circle] run function ARG(_PATH)skills/flame/circle/spin
 			execute at @s[tag=flame_bullet] run function ARG(_PATH)skills/flame/bullet/move
@@ -1423,8 +1426,7 @@ namespace stage()
 			func loop()
 			{
 				schedule function ARG(_PATH)loop 5s
-				execute store result score #EXIST_CLONE number if entity @e[type=armor_stand,tag=clone,limit=1]
-				execute if score #EXIST_CLONE number matches 1.. as @e[type=armor_stand,tag=boss] at @s run function ARG(_PATH)flame/cast
+				execute if score #EXIST_CLONE number matches 1.. as @e[type=armor_stand,tag=miko] at @s run function ARG(_PATH)flame/cast
 				execute unless score #EXIST_CLONE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_sikigami
 				```
 				print(f"execute at @r positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)dust/summon")
@@ -1928,11 +1930,58 @@ namespace stage()
 					scoreboard players set #SIKIGAMI_USED number 1
 					scoreboard players set #SIKIGAMI_CD number 1
 					schedule function ARG(_PATH)reset_cd 90s
+					
+					particle minecraft:cloud ~ ~ ~ 0.3 1.2 0.3 0.27 300
+					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 3 1 0
+					# TODO: 召喚分身，需有miko, clone兩個標籤
+					scoreboard players set #EXIST_CLONE number 3
+					```
+					print(f"spreadplayers {STAGE_CENTER[1][0]} {STAGE_CENTER[1][1]} 10 15 under {GROUND_Y[1] + 3} false @e[type=armor_stand,tag=miko]")
+					```
+					# 在各個分身位置生成防護罩特效
+					execute at @e[type=armor_stand,tag=miko] run summon area_effect_cloud ~ ~0.3 ~ {Duration:2147483647,Tags:["object","barrier"],CustomNameVisible:1b,CustomName:'{"text":"4","font":"skill:main"}'}
 				}
 				
 				func reset_cd()
 				{
 					scoreboard players reset #SIKIGAMI_CD number
+				}
+				
+				func hit_check()
+				{
+					execute if score #GUN_WEAK_ATTACK number matches 1 run function ARG(_PATH)block_damage
+					execute unless score #GUN_WEAK_ATTACK number matches 1 if entity @s[tag=clone] run function ARG(_PATH)clone_break
+					
+					# 被有效攻擊打到就清掉屏障，每個分身一定會分很開，直接抓最近的清掉就好
+					execute unless score #GUN_WEAK_ATTACK number matches 1 run kill @e[type=area_effect_cloud,tag=barrier,sort=nearest,limit=1]
+				}
+				
+				func block_damage()
+				{
+					playsound minecraft:enemy.miko.block_shoot player @a ~ ~ ~ 3 1 0
+					execute positioned ~ ~0.5 ~ run function ARG(_PATH)block_effect
+					scoreboard players set #IGNORE_DAMAGE number 1
+				}
+				
+				func block_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:burn_bullet/0"}',CustomNameVisible:1,Duration:4,Tags:['{"text":"","font":"font_animation:burn_bullet/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+				
+				func clone_break()
+				{
+					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 1 1 0
+					execute positioned ~ ~0.5 ~ run function ARG(_PATH)clone_break_effect
+					scoreboard players remove #EXIST_CLONE number 1
+				}
+				
+				func clone_break_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:sikigami_break/0"}',CustomNameVisible:1,Duration:8,Tags:['{"text":"","font":"font_animation:sikigami_break/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 7
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 			}
 		}
