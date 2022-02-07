@@ -1,0 +1,84 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "item/white_dye"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"custom_model_data": 1
+			},
+			"model": "minecraft:item/enemy/miko/boss/head"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 2
+			},
+			"model": "minecraft:item/enemy/miko/boss/body"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 3
+			},
+			"model": "minecraft:item/enemy/miko/boss/rhand"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 4
+			},
+			"model": "minecraft:item/enemy/miko/boss/stick"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 5
+			},
+			"model": "minecraft:item/enemy/miko/boss/paper"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 6
+			},
+			"model": "minecraft:item/enemy/miko/boss/lhand"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 7
+			},
+			"model": "minecraft:item/enemy/miko/boss/waist"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 8
+			},
+			"model": "minecraft:item/enemy/miko/boss/thigh"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 9
+			},
+			"model": "minecraft:item/enemy/miko/boss/calf"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 10
+			},
+			"model": "minecraft:item/enemy/miko/boss/thigh2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 11
+			},
+			"model": "minecraft:item/enemy/miko/boss/calf2"
+		}
+	],
+	"aj": {
+		"includedRigs": {
+			"dbd64e59-bf9d-96ed-f7a4-20531bde34e6": {
+				"name": "miko",
+				"usedIDs": [
+					[1, 11]
+				]
+			}
+		}
+	}
+}

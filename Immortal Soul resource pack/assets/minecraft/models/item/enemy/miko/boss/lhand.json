@@ -1,0 +1,42 @@
+{
+	"__credit": "Generated using Animated Java (https://animated-java.dev/)",
+	"textures": {
+		"5": "minecraft:item/enemy/miko/main",
+		"7": "minecraft:item/enemy/miko/boss/cloth"
+	},
+	"elements": [
+		{
+			"faces": {
+				"north": {"uv": [14.875, 10, 16, 15], "texture": "#5"},
+				"east": {"uv": [14.875, 10, 16, 15], "texture": "#5"},
+				"south": {"uv": [14.875, 10, 16, 15], "texture": "#5"},
+				"west": {"uv": [14.875, 10, 16, 15], "texture": "#5"},
+				"up": {"uv": [14.875, 10, 16, 14.625], "texture": "#5"},
+				"down": {"uv": [14.875, 10, 16, 14.625], "texture": "#5"}
+			},
+			"to": [8.2, 5.2, 8.4],
+			"from": [7.2, 1.2, 7.4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5.2, -0.2, 8]}
+		},
+		{
+			"faces": {
+				"north": {"uv": [14.85714, 0, 16, 16], "texture": "#7"},
+				"east": {"uv": [14.85714, 0, 16, 16], "texture": "#7"},
+				"south": {"uv": [14.875, 0, 16, 16], "texture": "#7"},
+				"west": {"uv": [14.875, 0, 16, 16], "texture": "#7"},
+				"up": {"uv": [14.875, 14.80357, 16, 16], "texture": "#7"},
+				"down": {"uv": [14.875, 14.80357, 16, 16], "texture": "#7"}
+			},
+			"to": [8.24, 4.7, 8.44],
+			"from": [7.16, 1.5, 7.36],
+			"rotation": {"angle": 0, "axis": "y", "origin": [5.16, 0, 8.04]}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 5.6, 0],
+			"scale": [4, 4, 4],
+			"rotation": [0, 0, 0]
+		}
+	}
+}

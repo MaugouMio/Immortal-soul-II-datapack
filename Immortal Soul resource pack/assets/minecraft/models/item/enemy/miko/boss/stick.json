@@ -1,0 +1,28 @@
+{
+	"__credit": "Generated using Animated Java (https://animated-java.dev/)",
+	"textures": {
+		"5": "minecraft:item/enemy/miko/main"
+	},
+	"elements": [
+		{
+			"faces": {
+				"north": {"uv": [0, 10, 0.5, 16], "rotation": 90, "texture": "#5"},
+				"east": {"uv": [0, 10, 0.5, 16], "texture": "#5"},
+				"south": {"uv": [0, 16, 0.5, 10], "rotation": 90, "texture": "#5"},
+				"west": {"uv": [0, 10, 0.5, 16], "texture": "#5"},
+				"up": {"uv": [0, 16, 0.5, 10], "rotation": 90, "texture": "#5"},
+				"down": {"uv": [0, 16, 0.5, 10], "rotation": 90, "texture": "#5"}
+			},
+			"to": [8.14, 5.16, 9.4],
+			"from": [7.84, 4.86, 4.4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 5, 8]}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 5.6, 0],
+			"scale": [4, 4, 4],
+			"rotation": [0, 0, 0]
+		}
+	}
+}
