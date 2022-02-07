@@ -1,17 +1,17 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1644219026,
+    "creation_time": 1644222375,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
       "animatedJava": {
-        "projectName": "unnamed_project",
-        "exporter": "vanillaStatueExporter",
+        "projectName": "miko",
+        "exporter": "vanillaAnimationExporter",
         "verbose": true,
         "rigItem": "minecraft:white_dye",
-        "rigModelsExportFolder": "",
-        "predicateFilePath": "",
+        "rigModelsExportFolder": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\enemy\\miko\\boss",
+        "predicateFilePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\white_dye.json",
         "transparentTexturePath": ""
       },
       "vanillaStatueExporter": {
@@ -31,8 +31,8 @@
         "dataPackPath": ""
       },
       "vanillaAnimationExporter": {
-        "rootEntityType": "minecraft:marker",
-        "rootEntityNbt": "{}",
+        "rootEntityType": "minecraft:armor_stand",
+        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"miko\",\"boss\",\"knockback_resist\",\"object\"],UUID:[I;1,1,1,1]}",
         "markerArmorStands": true,
         "autoDistance": true,
         "autoDistanceMovementThreshold": 1,
@@ -49,10 +49,13 @@
         "frameScoreboardObjective": "aj.frame",
         "animatingFlagScoreboardObjective": "aj.%projectName.animating",
         "animationLoopModeScoreboardObjective": "aj.%projectName.%animationName.loopMode",
-        "exportMode": "mcb",
+        "exportMode": "vanilla",
         "mcbFilePath": "",
         "mcbConfigPath": "",
-        "dataPackPath": ""
+        "dataPackPath": "C:\\Users\\MaugouMio\\AppData\\Roaming\\.minecraft\\saves\\Immortal Soul test1\\datapacks\\immortal soul datapack"
+      },
+      "rawAnimationExporter": {
+        "outputJsonPath": ""
       }
     },
     "variants": {
@@ -4553,7 +4556,7 @@
               "armAnimationEnabled": false,
               "uuid": "bb224261-9014-3beb-6bcb-611e0718261a",
               "export": true,
-              "isOpen": true,
+              "isOpen": false,
               "locked": false,
               "visibility": true,
               "autouv": 0,
@@ -4586,7 +4589,7 @@
               "armAnimationEnabled": false,
               "uuid": "06f474ac-7da5-f0e1-e2ac-90a1ceb42aef",
               "export": true,
-              "isOpen": true,
+              "isOpen": false,
               "locked": false,
               "visibility": true,
               "autouv": 0,
@@ -4703,7 +4706,7 @@
               "armAnimationEnabled": false,
               "uuid": "0020e256-235a-5215-5c28-f6afe26e71ef",
               "export": true,
-              "isOpen": true,
+              "isOpen": false,
               "locked": false,
               "visibility": true,
               "autouv": 0,
@@ -5309,11 +5312,11 @@
     {
       "uuid": "460a17a5-6392-7e75-8747-62f3d4832a3c",
       "name": "animation.miko.flame_end",
-      "loop": "hold",
+      "loop": "once",
       "override": false,
       "length": 0.8,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",
