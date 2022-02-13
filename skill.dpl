@@ -107,6 +107,7 @@ namespace skill()
 		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value 16752800
 		data modify entity @s HandItems[0].tag.CustomPotionColor set value 16752800
 		data modify entity @s HandItems[1].tag.CustomPotionColor set value 16752800
+		# TODO: 是巫女的話走AnimatedJava切variant的模式
 		schedule function ARG(_PATH)boss_hurt_reset 10t
 
 		execute if score @s health matches ..0 run function stage:end
@@ -122,6 +123,7 @@ namespace skill()
 		data modify entity @s ArmorItems[3].tag.CustomPotionColor set value -1
 		data modify entity @s HandItems[0].tag.CustomPotionColor set value -1
 		data modify entity @s HandItems[1].tag.CustomPotionColor set value -1
+		# TODO: 是巫女的話走AnimatedJava切variant的模式
 	}
 		
 	func reset_action()
