@@ -1682,7 +1682,7 @@ namespace stage()
 			{
 				func cast()
 				{
-					# TODO: 單手抓地動作
+					# TODO: 展開結界動作
 					```
 					print(f"execute at @p[gamemode=adventure,scores={{player=1..}}] positioned ~ {GROUND_Y[1]} ~ run function ARG(_PATH)knock_up")
 					```
@@ -1858,6 +1858,7 @@ namespace stage()
 			{
 				func cast()
 				{
+					# TODO: 單手抓地動作
 					scoreboard players reset #RAND_RESULT number
 					execute positioned ^ ^ ^2 run function ARG(_PATH)summon
 				}
