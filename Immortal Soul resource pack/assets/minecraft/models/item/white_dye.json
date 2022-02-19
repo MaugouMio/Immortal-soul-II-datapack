@@ -69,6 +69,138 @@
 				"custom_model_data": 11
 			},
 			"model": "minecraft:item/enemy/miko/boss/calf2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 12
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/head"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 13
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/body"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 14
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/rhand"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 15
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/stick"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 16
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/paper"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 17
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/lhand"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 18
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/waist"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 19
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/thigh"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 20
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/calf"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 21
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/thigh2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 22
+			},
+			"model": "minecraft:item/enemy/miko/boss/invisible/calf2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 23
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/head"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 24
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/body"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 25
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/rhand"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 26
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/stick"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 27
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/paper"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 28
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/lhand"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 29
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/waist"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 30
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/thigh"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 31
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/calf"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 32
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/thigh2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 33
+			},
+			"model": "minecraft:item/enemy/miko/boss/hurt/calf2"
 		}
 	],
 	"aj": {
@@ -76,7 +208,7 @@
 			"dbd64e59-bf9d-96ed-f7a4-20531bde34e6": {
 				"name": "miko",
 				"usedIDs": [
-					[1, 11]
+					[1, 33]
 				]
 			}
 		}
