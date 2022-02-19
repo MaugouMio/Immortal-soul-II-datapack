@@ -26,6 +26,9 @@ namespace stage()
 		bossbar set minecraft:boss color red
 		bossbar add zone {"translate":"Zone"}
 		execute store result bossbar minecraft:zone max run scoreboard players get #ZONE_MAX number
+		
+		# animated java 模型
+		function miko:install
 	}
 	
 	func main()
