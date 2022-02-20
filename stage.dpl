@@ -1388,7 +1388,9 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			# summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,DisabledSlots:4144959,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["miko","boss","knockback_resist","object"],UUID:[I;1,1,1,1]}
+			function miko:summon/default
+			tag 00000001-0000-0001-0000-000100000001 add boss
+			tag 00000001-0000-0001-0000-000100000001 remove new_miko
 		}
 		
 		func end()
@@ -1532,7 +1534,7 @@ namespace stage()
 					# 總動作時間比較長，延後下次技能時間
 					schedule function ARG(__PATH)loop 7s
 					
-					# TODO: 伸手動作
+					function miko:animations/animation.miko.flame/play
 					playsound minecraft:enemy.miko.flame_cast player @a ~ ~ ~ 3 1 0
 					function ARG(_PATH)circle/summon
 					
@@ -1625,7 +1627,12 @@ namespace stage()
 				func end()
 				{
 					scoreboard players set @e[type=armor_stand,tag=flame_circle] number 1
-					# schedule function 收手動作 5t
+					schedule function ARG(_PATH)end_anim 5t
+				}
+				
+				func end_anim()
+				{
+					execute as @e[type=armor_stand,tag=miko] run function miko:animations/animation.miko.flame_end/play
 				}
 			}
 			
@@ -1633,7 +1640,7 @@ namespace stage()
 			{
 				func cast()
 				{
-					# TODO: 舉手動作
+					function miko:animations/animation.miko.thunder/play
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:42}}],Tags:["object","effect"],UUID:[I;3,3,3,3]}
 					playsound minecraft:enemy.miko.thunder_prepare player @a ~ ~ ~ 3 1 0
 					execute at @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)summon
@@ -1655,6 +1662,7 @@ namespace stage()
 					kill 00000003-0000-0003-0000-000300000003
 					execute as @e[type=armor_stand,tag=thunder] at @s run function ARG(_PATH)attack
 					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.miko.thunder_strike player @a ~ ~ ~ 16 1 1
+					execute as 00000001-0000-0001-0000-000100000001 run function miko:animations/animation.miko.thunder_end/play
 				}
 				
 				func attack()
@@ -1685,7 +1693,7 @@ namespace stage()
 			{
 				func cast()
 				{
-					# TODO: 展開結界動作
+					function miko:animations/animation.miko.sacrifice/play
 					```
 					print(f"execute at @p[gamemode=adventure,scores={{player=1..}}] positioned ~ {GROUND_Y[1]} ~ run function ARG(_PATH)knock_up")
 					```
@@ -1718,6 +1726,8 @@ namespace stage()
 					execute if score @s life matches ..19 as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.1 ~
 					execute if score @s life matches 20..99 if entity @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range,limit=1] run function ARG(_PATH)bite
 					execute if score @s life matches 100.. run function ARG(_PATH)sink
+					
+					execute if score @s life matches 100 as 00000001-0000-0001-0000-000100000001 run function miko:animations/animation.miko.sacrifice_end/play
 				}
 				
 				func bite()
@@ -1752,7 +1762,7 @@ namespace stage()
 				func cast()
 				{
 					playsound minecraft:enemy.miko.sanka_prepare player @a ~ ~ ~ 3 1 0
-					#TODO: 開扇子遮臉動作
+					function miko:animations/animation.miko.sanka/play
 					```
 					for i in range(5):
 						print('summon armor_stand ~ ~ ~ {Rotation:[%df,0f],Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:46}}],Tags:["object","effect","sakura"]}' %(i * 72))
@@ -1778,11 +1788,17 @@ namespace stage()
 				
 				func teleport()
 				{
+					# 隱形，暫時給 effect tag 避免被當攻擊對象
+					function miko:set_variant/invisible
+					tag @s add effect
+					
 					kill @e[type=armor_stand,tag=sakura]
 					
 					scoreboard players set #BULLET_SPLIT number 2
 					execute positioned ~ ~0.7 ~ run function ARG(_PATH)bullet/explode
 					function ARG(_PATH)random_tp
+					
+					schedule function ARG(_PATH)call_show_up 10t
 				}
 				
 				func random_tp()
@@ -1791,6 +1807,20 @@ namespace stage()
 					print(f"spreadplayers {STAGE_CENTER[1][0]} {STAGE_CENTER[1][1]} 0 15 under {GROUND_Y[1] + 3} false @s")
 					```
 					execute at @s if entity @a[gamemode=adventure,scores={player=1..},distance=..5,limit=1] run function ARG(_PATH)random_tp
+				}
+				
+				func call_show_up()
+				{
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)show_up
+				}
+				
+				func show_up()
+				{
+					function miko:set_variant/default
+					tag @s remove effect
+					
+					particle firework ~ ~1 ~ 0 0 0 0.2 30
+					particle flash ~ ~1 ~ 0 0 0 1 1
 				}
 				
 				folder bullet()
@@ -1861,7 +1891,7 @@ namespace stage()
 			{
 				func cast()
 				{
-					# TODO: 單手抓地動作
+					function miko:animations/animation.miko.hell/play
 					scoreboard players reset #RAND_RESULT number
 					execute positioned ^ ^ ^2 run function ARG(_PATH)summon
 				}
@@ -1897,6 +1927,7 @@ namespace stage()
 				
 				func start_chase()
 				{
+					execute as 00000001-0000-0001-0000-000100000001 run function miko:animations/animation.miko.hell_end/play
 					playsound minecraft:enemy.miko.scream player @a ~ ~ ~ 3 1 0
 					
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 55
@@ -1937,13 +1968,24 @@ namespace stage()
 					
 					particle minecraft:cloud ~ ~ ~ 0.3 1.2 0.3 0.27 300
 					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 3 1 0
-					# TODO: 召喚分身，需有miko, clone兩個標籤
-					scoreboard players set #EXIST_CLONE number 3
+					
+					scoreboard players set #EXIST_CLONE number 0
+					function miko:summon/default
+					function miko:summon/default
+					function miko:summon/default
+					execute as @e[type=armor_stand,tag=new_miko] run function ARG(_PATH)clone_setting
 					```
 					print(f"spreadplayers {STAGE_CENTER[1][0]} {STAGE_CENTER[1][1]} 10 15 under {GROUND_Y[1] + 3} false @e[type=armor_stand,tag=miko]")
 					```
 					# 在各個分身位置生成防護罩特效
 					execute at @e[type=armor_stand,tag=miko] run summon area_effect_cloud ~ ~0.3 ~ {Duration:2147483647,Tags:["object","barrier"],CustomNameVisible:1b,CustomName:'{"text":"4","font":"skill:main"}'}
+				}
+				
+				func clone_setting()
+				{
+					tag @s add clone
+					tag @s remove new_miko
+					scoreboard players add #EXIST_CLONE number 1
 				}
 				
 				func reset_cd()
