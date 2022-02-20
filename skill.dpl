@@ -90,9 +90,15 @@ namespace skill()
 		scoreboard players operation @s display_number > #1 number
 		function number:display
 
-		execute if entity @s[tag=!boss,tag=!hell_skeleton] run function ARG(_PATH)normal_damage
-		execute if entity @s[tag=hell_skeleton] run function stage:stage2/skills/hell/skull_hurt
+		execute if entity @s[tag=!boss,tag=!dead_event] run function ARG(_PATH)normal_damage
+		execute if entity @s[tag=dead_event] run function ARG(_PATH)check_special_hurt
 		execute if entity @s[tag=boss] run function ARG(_PATH)boss_damage
+	}
+	
+	func check_special_hurt()
+	{
+		execute if entity @s[tag=hell_skeleton] run function stage:stage2/skills/hell/skull_hurt
+		execute if entity @s[tag=flame_bullet] run function stage:stage2/skills/flame/bullet/bullet_hurt
 	}
 	
 	func normal_damage()

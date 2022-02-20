@@ -37,60 +37,64 @@ void main() {
     vertexColor = minecraft_mix_light(Light0_Direction, Light1_Direction, Normal, Color) * texelFetch(Sampler2, UV2 / 16, 0);
 	
 	vec4 vertexTexel = texture(Sampler0, UV0);
-	if (vertexTexel.a < 0.015 && vertexTexel.a > 0.0) {
-		// float vertexId = mod(gl_VertexID, 4.0);
-		float vertexId = 0.0;
-		if (vertexTexel.r > 0.99)
-			vertexId = 1.0;
-		if (vertexTexel.g > 0.99)
-			vertexId = 2.0;
-		if (vertexTexel.b > 0.99)
-			vertexId = 3.0;
-		mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
-		
-		alpha = Color.b / 0.9803921568627451;
-		float expand = alpha * 1.5;
-		float facing = (Color.g - 0.5) * PI * 2.0;
-		
-		float theta = fract(GameTime * 300) * PI * 2;
-		if (vertexId == 0.0) {
-			float horizonOffset = expand * sin(PI * 0.25 + theta);
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * 0.25 + theta), horizonOffset * sin(facing)), 1.0);
+	if (vertexTexel.r > 0.99 && vertexTexel.g > 0.99 && vertexTexel.b > 0.99) {
+		if (vertexTexel.a < 0.015 && vertexTexel.a > 0.0) {
+			// float vertexId = mod(gl_VertexID, 4.0);
+			float vertexId = 0.0;
+			if (vertexTexel.r > 0.997)  // 255, 253, 253
+				vertexId = 1.0;
+			else if (vertexTexel.r > 0.993)  // 254, 253, 253
+				vertexId = 2.0;
+			else if (vertexTexel.g > 0.997)  // 253, 255, 253
+				vertexId = 3.0;
+			else if (vertexTexel.g > 0.993)  // 253, 254, 253
+				vertexId = 0.0;
+			mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
+			
+			alpha = Color.b / 0.9803921568627451;
+			float expand = alpha * 1.5;
+			float facing = (Color.g - 0.5) * PI * 2.0;
+			
+			float theta = fract(GameTime * 300) * PI * 2;
+			if (vertexId == 0.0) {
+				float horizonOffset = expand * sin(PI * 0.25 + theta);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * 0.25 + theta), horizonOffset * sin(facing)), 1.0);
+			}
+			else if (vertexId == 1.0) {
+				float horizonOffset = expand * sin(PI * 0.75 + theta);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * 0.75 + theta), horizonOffset * sin(facing)), 1.0);
+			}
+			else if (vertexId == 2.0) {
+				float horizonOffset = expand * sin(PI * -0.75 + theta);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * -0.75 + theta), horizonOffset * sin(facing)), 1.0);
+			}
+			else {
+				float horizonOffset = expand * sin(PI * -0.25 + theta);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * -0.25 + theta), horizonOffset * sin(facing)), 1.0);
+			}
+			
+			vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
 		}
-		else if (vertexId == 1.0) {
-			float horizonOffset = expand * sin(PI * 0.75 + theta);
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * 0.75 + theta), horizonOffset * sin(facing)), 1.0);
+		else if (vertexTexel.a < 0.025 && vertexTexel.a > 0.015) {
+			float vertexId = mod(gl_VertexID, 4.0);
+			mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
+			
+			float size = Color.b * 51.0;
+			if (vertexId == 0.0) {
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, size), 1.0);
+			}
+			else if (vertexId == 1.0) {
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, -size), 1.0);
+			}
+			else if (vertexId == 2.0) {
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, -size), 1.0);
+			}
+			else {
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, size), 1.0);
+			}
+			
+			vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
 		}
-		else if (vertexId == 2.0) {
-			float horizonOffset = expand * sin(PI * -0.75 + theta);
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * -0.75 + theta), horizonOffset * sin(facing)), 1.0);
-		}
-		else {
-			float horizonOffset = expand * sin(PI * -0.25 + theta);
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(horizonOffset * cos(facing), expand * cos(PI * -0.25 + theta), horizonOffset * sin(facing)), 1.0);
-		}
-		
-		vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
-	}
-	else if (vertexTexel.a < 0.025 && vertexTexel.a > 0.015) {
-		float vertexId = mod(gl_VertexID, 4.0);
-		mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
-		
-		float size = Color.b * 51.0;
-		if (vertexId == 0.0) {
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, size), 1.0);
-		}
-		else if (vertexId == 1.0) {
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, -size), 1.0);
-		}
-		else if (vertexId == 2.0) {
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, -size), 1.0);
-		}
-		else {
-			gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, size), 1.0);
-		}
-		
-		vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
 	}
 
     vertexDistance = length((ModelViewMat * vec4(Position, 1.0)).xyz);

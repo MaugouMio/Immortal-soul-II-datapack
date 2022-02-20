@@ -1,6 +1,86 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
+		"animation.miko.flame": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 0.55,
+			"bones": {
+				"upper_body": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.15": [0, 2.5, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"0.05": [0, 0, 0],
+						"0.15": [0, 27.5, 0]
+					}
+				},
+				"rhand": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.15": [-80.79864, 17.13502, -14.08618]
+					}
+				},
+				"stick": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.05": [47.82185, -35.79621, -43.55273],
+						"0.15": [57.51564, 0.75155, 2.38443]
+					}
+				},
+				"paper": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.15": [69.76331, -1.17824, 42.85158],
+						"0.35": [-7.4667, -3.13682, 35.60427],
+						"0.45": [18.45086, -2.08589, 15.60651]
+					}
+				},
+				"root": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.15": [0, -30, 0]
+					}
+				}
+			},
+			"timeline": {
+				"0.55": "scoreboard players set #ANIM_LOCK number 2"
+			}
+		},
+		"animation.miko.flame_loop": {
+			"loop": true,
+			"animation_length": 0.3,
+			"bones": {
+				"upper_body": {
+					"rotation": [0, 2.5, 0]
+				},
+				"head": {
+					"rotation": [0, 27.5, 0]
+				},
+				"rhand": {
+					"rotation": [-80.79864, 17.13502, -14.08618],
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.15": {
+							"post": [0, 0.5, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"0.3": [0, 0, 0]
+					}
+				},
+				"stick": {
+					"rotation": [57.51564, 0.75155, 2.38443]
+				},
+				"paper": {
+					"rotation": [18.45086, -2.08589, 15.60651]
+				},
+				"root": {
+					"rotation": [0, -30, 0]
+				}
+			}
+		},
 		"animation.miko.flame_end": {
 			"loop": "hold_on_last_frame",
 			"animation_length": 0.8,
@@ -48,6 +128,9 @@
 						"0.5": [0, 0, 0]
 					}
 				}
+			},
+			"timeline": {
+				"0.8": "scoreboard players reset #ANIM_LOCK number"
 			}
 		},
 		"animation.miko.thunder": {
@@ -179,6 +262,9 @@
 						"0.8": [0, 0, 0]
 					}
 				}
+			},
+			"timeline": {
+				"0.8": "scoreboard players reset #ANIM_LOCK number"
 			}
 		},
 		"animation.miko.sanka": {
@@ -274,6 +360,9 @@
 						"0.3": [5, 0, 0]
 					}
 				}
+			},
+			"timeline": {
+				"1.1": "scoreboard players reset #ANIM_LOCK number"
 			}
 		},
 		"animation.miko.sacrifice": {
@@ -347,6 +436,9 @@
 						"0.15": [0, -1, 0.25]
 					}
 				}
+			},
+			"timeline": {
+				"0.55": "scoreboard players reset #ANIM_LOCK number"
 			}
 		},
 		"animation.miko.sacrifice_end": {
@@ -420,6 +512,9 @@
 						"0.25": [0, 0, 0]
 					}
 				}
+			},
+			"timeline": {
+				"0.6": "scoreboard players reset #ANIM_LOCK number"
 			}
 		},
 		"animation.miko.hell": {
@@ -600,6 +695,9 @@
 						"0.5": [0, 0, 0]
 					}
 				}
+			},
+			"timeline": {
+				"0.5": "scoreboard players reset #ANIM_LOCK number"
 			}
 		}
 	}

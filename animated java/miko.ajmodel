@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1645284412,
+    "creation_time": 1645369451,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -32,7 +32,7 @@
       },
       "vanillaAnimationExporter": {
         "rootEntityType": "minecraft:armor_stand",
-        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"miko\",\"boss\",\"knockback_resist\",\"object\"],UUID:[I;1,1,1,1]}",
+        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"aj_model\",\"miko\",\"knockback_resist\",\"object\",\"new_miko\"],UUID:[I;1,1,1,1]}",
         "markerArmorStands": true,
         "autoDistance": true,
         "autoDistanceMovementThreshold": 1,
@@ -5141,7 +5141,7 @@
       "mode": "bitmap",
       "saved": true,
       "uuid": "351d8dce-7903-8758-eeaf-fe4ccdf41d40",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAVCAYAAAB2Wd+JAAAAAXNSR0IArs4c6QAAAHVJREFUOE/VkUEOgDAIBOF/5bXt/zCg1KZSIxw07k3TYTZZhGQwyUEe5FIYWwsdUOYDkJmBCJ7WlYZQKyAHQIUkHZQPIv3nmUfA5tuNY6YDVm3e+wrai+OA1PKyNK4Av6pYFob7qu+CAZvO1udIgUHoNP4C3AAOU32cKpcgSwAAAABJRU5ErkJggg=="
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAVCAYAAAB2Wd+JAAAAAXNSR0IArs4c6QAAAHdJREFUOE/V0UsKwCAMBNCk5xM8q+D1bMoIEfFDmyxK667QlxkYJudjpyM/lBCEczYdqOZ9WEqRI0Z6WhcNz5SILRAIKzSID6TirZJ7oPPVxH7L8YBWG/eeoP6gB1Br9baJO7CsipQ78AFoqVln0zlc0Ipa4j/gBcXnjEK2SuViAAAAAElFTkSuQmCC"
     },
     {
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest_side.png",
@@ -5155,7 +5155,7 @@
       "mode": "bitmap",
       "saved": true,
       "uuid": "cd231592-313a-ac65-febd-5d163b923c39",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAAClJREFUGFdj/P///38GEPD1BVMgwLhlCyOYhkvCpRAKsUvCTMCqk7aSADCMHoq/R5sZAAAAAElFTkSuQmCC"
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAACxJREFUGFdj/Pv3738GBgYGJn9/EAUGjFu2MIJpmCRcBkkhVkm4Cdh00lgSACXuHmxsP9vRAAAAAElFTkSuQmCC"
     },
     {
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\cloth.png",
@@ -5169,7 +5169,7 @@
       "mode": "bitmap",
       "saved": true,
       "uuid": "905d7c25-dce5-a013-b007-a6ae048e1549",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAEhJREFUOE9j/P///38GEPD1BVPEAkYUjZs3E6uPYaA0gvxHgjNB/oE4dbhr9PH5T2rAQAKH/hphaZXoxAZRiEhy9NMIChwyAAA/Zk8FarG9qgAAAABJRU5ErkJggg=="
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAExJREFUOE9j/Pv3738GBgYGJn9/EEU0YETW+G/jxsGuEeQ/UpwJ8g/Yj8Nd438fn/+kBgw4cOivEZbkiE5rUIXwtEo/jaDAIdU2kHoAvkVZsRr8U3YAAAAASUVORK5CYII="
     },
     {
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\skirt.png",
@@ -5225,7 +5225,7 @@
       "mode": "bitmap",
       "saved": true,
       "uuid": "7ed1e0b5-ce7b-b838-799d-3e64b511d980",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAICAYAAAD0g6+qAAAAAXNSR0IArs4c6QAAAGRJREFUKFNjZKASYGRgYPgPNQvERgH/5++HyYHFGRMdMdTA9MMkUDT8/4/CxXAzIyOGeXARsE5CBqCbiGQgitH/yTQI7Dx0NxLlMmSXwFyJLfDAviQQmZiBhEsDeozBbcYecwwA4BIbCGmd0RsAAAAASUVORK5CYII="
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAICAYAAAD0g6+qAAAAAXNSR0IArs4c6QAAAGhJREFUKFNjZKASYGRgYPgPNQvERgH/5++HyYHFGRMdMdTA9MMkUDT8/fsXrzuZmZnR5RlRDCJkALpuJAPhBoHU/CfTILBj0P0M9iIhA5FdAnMltsADu45AZGLow2UQA3qMwW3GHnMMANxSGwhEyNIPAAAAAElFTkSuQmCC"
     },
     {
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\bangs2.png",
@@ -5404,7 +5404,7 @@
       "override": false,
       "length": 0.55,
       "snapping": 20,
-      "selected": false,
+      "selected": true,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",
@@ -5658,6 +5658,209 @@
                 }
               ],
               "uuid": "e19d318b-1f06-a147-bd48-b82b33fecc34",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players set #ANIM_LOCK number 2"
+                }
+              ],
+              "uuid": "d114a3fb-ace1-0814-4329-60f1bd668a43",
+              "time": 0.55,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "uuid": "ec966ba1-a419-d3fc-c59d-a000476ba924",
+      "name": "animation.miko.flame_loop",
+      "loop": "loop",
+      "override": false,
+      "length": 0.3,
+      "snapping": 20,
+      "selected": false,
+      "saved": true,
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
+      "anim_time_update": "",
+      "blend_weight": "",
+      "start_delay": "",
+      "loop_delay": "",
+      "markers": [
+        {
+          "color": 0,
+          "time": 0
+        }
+      ],
+      "animators": {
+        "e195f9cc-44b5-690a-ae69-88511381df3d": {
+          "name": "upper_body",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 2.5,
+                  "z": 0
+                }
+              ],
+              "uuid": "62011fb7-b0c0-f247-7c9d-c13989f17cb2",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "bb224261-9014-3beb-6bcb-611e0718261a": {
+          "name": "head",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 27.5,
+                  "z": 0
+                }
+              ],
+              "uuid": "62f32093-07d3-13cf-8ea0-169ba0fe1afd",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "22271bc1-2f96-90d1-5c00-fd892731b271": {
+          "name": "rhand",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": -80.79863647116485,
+                  "y": 17.135021663866134,
+                  "z": -14.086180977406514
+                }
+              ],
+              "uuid": "fd092d44-b57d-7597-211e-6ade9ddf3b5c",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0",
+                  "z": "0"
+                }
+              ],
+              "uuid": "d8f62d5c-ff6a-bbb7-2ca6-0a8cd0fdd367",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0.5,
+                  "z": 0
+                }
+              ],
+              "uuid": "29815e60-8078-5a87-cccc-5a2ee0274b5e",
+              "time": 0.15,
+              "color": -1,
+              "interpolation": "catmullrom"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0",
+                  "z": "0"
+                }
+              ],
+              "uuid": "3aa52a92-76d5-eaec-fae6-7a5e9023ab5f",
+              "time": 0.3,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "ddfb45cd-bdf8-4e4a-4b18-219abb5bce14": {
+          "name": "stick",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 57.51564073502959,
+                  "y": 0.7515475302980121,
+                  "z": 2.3844291611171684
+                }
+              ],
+              "uuid": "38ea3486-fd0c-1caf-7bdb-88255782ccad",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "83d654c9-2c5e-4098-ecfb-d800fc98c801": {
+          "name": "paper",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 18.45085858901328,
+                  "y": -2.0858876933322246,
+                  "z": 15.606513608051593
+                }
+              ],
+              "uuid": "933de352-a1df-9cf0-5e89-27fbf3ae4028",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "04de9493-eae9-281d-4b8b-586ef76546cd": {
+          "name": "root",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": -30,
+                  "z": 0
+                }
+              ],
+              "uuid": "2de7fc48-e3fa-cd63-ce1b-734d7c63c03e",
               "time": 0,
               "color": -1,
               "interpolation": "linear"
@@ -5984,6 +6187,24 @@
               ],
               "uuid": "e19d318b-1f06-a147-bd48-b82b33fecc34",
               "time": 0.5,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players reset #ANIM_LOCK number"
+                }
+              ],
+              "uuid": "7cb2d87e-5770-568b-8337-5c0925270e8b",
+              "time": 0.8,
               "color": -1,
               "interpolation": "linear"
             }
@@ -6834,6 +7055,24 @@
               "interpolation": "linear"
             }
           ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players reset #ANIM_LOCK number"
+                }
+              ],
+              "uuid": "5f7fb867-ea2e-dcf1-5e5f-c398b3eb9684",
+              "time": 0.8,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
         }
       }
     },
@@ -7329,6 +7568,24 @@
               ],
               "uuid": "0389556e-3ec3-5c7e-2e5b-edcfe4ec68e1",
               "time": 0.3,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players reset #ANIM_LOCK number"
+                }
+              ],
+              "uuid": "25b54804-cd28-5b0d-8ea2-5e3c516fa884",
+              "time": 1.1,
               "color": -1,
               "interpolation": "linear"
             }
@@ -8271,6 +8528,24 @@
               ],
               "uuid": "5b783aff-1803-bcea-aa10-e9e34a1e82d6",
               "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players reset #ANIM_LOCK number"
+                }
+              ],
+              "uuid": "94854ec4-e601-040c-48b9-9ce12b5448a5",
+              "time": 0.6,
               "color": -1,
               "interpolation": "linear"
             }
@@ -9294,6 +9569,24 @@
                 }
               ],
               "uuid": "91ab828c-1529-9377-cef1-d6a581004c03",
+              "time": 0.5,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players reset #ANIM_LOCK number"
+                }
+              ],
+              "uuid": "b23dd61f-d013-e166-1354-f2f08422711d",
               "time": 0.5,
               "color": -1,
               "interpolation": "linear"

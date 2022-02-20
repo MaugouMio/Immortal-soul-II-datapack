@@ -88,6 +88,8 @@ namespace main()
 		effect give @s minecraft:saturation 1000000 100 true
 		effect give @s minecraft:jump_boost 1000000 1 true
 		gamemode adventure @s
+		
+		tag @s add flame_target
 	}
 	
 	folder login_reset()
