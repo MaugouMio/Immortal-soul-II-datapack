@@ -1,0 +1,49 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/barrier_charge/0.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/barrier_charge/1.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/barrier_charge/2.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/barrier_charge/3.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/barrier_charge/4.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "4"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,94 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/0.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/1.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/2.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/3.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/4.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "4"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/5.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "5"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/6.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "6"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "7"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "8"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "9"
+            ]
+        }
+    ]
+}

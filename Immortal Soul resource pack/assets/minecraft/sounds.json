@@ -293,6 +293,22 @@
       }
     ]
   },
+  "enemy.miko.smoke_burst2": {
+    "sounds": [
+      {
+        "name": "enemy/miko/smoke_burst2",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.dust_explode": {
+    "sounds": [
+      {
+        "name": "enemy/miko/dust_explode",
+        "stream": true
+      }
+    ]
+  },
   
   
   

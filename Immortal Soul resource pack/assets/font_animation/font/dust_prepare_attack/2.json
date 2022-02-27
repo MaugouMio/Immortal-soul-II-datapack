@@ -1,0 +1,67 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "4"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "5"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/dust_prepare_attack/7.png",
+            "ascent": 36,
+            "height": 72,
+            "chars": [
+                "6"
+            ]
+        }
+    ]
+}
