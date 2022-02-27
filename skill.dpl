@@ -73,8 +73,8 @@ namespace skill()
 		scoreboard players set #IGNORE_DAMAGE number 0
 		# 真白的劍舞技能施放中
 		execute if score #SELECTED_STAGE number matches 1 if score #SWORD_DANCE number matches 1.. run function stage:stage1/skills/dodge/try
-		# 式神亂舞狀態
-		execute if score #SELECTED_STAGE number matches 2 if score #EXIST_CLONE number matches 1.. if entity @s[tag=miko] run function stage:stage2/skills/sikigami/hit_check
+		# 子彈結界狀態
+		execute if score #SELECTED_STAGE number matches 2 if score @s bullet_barrier matches 1.. run function stage:stage2/skills/sikigami/hit_check
 		# 有ZONE的只有真白，沒有小怪，不用判定boss標籤
 		execute if score #IGNORE_DAMAGE number matches 0 if score #ZONE_ACTIVE number matches 1 run function stage:stage1/skills/zone/hit
 		execute if score #IGNORE_DAMAGE number matches 0 run function ARG(_PATH)deal_damage

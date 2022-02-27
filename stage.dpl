@@ -11,10 +11,12 @@ namespace stage()
 	{
 		scoreboard objectives add death deathCount
 		scoreboard objectives add game_id dummy
+		scoreboard objectives add bullet_barrier dummy
 		
 		scoreboard players set #PLAYER_MODE number 1
 		scoreboard players set #SELECTED_STAGE number 1
 		scoreboard players set #ZONE_MAX number 10000
+		scoreboard players set #BULLET_BARRIER_MAX number 3000
 		# 破壞後5秒回復
 		scoreboard players operation #ZONE_RECOVER number = #ZONE_MAX number
 		scoreboard players operation #ZONE_RECOVER number /= #100 number
@@ -26,6 +28,8 @@ namespace stage()
 		bossbar set minecraft:boss color red
 		bossbar add zone {"translate":"Zone"}
 		execute store result bossbar minecraft:zone max run scoreboard players get #ZONE_MAX number
+		bossbar add bullet_barrier {"translate":"Barrier"}
+		execute store result bossbar minecraft:bullet_barrier max run scoreboard players get #BULLET_BARRIER_MAX number
 		
 		# animated java 模型
 		function miko:install
@@ -1378,13 +1382,16 @@ namespace stage()
 			bossbar set minecraft:boss max 50000
 			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
 			bossbar set minecraft:boss name {"translate":"Cursed Miko","color":"white","bold":true}
+			
+			bossbar set minecraft:bullet_barrier players @a
 			```
 			print(f"tp @a {STAGE_CENTER[1][0]} {GROUND_Y[1]} {STAGE_CENTER[1][1]} 180 50")
 			print(f"execute positioned {STAGE_CENTER[1][0]} {GROUND_Y[1]} {STAGE_CENTER[1][1] - 8} run function ARG(_PATH)summon_boss")
 			```
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/dust/summon_loop 10s
-			schedule function ARG(_PATH)skills/dust/shoot 11s
+			# schedule function ARG(_PATH)skills/dust/shoot 11s
+			schedule function ARG(_PATH)skills/dust/attack 15s
 			
 			# 可攻擊的子彈編號從 10 開始，前面保留給骷髏跟分身
 			scoreboard players set #BULLET_ID number 10
@@ -1405,7 +1412,9 @@ namespace stage()
 		{
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/dust/summon_loop
-			schedule clear ARG(_PATH)skills/dust/shoot
+			# schedule clear ARG(_PATH)skills/dust/shoot
+			schedule clear ARG(_PATH)skills/dust/attack
+			schedule clear ARG(_PATH)skills/dust/explode
 			schedule clear ARG(_PATH)skills/dust/real_summon
 			schedule clear ARG(_PATH)skills/flame/circle/summon
 			schedule clear ARG(_PATH)skills/flame/bullet/shoot
@@ -1420,6 +1429,8 @@ namespace stage()
 			scoreboard players reset #ANIM_LOCK number
 			scoreboard players reset #FACING_TIMER number
 			
+			bossbar set minecraft:bullet_barrier visible false
+			
 			function miko:remove/all
 		}
 		
@@ -1433,7 +1444,7 @@ namespace stage()
 		func armor_stand_main()
 		{
 			execute if entity @s[tag=miko] at @s facing entity @p[scores={player=1..},gamemode=adventure] feet run function ARG(_PATH)face_player
-			execute at @s[tag=dust_bullet] run function ARG(_PATH)skills/dust/bullet/move
+			# execute at @s[tag=dust_bullet] run function ARG(_PATH)skills/dust/bullet/move
 			execute if entity @s[tag=flame_circle] run function ARG(_PATH)skills/flame/circle/spin
 			execute at @s[tag=flame_bullet] run function ARG(_PATH)skills/flame/bullet/move
 			execute at @s[tag=sanka_bullet] run function ARG(_PATH)skills/sanka/bullet/move
@@ -1484,8 +1495,9 @@ namespace stage()
 			
 			func rand_range()
 			{
-				execute if score #RAND_RESULT number matches ..49 run function ARG(_PATH)near_judge
-				execute if score #RAND_RESULT number matches 50.. run function ARG(_PATH)far_judge
+				# 近距離招權重比較大，因為威脅性比較高
+				execute if score #RAND_RESULT number matches ..69 run function ARG(_PATH)near_judge
+				execute if score #RAND_RESULT number matches 70.. run function ARG(_PATH)far_judge
 				# 重骰一次避免隨機距離跟放的招相關
 				function random:rand_rate
 			}
@@ -1530,32 +1542,51 @@ namespace stage()
 					kill 00000002-0000-0002-0000-000200000002
 				}
 				
-				func shoot()
+				# func shoot()
+				# {
+					# execute as @e[type=area_effect_cloud,tag=dust] at @s run function ARG(_PATH)bullet/summon
+					# schedule function ARG(_PATH)shoot 2s
+				# }
+				
+				# folder bullet()
+				# {
+					# func summon()
+					# {
+						# summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","effect","dust_bullet","new_bullet"]}
+						# execute as @e[type=armor_stand,tag=new_bullet,limit=1] at @s run function ARG(_PATH)setting
+					# }
+					
+					# func setting()
+					# {
+						# execute facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
+						# tag @s remove new_bullet
+					# }
+					
+					# func move()
+					# {
+						# tp @s ^ ^ ^0.3
+						# execute positioned ~-0.75 ~-0.75 ~-0.75 as @a[scores={player=1..},gamemode=adventure,dx=0,dy=0,dz=0] positioned ~0.5 ~0.5 ~0.5 if entity @s[dx=0,dy=0,dz=0] run effect give @s blindness 2 0 true
+						# execute unless block ~ ~ ~ #skill:canpass run kill @s
+					# }
+				# }
+				
+				func attack()
 				{
-					execute as @e[type=area_effect_cloud,tag=dust] at @s run function ARG(_PATH)bullet/summon
-					schedule function ARG(_PATH)shoot 2s
+					# execute as @e[type=area_effect_cloud,tag=dust] at @s run function ARG(_PATH)dust_prepare_effect
+					schedule function ARG(_PATH)explode 2s
+					schedule function ARG(_PATH)attack 10s
 				}
 				
-				folder bullet()
+				func explode()
 				{
-					func summon()
-					{
-						summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","effect","dust_bullet","new_bullet"]}
-						execute as @e[type=armor_stand,tag=new_bullet,limit=1] at @s run function ARG(_PATH)setting
-					}
-					
-					func setting()
-					{
-						execute facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
-						tag @s remove new_bullet
-					}
-					
-					func move()
-					{
-						tp @s ^ ^ ^0.3
-						execute positioned ~-0.75 ~-0.75 ~-0.75 as @a[scores={player=1..},gamemode=adventure,dx=0,dy=0,dz=0] positioned ~0.5 ~0.5 ~0.5 if entity @s[dx=0,dy=0,dz=0] run effect give @s blindness 2 0 true
-						execute unless block ~ ~ ~ #skill:canpass run kill @s
-					}
+					execute as @e[type=area_effect_cloud,tag=dust] at @s run function ARG(_PATH)explode_effect
+				}
+				
+				func explode_effect()
+				{
+					# function ARG(_PATH)dust_explode_effect
+					# playsound minecraft:enemy.miko.dust.explode player @a ~ ~ ~ 1 1 0
+					effect give @a[gamemode=adventure,scores={player=1..},distance=..2] instant_damage 1 0 true
 				}
 			}
 			
@@ -1750,7 +1781,7 @@ namespace stage()
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:20,CustomPotionColor:29}}],Tags:["object","effect"],UUID:[I;4,4,4,4]}
 					summon armor_stand ~ ~-1.9 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:52}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}
 					
-					execute as @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range] run function ARG(_PATH)fly
+					execute as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)fly
 					schedule function ARG(_PATH)clear_levitation 1t
 				}
 				
@@ -1769,10 +1800,18 @@ namespace stage()
 				{
 					scoreboard players add @s life 1
 					execute if score @s life matches ..19 as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.1 ~
-					execute if score @s life matches 20..99 if entity @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range,limit=1] run function ARG(_PATH)bite
+					scoreboard players set #SKULL_BITE number 0
+					execute if score @s life matches 20..99 as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)hurt
+					execute if score #SKULL_BITE number matches 1 run function ARG(_PATH)bite
 					execute if score @s life matches 100.. run function ARG(_PATH)sink
 					
 					execute if score @s life matches 100 as 00000001-0000-0001-0000-000100000001 run function miko:animations/animation.miko.sacrifice_end/play
+				}
+				
+				func hurt()
+				{
+					effect give @s instant_damage 1 1 true
+					scoreboard players set #SKULL_BITE number 1
 				}
 				
 				func bite()
@@ -1781,8 +1820,6 @@ namespace stage()
 					data modify entity 00000005-0000-0005-0000-000500000005 ArmorItems[3].tag.CustomModelData set value 53
 					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.5 ~
 					execute at 00000005-0000-0005-0000-000500000005 run particle minecraft:crit ~ ~1.2 ~-1.7 1 0 0 1.7 50
-					
-					effect give @a[gamemode=adventure,scores={player=1..},predicate=stage:sacrifice_range] instant_damage 1 1 true
 					
 					scoreboard players set @s life 99
 				}
@@ -1840,7 +1877,7 @@ namespace stage()
 					
 					kill @e[type=armor_stand,tag=sakura]
 					
-					scoreboard players set #BULLET_SPLIT number 1
+					scoreboard players set #BULLET_SPLIT number 2
 					execute positioned ~ ~0.7 ~ run function ARG(_PATH)bullet/explode
 					function ARG(_PATH)random_tp
 					execute at @s run function miko:move
@@ -1905,7 +1942,7 @@ namespace stage()
 					
 					func move()
 					{
-						tp @s ^ ^ ^0.3
+						tp @s ^ ^ ^0.2
 						scoreboard players remove @s life 1
 						
 						scoreboard players set #SANKA_EXPLODED number 0
@@ -1953,7 +1990,7 @@ namespace stage()
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:21,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;6,6,6,6]}
 					```
 					for i in range(-7, 8):
-						print('execute if entity @s[y_rotation=%d..%d] run summon armor_stand ~ ~-3.2 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:54}}],Tags:["object","effect","hell_skeleton","dead_event"],UUID:[I;7,7,7,7],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:23.0f,Pose:{Head:[0.1f,0f,0f]},Rotation:[%df,0f]}' %(i*24-11, i*24+12, i*24))
+						print('execute if entity @s[y_rotation=%d..%d] run summon armor_stand ~ ~-3.2 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:54}}],Tags:["object","effect","hell_skeleton","dead_event"],UUID:[I;7,7,7,7],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:165.0f,Pose:{Head:[0.1f,0f,0f]},Rotation:[%df,0f]}' %(i*24-11, i*24+12, i*24))
 					```
 					scoreboard players set #SKULL_ANGLE number 0
 					scoreboard players set #SWAMP_SIZE number 0
@@ -1977,6 +2014,7 @@ namespace stage()
 				
 				func start_chase()
 				{
+					kill 00000006-0000-0006-0000-000600000006
 					execute as 00000001-0000-0001-0000-000100000001 run function miko:animations/animation.miko.hell_end/play
 					playsound minecraft:enemy.miko.scream player @a ~ ~ ~ 3 1 0
 					
@@ -2004,7 +2042,7 @@ namespace stage()
 					particle minecraft:item minecraft:bone_block ~ ~1 ~ 0 0 0 0.4 100
 					playsound minecraft:enemy.miko.skull_break player @a ~ ~ ~ 3 1 0
 					
-					execute positioned ~ ~-0.8 ~ run effect give @a[gamemode=adventure,scores={player=1..},distance=..5] instant_damage 1 1 true
+					# execute positioned ~ ~-0.8 ~ run effect give @a[gamemode=adventure,scores={player=1..},distance=..5] instant_damage 1 1 true
 					kill @s
 				}
 			}
@@ -2020,24 +2058,64 @@ namespace stage()
 					particle minecraft:cloud ~ ~ ~ 0.3 1.2 0.3 0.27 300
 					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 3 1 0
 					
+					# 隱形，暫時給 effect tag 避免被當攻擊對象
+					function miko:set_variant/invisible
+					tag @s add effect
+					
 					scoreboard players set #EXIST_CLONE number 0
-					function miko:summon/default
-					function miko:summon/default
-					function miko:summon/default
+					function ARG(_PATH)summon_clone
 					execute as @e[type=armor_stand,tag=new_miko] run function ARG(_PATH)clone_setting
+					
+					schedule function ARG(_PATH)call_show_up 10t
+				}
+				
+				func summon_clone()
+				{
+					# 特別處理 boss 要傳送的位置
+					summon marker ~ ~ ~ {Tags:["object","clone_summon","boss_position"],UUID:[I;8,8,8,8]}
 					```
-					print(f"spreadplayers {STAGE_CENTER[1][0]} {STAGE_CENTER[1][1]} 10 15 under {GROUND_Y[1] + 3} false @e[type=armor_stand,tag=miko]")
+					for i in range(3):
+						print('summon marker ~ ~ ~ {Tags:["object","clone_summon"]}')
+					print(f"spreadplayers {STAGE_CENTER[1][0]} {STAGE_CENTER[1][1]} 10 15 under {int(GROUND_Y[1] + 3)} false @e[type=marker,tag=clone_summon]")
 					```
-					# 在各個分身位置生成防護罩特效
-					execute at @e[type=armor_stand,tag=miko] run summon area_effect_cloud ~ ~0.3 ~ {Duration:2147483647,Tags:["object","barrier"],CustomNameVisible:1b,CustomName:'{"text":"4","font":"skill:main"}'}
+					execute at @e[type=marker,tag=clone_summon,tag=!boss_position] run function miko:summon/invisible
+					execute at 00000008-0000-0008-0000-000800000008 run tp @s ~ ~ ~
+					execute at 00000008-0000-0008-0000-000800000008 run function miko:move
+					kill @e[type=marker,tag=clone_summon]
 				}
 				
 				func clone_setting()
 				{
+					tag @s add effect
+					
 					tag @s add clone
 					tag @s remove new_miko
 					execute store result score @s number run scoreboard players add #EXIST_CLONE number 1
 					scoreboard players add @s number 2
+					
+					scoreboard players set @s bullet_barrier 1
+				}
+				
+				func call_show_up()
+				{
+					execute as @e[type=armor_stand,tag=miko] at @s run function ARG(_PATH)show_up
+					
+					execute store result bossbar minecraft:bullet_barrier value run scoreboard players operation 00000001-0000-0001-0000-000100000001 bullet_barrier = #BULLET_BARRIER_MAX number
+					bossbar set minecraft:bullet_barrier visible true
+				}
+				
+				func show_up()
+				{
+					# 不知道為什麼距離遠的時候 move 會錯位，再跑一次 move 才會正常
+					execute if entity @s[tag=boss] run function miko:move
+					function miko:set_variant/default
+					tag @s remove effect
+					
+					particle minecraft:cloud ~ ~ ~ 0.3 1.2 0.3 0.27 100
+					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 1 1 0
+					
+					# 生成防護罩特效
+					summon area_effect_cloud ~ ~0.3 ~ {Duration:2147483647,Tags:["object","barrier"],CustomNameVisible:1b,CustomName:'{"text":"4","font":"skill:main"}'}
 				}
 				
 				func reset_cd()
@@ -2049,9 +2127,7 @@ namespace stage()
 				{
 					execute if score #GUN_WEAK_ATTACK number matches 1 run function ARG(_PATH)block_damage
 					execute unless score #GUN_WEAK_ATTACK number matches 1 if entity @s[tag=clone] run function ARG(_PATH)clone_break
-					
-					# 被有效攻擊打到就清掉屏障，每個分身一定會分很開，直接抓最近的清掉就好
-					execute unless score #GUN_WEAK_ATTACK number matches 1 run kill @e[type=area_effect_cloud,tag=barrier,sort=nearest,limit=1]
+					execute unless score #GUN_WEAK_ATTACK number matches 1 if entity @s[tag=boss] run function ARG(_PATH)barrier_check
 				}
 				
 				func block_damage()
@@ -2073,6 +2149,9 @@ namespace stage()
 					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 1 1 0
 					execute positioned ~ ~0.5 ~ run function ARG(_PATH)clone_break_effect
 					scoreboard players remove #EXIST_CLONE number 1
+					# 清掉屏障，每個分身一定會分很開，直接抓最近的清掉就好
+					kill @e[type=area_effect_cloud,tag=barrier,sort=nearest,limit=1]
+					function miko:remove/this
 				}
 				
 				func clone_break_effect()
@@ -2080,6 +2159,19 @@ namespace stage()
 					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:sikigami_break/0"}',CustomNameVisible:1,Duration:8,Tags:['{"text":"","font":"font_animation:sikigami_break/0"}', 'new_font_anim']}
 					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 7
 					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+				
+				func barrier_check()
+				{
+					execute store result bossbar minecraft:bullet_barrier value run scoreboard players operation @s bullet_barrier -= @s display_number
+					execute if score @s bullet_barrier matches ..0 run function ARG(_PATH)clear_barrier
+				}
+				
+				func clear_barrier()
+				{
+					bossbar set minecraft:bullet_barrier visible false
+					# 清掉屏障，每個分身一定會分很開，直接抓最近的清掉就好
+					kill @e[type=area_effect_cloud,tag=barrier,sort=nearest,limit=1]
 				}
 			}
 		}
