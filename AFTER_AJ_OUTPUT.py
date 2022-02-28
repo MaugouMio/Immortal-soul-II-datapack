@@ -12,6 +12,12 @@ for path in model_list:
 		if int(file[:file.find('.')]) % 3 == 1:
 			with open(path + '\\' + file, "a") as f:
 				f.write("\ntag @s add effect")
+				
+# 召喚巫女分身會是 invisible 的 variant，這個不要加 UUID 指定
+with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\miko\functions\summon\invisible.mcfunction", "r") as f:
+	new_summon_func = f.read().replace(",UUID:[I;1,1,1,1]", "")
+with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\miko\functions\summon\invisible.mcfunction", "w") as f:
+	f.write(new_summon_func)
 	
 # 補被蓋掉的 minecraft tick tag
 with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\minecraft\tags\functions\tick.json", "r") as f:

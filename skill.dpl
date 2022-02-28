@@ -418,7 +418,7 @@ namespace skill()
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
 
 				scoreboard players set #DAMAGE_SCALE number 8
-				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
+				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] positioned ^ ^ ^-2 facing entity @s feet positioned as @s rotated ~180 0 run function skill:edge/damage
 				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
 				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 				
@@ -436,7 +436,7 @@ namespace skill()
 				particle minecraft:cloud ~ ~ ~ 0.5 0 0.5 0.1 2 force
 
 				scoreboard players set #DAMAGE_SCALE number 8
-				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] at @s run function skill:edge/damage
+				execute rotated ~ 0 positioned ^ ^ ^2 run execute as @e[type=#skill:hostile,tag=!effect,distance=..2] positioned ^ ^ ^-2 facing entity @s feet positioned as @s rotated ~180 0 run function skill:edge/damage
 				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
 				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 				
@@ -455,7 +455,7 @@ namespace skill()
 
 				scoreboard players set #DAMAGE_SCALE number 16
 				execute if score #BOTH_HAND number matches 1 run scoreboard players add #DAMAGE_SCALE number 16
-				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,tag=!effect,distance=..3] at @s run function skill:edge/damage
+				execute rotated ~ 0 positioned ^ ^ ^3 run execute as @e[type=#skill:hostile,tag=!effect,distance=..3] positioned ^ ^ ^-3 facing entity @s feet positioned as @s rotated ~180 0 run function skill:edge/damage
 				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
 				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 			}
@@ -537,7 +537,7 @@ namespace skill()
 				playsound minecraft:skill.drop_attack player @a
 
 				# 本身範圍就比劍舞格擋距離大，不用額外判斷
-				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)drop_damage
+				execute align y rotated ~ 0 positioned ^ ^0.2 ^3 as @e[type=#skill:hostile,tag=!effect,distance=..4] positioned ^ ^ ^-3 facing entity @s feet positioned as @s rotated ~180 0 run function ARG(_PATH)drop_damage
 			}
 			
 			func drop_damage()
@@ -567,7 +567,7 @@ namespace skill()
 				playsound minecraft:skill.double player @a
 
 				scoreboard players set #DAMAGE_SCALE number 12
-				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)double_damage
+				execute positioned ~ ~-1 ~ as @e[type=#skill:hostile,tag=!effect,distance=..4] facing entity @s feet positioned as @s rotated ~180 0 run function ARG(_PATH)double_damage
 				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
 				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 			}
@@ -618,7 +618,7 @@ namespace skill()
 				
 				scoreboard players set #DAMAGE_SCALE number 20
 				# 加上移動距離後比劍舞判定距離長，不用額外判定
-				execute as @e[type=#skill:hostile,tag=!effect,distance=..5] at @s run function ARG(_PATH)rush_damage
+				execute as @e[type=#skill:hostile,tag=!effect,distance=..5] facing entity @s feet positioned as @s rotated ~180 0 run function ARG(_PATH)rush_damage
 				playsound minecraft:skill.rush_attack player @a
 			}
 			
@@ -653,7 +653,7 @@ namespace skill()
 				playsound minecraft:skill.double player @a
 
 				scoreboard players set #DAMAGE_SCALE number 20
-				execute as @e[type=#skill:hostile,tag=!effect,distance=..4] at @s run function ARG(_PATH)jump_damage
+				execute as @e[type=#skill:hostile,tag=!effect,distance=..4] facing entity @s feet positioned as @s rotated ~180 0 run function ARG(_PATH)jump_damage
 				# 劍舞的額外格擋判定(上面如果已經格擋過了，就不會有tag=sword_dance_target的玩家)
 				execute if score #SWORD_DANCE number matches 2 if entity @a[tag=sword_dance_target,limit=1] rotated ~ 0 positioned ^ ^ ^3.5 as 00000001-0000-0001-0000-000100000001 if entity @s[distance=..3.5] run function stage:stage1/skills/sword_dance/counter
 			}
@@ -692,7 +692,7 @@ namespace skill()
 		
 		func do_damage()
 		{
-			execute positioned ~ ~0.5 ~ run function ARG(_PATH)hit_effect
+			execute positioned ^ ^0.5 ^0.4 run function ARG(_PATH)hit_effect
 			function skill:damage
 		}
 		
@@ -767,7 +767,7 @@ namespace skill()
 				
 				scoreboard players set #DAMAGE_SCALE number 3
 				scoreboard players set #GUN_WEAK_ATTACK number 1
-				execute as @e[type=#skill:hostile,tag=!effect,tag=target,limit=1] at @s run function ARG(_PATH)damage
+				execute as @e[type=#skill:hostile,tag=!effect,tag=target,limit=1] facing entity @s feet positioned as @s rotated ~180 0 run function ARG(_PATH)damage
 				scoreboard players reset #GUN_WEAK_ATTACK number
 			}
 			
@@ -809,7 +809,7 @@ namespace skill()
 			
 			func damage()
 			{
-				execute positioned ~ ~0.5 ~ run function ARG(_PATH)hit_effect
+				execute positioned ^ ^0.5 ^0.4 run function ARG(_PATH)hit_effect
 				function skill:damage
 				tag @s remove target
 			}
