@@ -80,17 +80,18 @@ void main() {
 			mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
 			
 			float size = Color.b * 51.0;
+			float theta = -Color.g * PI * 2.0;  // clockwise
 			if (vertexId == 0.0) {
-				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, size), 1.0);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size * sin(PI * 0.25 + theta), 0.0, size * cos(PI * 0.25 + theta)), 1.0);
 			}
 			else if (vertexId == 1.0) {
-				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size, 0.0, -size), 1.0);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size * sin(PI * 0.75 + theta), 0.0, size * cos(PI * 0.75 + theta)), 1.0);
 			}
 			else if (vertexId == 2.0) {
-				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, -size), 1.0);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size * sin(PI * -0.75 + theta), 0.0, size * cos(PI * -0.75 + theta)), 1.0);
 			}
 			else {
-				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(-size, 0.0, size), 1.0);
+				gl_Position = ProjMat * ModelViewMat * vec4(Position + WorldMat * vec3(size * sin(PI * -0.25 + theta), 0.0, size * cos(PI * -0.25 + theta)), 1.0);
 			}
 			
 			vertexColor = vec4(1.0, 1.0, 1.0, 1.0);

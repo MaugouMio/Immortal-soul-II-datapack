@@ -25,6 +25,8 @@
 		{"predicate": {"custom_model_data": 18},"model": "item/enemy/sword/boss_chop"},
 		{"predicate": {"custom_model_data": 19},"model": "item/enemy/miko/flame_circle"},
 		{"predicate": {"custom_model_data": 20},"model": "item/enemy/miko/torii"},
-		{"predicate": {"custom_model_data": 21},"model": "item/enemy/miko/swamp"}
+		{"predicate": {"custom_model_data": 21},"model": "item/enemy/miko/swamp"},
+		{"predicate": {"custom_model_data": 22},"model": "item/enemy/miko/taiji"},
+		{"predicate": {"custom_model_data": 23},"model": "item/enemy/miko/blur"}
 	]
 }

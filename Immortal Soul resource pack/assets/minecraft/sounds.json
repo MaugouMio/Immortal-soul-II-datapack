@@ -301,10 +301,34 @@
       }
     ]
   },
+  "enemy.miko.laugh": {
+    "sounds": [
+      {
+        "name": "enemy/miko/laugh",
+        "stream": true
+      }
+    ]
+  },
   "enemy.miko.dust_explode": {
     "sounds": [
       {
         "name": "enemy/miko/dust_explode",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.dust_die": {
+    "sounds": [
+      {
+        "name": "enemy/miko/dust_die",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.sikigami_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/miko/sikigami_prepare",
         "stream": true
       }
     ]
