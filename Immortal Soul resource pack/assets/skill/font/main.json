@@ -18,15 +18,11 @@
 				"1"
 			]
 		},
-		{
-			"type": "bitmap",
-			"file": "skill:font/flame_bullet.png",
-			"ascent": 30,
-			"height": 60,
-			"chars": [
-				"2"
-			]
-		},
+		
+		
+		
+		
+		
 		{
 			"type": "bitmap",
 			"file": "skill:font/sanka_bullet.png",

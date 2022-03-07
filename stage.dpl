@@ -1700,7 +1700,8 @@ namespace stage()
 					
 					func summon()
 					{
-						summon armor_stand ^ ^0.7 ^1 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,CustomNameVisible:1b,CustomName:'{"text":"2","font":"skill:main"}',Tags:["object","flame_bullet","dead_event","new_flame"]}
+						# summon armor_stand ^ ^0.7 ^1 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,CustomNameVisible:1b,CustomName:'{"text":"2","font":"skill:main"}',Tags:["object","flame_bullet","dead_event","new_flame"]}
+						summon armor_stand ^ ^0.7 ^1 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","flame_bullet","dead_event","new_flame"]}
 						execute as @e[type=armor_stand,tag=new_flame,limit=1] run function ARG(_PATH)setting
 					}
 					
@@ -1825,6 +1826,9 @@ namespace stage()
 			{
 				func cast()
 				{
+					# 先清掉舊的避免太快連續施放
+					function ARG(_PATH)clear_effect
+					
 					scoreboard players set #ANIM_LOCK number 1
 					function miko:animations/animation.miko.sacrifice/play
 					```
@@ -1858,7 +1862,7 @@ namespace stage()
 					scoreboard players add @s life 1
 					execute if score @s life matches ..19 as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.1 ~
 					scoreboard players set #SKULL_BITE number 0
-					execute if score @s life matches 20..79 as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)hurt
+					execute if score @s life matches 25..79 as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)hurt
 					execute if score #SKULL_BITE number matches 1 run function ARG(_PATH)bite
 					execute if score @s life matches 80.. run function ARG(_PATH)sink
 					
@@ -2124,8 +2128,9 @@ namespace stage()
 					schedule function ARG(_PATH)reset_cd 90s
 					
 					scoreboard players set #ANIM_LOCK number 1
-					playsound minecraft:enemy.miko.sikigami_prepare player @a ~ ~ ~ 3 1 0
 					function miko:animations/animation.miko.sikigami/play
+					
+					scoreboard players reset #TAIJI_SIZE number
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:22,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;9,9,9,9]}
 					
 					schedule function ARG(_PATH)call_effect 30t
@@ -2136,22 +2141,24 @@ namespace stage()
 					func main()
 					{
 						scoreboard players add @s life 1
-						execute if score @s life matches 6..20 run function ARG(_PATH)expand
+						execute if score @s life matches 11..25 run function ARG(_PATH)expand
 						execute if score @s life matches 30.. run function ARG(_PATH)shrink
 						
-						kill @s[scores={life=40}]
+						kill @s[scores={life=35}]
 					}
 					
 					func expand()
 					{
-						execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 4358 run scoreboard players get @s life
+						execute if score @s life matches 11 at @s run playsound minecraft:enemy.miko.sikigami_prepare player @a ~ ~ ~ 3 1 0
+						scoreboard players add #TAIJI_SIZE number 1
+						execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 4358 run scoreboard players get #TAIJI_SIZE number
 					}
 					
 					func shrink()
 					{
 						execute if score @s life matches 30 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 23
-						scoreboard players set #TAIJI_SIZE number 40
-						execute if score @s life matches 31.. store result entity @s ArmorItems[3].tag.CustomPotionColor int 9 run scoreboard players operation #TAIJI_SIZE number -= @s life
+						scoreboard players set #TAIJI_SIZE number 35
+						execute if score @s life matches 31.. store result entity @s ArmorItems[3].tag.CustomPotionColor int 18 run scoreboard players operation #TAIJI_SIZE number -= @s life
 					}
 				}
 				
@@ -2163,6 +2170,7 @@ namespace stage()
 				
 				func effect()
 				{
+					function miko:animations/animation.miko.sikigami/stop
 					particle minecraft:cloud ~ ~ ~ 0.3 1.2 0.3 0.27 300
 					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 3 1 0
 					
@@ -2189,9 +2197,9 @@ namespace stage()
 						print('summon marker ~ ~ ~ {Tags:["object","clone_summon"]}')
 					print(f"spreadplayers {STAGE_CENTER[1][0]} {STAGE_CENTER[1][1]} 10 15 under {int(GROUND_Y[1] + 3)} false @e[type=marker,tag=clone_summon]")
 					```
-					execute at @e[type=marker,tag=clone_summon,tag=!boss_position] run function miko:summon/invisible
-					execute at 00000008-0000-0008-0000-000800000008 run tp @s ~ ~ ~ ~ ~
-					execute at 00000008-0000-0008-0000-000800000008 run function miko:move
+					execute at @e[type=marker,tag=clone_summon,tag=!boss_position] facing entity @p[scores={player=1..},gamemode=adventure] feet run function miko:summon/invisible
+					execute at 00000008-0000-0008-0000-000800000008 facing entity @p[scores={player=1..},gamemode=adventure] feet run tp @s ~ ~ ~ ~ 0
+					execute at @s run function miko:move
 					kill @e[type=marker,tag=clone_summon]
 				}
 				
