@@ -1826,11 +1826,15 @@ namespace stage()
 			{
 				func cast()
 				{
-					# 先清掉舊的避免太快連續施放
-					function ARG(_PATH)clear_effect
-					
+					playsound minecraft:enemy.miko.swoosh player @a ~ ~ ~ 1 1 0
 					scoreboard players set #ANIM_LOCK number 1
 					function miko:animations/animation.miko.sacrifice/play
+					
+					schedule function ARG(_PATH)call_knock_up 15t
+				}
+				
+				func call_knock_up()
+				{
 					```
 					print(f"execute at @p[gamemode=adventure,scores={{player=1..}}] positioned ~ {GROUND_Y[1]} ~ run function ARG(_PATH)knock_up")
 					```
@@ -1838,6 +1842,9 @@ namespace stage()
 				
 				func knock_up()
 				{
+					# 先清掉舊的避免太快連續施放
+					function ARG(_PATH)clear_effect
+					
 					playsound minecraft:enemy.miko.sacrifice player @a ~ ~ ~ 3 1 0
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:20,CustomPotionColor:29}}],Tags:["object","effect"],UUID:[I;4,4,4,4]}
 					summon armor_stand ~ ~-1.9 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:52}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}
@@ -1866,7 +1873,7 @@ namespace stage()
 					execute if score #SKULL_BITE number matches 1 run function ARG(_PATH)bite
 					execute if score @s life matches 80.. run function ARG(_PATH)sink
 					
-					execute if score @s life matches 80 as 00000001-0000-0001-0000-000100000001 run function miko:animations/animation.miko.sacrifice_end/play
+					execute if score @s life matches 30 as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.sacrifice_end/play
 				}
 				
 				func hurt()

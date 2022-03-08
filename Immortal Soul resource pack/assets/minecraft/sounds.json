@@ -237,6 +237,14 @@
       }
     ]
   },
+  "enemy.miko.swoosh": {
+    "sounds": [
+      {
+        "name": "enemy/miko/swoosh",
+        "stream": true
+      }
+    ]
+  },
   "enemy.miko.sacrifice": {
     "sounds": [
       {
