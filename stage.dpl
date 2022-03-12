@@ -1391,8 +1391,11 @@ namespace stage()
 			print(f"execute positioned {STAGE_CENTER[1][0]} {GROUND_Y[1]} {STAGE_CENTER[1][1] - 8} rotated 0 0 run function ARG(_PATH)summon_boss")
 			```
 			schedule function ARG(_PATH)skills/loop 5s
-			schedule function ARG(_PATH)skills/dust/summon_loop 7s
-			schedule function ARG(_PATH)skills/dust/attack 9.5s
+			
+			schedule function ARG(_PATH)skills/dust/summon_loop 8s
+			execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)skills/dust/attack 12s
+			execute if score #DIFFICULTY number matches 2..3 run schedule function ARG(_PATH)skills/dust/attack 11.5s
+			execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)skills/dust/attack 11s
 			
 			# 可攻擊的子彈編號從 10 開始，前面保留給骷髏跟分身
 			scoreboard players set #BULLET_ID number 10
@@ -1490,8 +1493,8 @@ namespace stage()
 				function random:rand_rate
 				
 				scoreboard players set #NEAR_SKILL number 0
-				execute if entity @a[scores={player=1..},gamemode=adventure,distance=..5,limit=1] run scoreboard players add #NEAR_SKILL number 1
-				execute if entity @a[scores={player=1..},gamemode=adventure,distance=5.01..,limit=1] run scoreboard players add #NEAR_SKILL number 2
+				execute if entity @a[scores={player=1..},gamemode=adventure,distance=..6,limit=1] run scoreboard players add #NEAR_SKILL number 1
+				execute if entity @a[scores={player=1..},gamemode=adventure,distance=6.01..,limit=1] run scoreboard players add #NEAR_SKILL number 2
 				
 				execute if score #NEAR_SKILL number matches 1 run function ARG(_PATH)near_judge
 				execute if score #NEAR_SKILL number matches 2 run function ARG(_PATH)far_judge
@@ -1528,9 +1531,11 @@ namespace stage()
 				func summon_loop()
 				{
 					```
-					print(f"execute at @r positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)summon")
+					print(f"execute at @r[scores={{player=1..}},gamemode=adventure] positioned ~ {GROUND_Y[1] + 0.55} ~ run function ARG(_PATH)summon")
 					```
-					schedule function ARG(_PATH)summon_loop 5s
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)summon_loop 8s
+					execute if score #DIFFICULTY number matches 2..3 run schedule function ARG(_PATH)summon_loop 7s
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)summon_loop 6s
 				}
 				
 				func summon()
@@ -1551,7 +1556,10 @@ namespace stage()
 				{
 					execute as @e[type=area_effect_cloud,tag=dust] at @s run function ARG(_PATH)prepare_attack
 					schedule function ARG(_PATH)explode 15t
-					schedule function ARG(_PATH)attack 5s
+					
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)attack 8s
+					execute if score #DIFFICULTY number matches 2..3 run schedule function ARG(_PATH)attack 7s
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)attack 6s
 				}
 				
 				func prepare_attack()
@@ -1610,7 +1618,7 @@ namespace stage()
 					func step()
 					{
 						particle minecraft:squid_ink ~ ~1 ~ 0.1 0.1 0.1 0 1
-						execute positioned ^ ^ ^-0.4 facing entity 00000001-0000-0001-0000-000100000001 feet positioned ^ ^ ^0.1 facing entity @s feet run tp @s ~ ~ ~ ~ ~
+						execute positioned ^ ^ ^-0.4 facing entity 00000001-0000-0001-0000-000100000001 feet positioned ^ ^ ^0.12 facing entity @s feet run tp @s ~ ~ ~ ~ ~
 					}
 					
 					func charge()
@@ -1657,7 +1665,9 @@ namespace stage()
 					playsound minecraft:enemy.miko.flame_cast player @a ~ ~ ~ 3 1 0
 					execute rotated ~ 0 run function ARG(_PATH)circle/summon
 					
-					scoreboard players set #FLAME_BULLET number 20
+					execute if score #DIFFICULTY number matches 1 run scoreboard players set #FLAME_BULLET number 16
+					execute if score #DIFFICULTY number matches 2..3 run scoreboard players set #FLAME_BULLET number 18
+					execute if score #DIFFICULTY number matches 4 run scoreboard players set #FLAME_BULLET number 20
 					schedule function ARG(_PATH)bullet/shoot 1s
 				}
 				
@@ -1668,7 +1678,7 @@ namespace stage()
 						# for i in range(-7, 8):
 						#	print('execute if entity @s[y_rotation=%.3f..%d] run summon armor_stand ~ ~ ~ {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,HasVisualFire:1b,Pose:{Head:[90f,0f,0f]},ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:19,CustomPotionColor:0}}],Tags:["object","effect","flame_circle"],Rotation:[%df,0f]}' %(i*24-11.999, i*24+12, i*24))
 						
-						summon armor_stand ^ ^ ^1.2 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,HasVisualFire:1b,Pose:{Head:[90f,0f,0f]},ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:19,CustomPotionColor:0}}],Tags:["object","effect","flame_circle"]}
+						summon armor_stand ^ ^ ^0.7 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,HasVisualFire:1b,Pose:{Head:[90f,0f,0f]},ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:19,CustomPotionColor:0}}],Tags:["object","effect","flame_circle"]}
 					}
 					
 					func spin()
@@ -1700,16 +1710,19 @@ namespace stage()
 					
 					func summon()
 					{
-						# summon armor_stand ^ ^0.7 ^1 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,CustomNameVisible:1b,CustomName:'{"text":"2","font":"skill:main"}',Tags:["object","flame_bullet","dead_event","new_flame"]}
-						summon armor_stand ^ ^0.7 ^1 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","flame_bullet","dead_event","new_flame"]}
-						execute as @e[type=armor_stand,tag=new_flame,limit=1] run function ARG(_PATH)setting
+						# summon armor_stand ^ ^0.7 ^2 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","flame_bullet","dead_event","new_flame"]}
+						```
+						for i in range(-7, 8):
+							print('execute if entity @s[y_rotation=%.3f..%d] run summon armor_stand ^ ^0.7 ^1.9 {Invisible:1b,NoGravity:1b,Invulnerable:1b,Marker:1b,Health:4.8f,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:40}}],Tags:["object","flame_bullet","dead_event","new_flame"],Rotation:[%df,0f]}' %(i*24-11.999, i*24+12, i*24))
+						```
+						execute as @e[type=armor_stand,tag=new_flame,limit=1] positioned as @s run function ARG(_PATH)setting
 					}
 					
 					func setting()
 					{
 						execute store result score @s number run scoreboard players add #BULLET_ID number 1
 						scoreboard players set @s health 48
-						tp @s ^ ^0.7 ^0.5 ~ 0
+						tp @s ~ ~ ~ ~ 0
 						tag @s remove new_flame
 					}
 					
@@ -1775,7 +1788,11 @@ namespace stage()
 					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:42}}],Tags:["object","effect"],UUID:[I;3,3,3,3]}
 					playsound minecraft:enemy.miko.thunder_prepare player @a ~ ~ ~ 3 1 0
 					execute at @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)summon
-					schedule function ARG(_PATH)strike 20t
+					
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)strike 30t
+					execute if score #DIFFICULTY number matches 2 run schedule function ARG(_PATH)strike 26t
+					execute if score #DIFFICULTY number matches 3 run schedule function ARG(_PATH)strike 23t
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)strike 20t
 				}
 				
 				func summon()
@@ -1783,7 +1800,7 @@ namespace stage()
 					```
 					for i in range(5):
 						print('summon marker ~ ~ ~ {Tags:["object","thunder_summon"]}')
-					print(f"spreadplayers ~ ~ 4.2 6 under {int(GROUND_Y[1] + 3)} false @e[type=marker,tag=thunder_summon]")
+					print(f"spreadplayers ~ ~ 4.8 7 under {int(GROUND_Y[1] + 3)} false @e[type=marker,tag=thunder_summon]")
 					```
 					execute at @e[tag=thunder_summon] run summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:41}}],Tags:["object","effect","thunder"]}
 					kill @e[type=marker,tag=thunder_summon]
@@ -1845,8 +1862,9 @@ namespace stage()
 					# 先清掉舊的避免太快連續施放
 					function ARG(_PATH)clear_effect
 					
+					particle flash ~ ~0.2 ~ 0 0 0 1 1
 					playsound minecraft:enemy.miko.sacrifice player @a ~ ~ ~ 3 1 0
-					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:20,CustomPotionColor:29}}],Tags:["object","effect"],UUID:[I;4,4,4,4]}
+					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:20,CustomPotionColor:41}}],Tags:["object","effect"],UUID:[I;4,4,4,4]}
 					summon armor_stand ~ ~-1.9 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:52}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}
 					
 					execute as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)fly
@@ -1856,7 +1874,9 @@ namespace stage()
 				func fly()
 				{
 					tp @s @s
-					effect give @s levitation 1 110 true
+					execute if score #DIFFICULTY number matches 1 run effect give @s levitation 1 127 true
+					execute if score #DIFFICULTY number matches 2..3 run effect give @s levitation 1 110 true
+					execute if score #DIFFICULTY number matches 4 run effect give @s levitation 1 102 true
 				}
 				
 				func clear_levitation()
@@ -1869,9 +1889,9 @@ namespace stage()
 					scoreboard players add @s life 1
 					execute if score @s life matches ..19 as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.1 ~
 					scoreboard players set #SKULL_BITE number 0
-					execute if score @s life matches 25..79 as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)hurt
+					execute if score @s life matches 25..59 as @a[gamemode=adventure,scores={player=1..}] if predicate stage:sacrifice_range run function ARG(_PATH)hurt
 					execute if score #SKULL_BITE number matches 1 run function ARG(_PATH)bite
-					execute if score @s life matches 80.. run function ARG(_PATH)sink
+					execute if score @s life matches 60.. run function ARG(_PATH)sink
 					
 					execute if score @s life matches 30 as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.sacrifice_end/play
 				}
@@ -1889,7 +1909,8 @@ namespace stage()
 					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.5 ~
 					execute at 00000005-0000-0005-0000-000500000005 run particle minecraft:crit ~ ~1.2 ~-1.7 1 0 0 1.7 50
 					
-					scoreboard players set @s life 79
+					scoreboard players set @s life 59
+					execute if score @s life matches ..29 as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.sacrifice_end/play
 				}
 				
 				func sink()
@@ -1897,7 +1918,7 @@ namespace stage()
 					tp @s ~ ~-0.1 ~
 					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~-0.1 ~
 					
-					execute if score @s life matches 140 run function ARG(_PATH)clear_effect
+					execute if score @s life matches 120 run function ARG(_PATH)clear_effect
 				}
 				
 				func clear_effect()
@@ -1921,7 +1942,9 @@ namespace stage()
 					scoreboard players set #SAKURA_MODEL number 46
 					schedule function ARG(_PATH)sakura_draw 1t
 					
-					schedule function ARG(_PATH)call_teleport 20t
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)call_teleport 30t
+					execute if score #DIFFICULTY number matches 2..3 run schedule function ARG(_PATH)call_teleport 24t
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)call_teleport 20t
 				}
 				
 				func sakura_draw()
@@ -1993,11 +2016,11 @@ namespace stage()
 					{
 						particle firework ~ ~1 ~ 0 0 0 0.2 30
 						particle flash ~ ~1 ~ 0 0 0 1 1
-						playsound minecraft:enemy.miko.sanka_shoot player @a ~ ~ ~ 3 1 0
 					}
 					
 					func spawn()
 					{
+						playsound minecraft:enemy.miko.sanka_shoot player @a ~ ~ ~ 3 1 0
 						```
 						for i in range(6):
 							print('''summon armor_stand ~ ~ ~ {Rotation:[%df,0f],Invisible:1b,Invulnerable:1b,NoGravity:1b,HasVisualFire:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"3","font":"skill:main"}',Tags:["object","effect","sanka_bullet","new_sanka"]}''' %(i * 60))
@@ -2031,6 +2054,7 @@ namespace stage()
 						
 						scoreboard players operation #BULLET_SPLIT number = @s number
 						scoreboard players remove #BULLET_SPLIT number 1
+						
 						function ARG(_PATH)explode
 						kill @s
 					}
@@ -2040,6 +2064,7 @@ namespace stage()
 						scoreboard players set #SANKA_EXPLODED number 2
 						
 						function ARG(_PATH)explode_effect
+						playsound minecraft:enemy.miko.sanka_shoot player @a ~ ~ ~ 3 1 0
 						execute unless score @s beamtime matches 0.. run effect give @s instant_damage 1 0 true
 					}
 				}
@@ -2068,6 +2093,10 @@ namespace stage()
 					for i in range(-7, 8):
 						print('execute if entity @s[y_rotation=%.3f..%d] run summon armor_stand ~ ~-3.2 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:54}}],Tags:["object","effect","hell_skeleton","dead_event"],UUID:[I;7,7,7,7],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:132.0f,Pose:{Head:[0.1f,0f,0f]},Rotation:[%df,0f]}' %(i*24-11.999, i*24+12, i*24))
 					```
+					execute if score #DIFFICULTY number matches 1 run data modify entity 00000007-0000-0007-0000-000700000007 Health set value 88.0f
+					execute if score #DIFFICULTY number matches 2 run data modify entity 00000007-0000-0007-0000-000700000007 Health set value 110.0f
+					execute if score #DIFFICULTY number matches 3 run data modify entity 00000007-0000-0007-0000-000700000007 Health set value 121.0f
+					
 					scoreboard players set #SKULL_ANGLE number 0
 					scoreboard players set #SWAMP_SIZE number 0
 				}
@@ -2101,13 +2130,13 @@ namespace stage()
 				
 				func chase()
 				{
-					execute facing entity @p[gamemode=adventure,scores={player=1..}] feet rotated ~ 0 run tp @s ^ ^ ^0.5 ~ 0
+					execute facing entity @p[gamemode=adventure,scores={player=1..}] feet rotated ~ 0 run tp @s ^ ^ ^0.45 ~ 0
 					execute positioned ~-1.5 ~-1 ~-1.5 as @a[gamemode=adventure,scores={player=1..},dx=2,dy=3,dz=2] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
 				}
 				
 				func skull_hurt()
 				{
-					tp @s ^ ^ ^-0.8
+					tp @s ^ ^ ^-0.95
 					execute if score @s health matches 1.. store result entity @s Health float 0.1 run scoreboard players get @s health
 					execute if score @s health matches ..0 run function ARG(_PATH)explode
 				}
@@ -2128,7 +2157,10 @@ namespace stage()
 				func cast()
 				{
 					# 延後下次技能時間，給玩家一點時間清分身
-					schedule function ARG(__PATH)loop 8s
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(__PATH)loop 14s
+					execute if score #DIFFICULTY number matches 2 run schedule function ARG(__PATH)loop 13s
+					execute if score #DIFFICULTY number matches 3 run schedule function ARG(__PATH)loop 12s
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(__PATH)loop 11s
 					
 					scoreboard players set #SIKIGAMI_USED number 1
 					scoreboard players set #SIKIGAMI_CD number 1
@@ -2171,7 +2203,6 @@ namespace stage()
 				
 				func call_effect()
 				{
-					scoreboard players reset #ANIM_LOCK number
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)effect
 				}
 				
@@ -2192,7 +2223,7 @@ namespace stage()
 					function ARG(_PATH)summon_clone
 					execute as @e[type=armor_stand,tag=new_miko] run function ARG(_PATH)clone_setting
 					
-					schedule function ARG(_PATH)call_show_up 10t
+					schedule function ARG(_PATH)call_show_up 20t
 				}
 				
 				func summon_clone()
@@ -2224,6 +2255,7 @@ namespace stage()
 				
 				func call_show_up()
 				{
+					scoreboard players reset #ANIM_LOCK number
 					execute as @e[type=armor_stand,tag=miko] at @s run function ARG(_PATH)show_up
 					
 					execute store result bossbar minecraft:bullet_barrier value run scoreboard players operation 00000001-0000-0001-0000-000100000001 bullet_barrier = #BULLET_BARRIER_MAX number
@@ -2232,6 +2264,9 @@ namespace stage()
 				
 				func show_up()
 				{
+					scoreboard players set #BULLET_SPLIT number 1
+					execute positioned ~ ~0.7 ~ run function ARG(__PATH)sanka/bullet/explode
+					
 					# 不知道為什麼距離遠的時候 move 會錯位，再跑一次 move 才會正常
 					execute if entity @s[tag=boss] run function miko:move
 					function miko:set_variant/default
@@ -2272,11 +2307,12 @@ namespace stage()
 				
 				func clone_break()
 				{
-					playsound minecraft:enemy.miko.laugh player @a ~ ~ ~ 1 1 0
+					playsound minecraft:enemy.miko.laugh player @a ~ ~ ~ 3 1 1
 					execute positioned ~ ~0.5 ~ run function ARG(_PATH)clone_break_effect
 					scoreboard players remove #EXIST_CLONE number 1
-					# 清掉屏障，每個分身一定會分很開，直接抓最近的清掉就好
+					# 清掉屏障跟火環，每個分身一定會分很開，直接抓最近的清掉就好
 					kill @e[type=area_effect_cloud,tag=barrier,sort=nearest,limit=1]
+					kill @e[type=armor_stand,tag=flame_circle,sort=nearest,limit=1]
 					function miko:remove/this
 				}
 				
@@ -2295,6 +2331,7 @@ namespace stage()
 				
 				func clear_barrier()
 				{
+					playsound minecraft:enemy.miko.barrier_break player @a ~ ~ ~ 3 1 0
 					particle flash ~ ~1 ~ 0 0 0 1 1
 					bossbar set minecraft:bullet_barrier visible false
 					# 清掉屏障，每個分身一定會分很開，直接抓最近的清掉就好

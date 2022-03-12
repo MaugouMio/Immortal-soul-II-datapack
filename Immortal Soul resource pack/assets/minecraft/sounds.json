@@ -201,7 +201,8 @@
     "sounds": [
       {
         "name": "enemy/miko/flame_burst",
-        "stream": true
+        "stream": false,
+		"preload": true
       }
     ]
   },
@@ -217,7 +218,8 @@
     "sounds": [
       {
         "name": "enemy/miko/thunder_strike",
-        "stream": true
+        "stream": false,
+		"preload": true
       }
     ]
   },
@@ -289,7 +291,8 @@
     "sounds": [
       {
         "name": "enemy/miko/block_shoot",
-        "stream": true
+        "stream": false,
+		"preload": true
       }
     ]
   },
@@ -313,7 +316,8 @@
     "sounds": [
       {
         "name": "enemy/miko/laugh",
-        "stream": true
+        "stream": false,
+		"preload": true
       }
     ]
   },
@@ -321,7 +325,8 @@
     "sounds": [
       {
         "name": "enemy/miko/dust_explode",
-        "stream": true
+        "stream": false,
+		"preload": true
       }
     ]
   },
@@ -337,6 +342,14 @@
     "sounds": [
       {
         "name": "enemy/miko/sikigami_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.miko.barrier_break": {
+    "sounds": [
+      {
+        "name": "enemy/miko/barrier_break",
         "stream": true
       }
     ]
