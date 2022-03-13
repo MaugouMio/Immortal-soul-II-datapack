@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1646756635,
+    "creation_time": 1647184468,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -6546,7 +6546,7 @@
       "override": false,
       "length": 0.8,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",
@@ -7019,9 +7019,9 @@
       "name": "animation.miko.sanka",
       "loop": "once",
       "override": false,
-      "length": 1.1,
+      "length": 1.6,
       "snapping": 20,
-      "selected": false,
+      "selected": true,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",
@@ -7484,24 +7484,6 @@
               ],
               "uuid": "94d18b57-ffb2-716f-3086-a1b9376f6c1d",
               "time": 0.3,
-              "color": -1,
-              "interpolation": "linear"
-            }
-          ]
-        },
-        "effects": {
-          "name": "Effects",
-          "type": "effect",
-          "keyframes": [
-            {
-              "channel": "timeline",
-              "data_points": [
-                {
-                  "script": "scoreboard players reset #ANIM_LOCK number"
-                }
-              ],
-              "uuid": "96b14a9c-af42-db05-4128-97300e15a40c",
-              "time": 1.1,
               "color": -1,
               "interpolation": "linear"
             }

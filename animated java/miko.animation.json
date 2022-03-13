@@ -268,7 +268,7 @@
 			}
 		},
 		"animation.miko.sanka": {
-			"animation_length": 1.1,
+			"animation_length": 1.6,
 			"bones": {
 				"root": {
 					"position": {
@@ -360,9 +360,6 @@
 						"0.3": [5, 0, 0]
 					}
 				}
-			},
-			"timeline": {
-				"1.1": "scoreboard players reset #ANIM_LOCK number"
 			}
 		},
 		"animation.miko.sacrifice": {

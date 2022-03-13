@@ -1909,8 +1909,8 @@ namespace stage()
 					execute as 00000005-0000-0005-0000-000500000005 at @s run tp @s ~ ~0.5 ~
 					execute at 00000005-0000-0005-0000-000500000005 run particle minecraft:crit ~ ~1.2 ~-1.7 1 0 0 1.7 50
 					
-					scoreboard players set @s life 59
 					execute if score @s life matches ..29 as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.sacrifice_end/play
+					scoreboard players set @s life 59
 				}
 				
 				func sink()
@@ -1963,6 +1963,7 @@ namespace stage()
 				func teleport()
 				{
 					# 隱形，暫時給 effect tag 避免被當攻擊對象
+					function miko:animations/animation.miko.sanka/stop
 					function miko:set_variant/invisible
 					tag @s add effect
 					
@@ -1987,6 +1988,8 @@ namespace stage()
 				
 				func call_show_up()
 				{
+					execute if score #DEBUG number matches 1 run say debug call show up
+					scoreboard players reset #ANIM_LOCK number
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)show_up
 				}
 				
@@ -2255,18 +2258,18 @@ namespace stage()
 				
 				func call_show_up()
 				{
+					execute if score #DEBUG number matches 1 run say debug call show up
 					scoreboard players reset #ANIM_LOCK number
 					execute as @e[type=armor_stand,tag=miko] at @s run function ARG(_PATH)show_up
 					
 					execute store result bossbar minecraft:bullet_barrier value run scoreboard players operation 00000001-0000-0001-0000-000100000001 bullet_barrier = #BULLET_BARRIER_MAX number
 					bossbar set minecraft:bullet_barrier visible true
+					
+					schedule function ARG(_PATH)call_sanka 10t
 				}
 				
 				func show_up()
 				{
-					scoreboard players set #BULLET_SPLIT number 1
-					execute positioned ~ ~0.7 ~ run function ARG(__PATH)sanka/bullet/explode
-					
 					# 不知道為什麼距離遠的時候 move 會錯位，再跑一次 move 才會正常
 					execute if entity @s[tag=boss] run function miko:move
 					function miko:set_variant/default
@@ -2277,6 +2280,17 @@ namespace stage()
 					
 					# 生成防護罩特效
 					summon area_effect_cloud ~ ~0.3 ~ {Duration:2147483647,Tags:["object","barrier"],CustomNameVisible:1b,CustomName:'{"text":"4","font":"skill:main"}'}
+				}
+				
+				func call_sanka()
+				{
+					execute at @e[type=armor_stand,tag=miko] run function ARG(_PATH)do_sanka
+				}
+				
+				func do_sanka()
+				{
+					scoreboard players set #BULLET_SPLIT number 1
+					execute positioned ~ ~0.7 ~ run function ARG(__PATH)sanka/bullet/explode
 				}
 				
 				func reset_cd()
