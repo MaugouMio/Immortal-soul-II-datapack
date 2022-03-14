@@ -1962,6 +1962,7 @@ namespace stage()
 				
 				func teleport()
 				{
+					schedule clear skill:boss_hurt_reset
 					# 隱形，暫時給 effect tag 避免被當攻擊對象
 					function miko:animations/animation.miko.sanka/stop
 					function miko:set_variant/invisible
@@ -1988,7 +1989,6 @@ namespace stage()
 				
 				func call_show_up()
 				{
-					execute if score #DEBUG number matches 1 run say debug call show up
 					scoreboard players reset #ANIM_LOCK number
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)show_up
 				}
@@ -2215,6 +2215,7 @@ namespace stage()
 					particle minecraft:cloud ~ ~ ~ 0.3 1.2 0.3 0.27 300
 					playsound minecraft:enemy.miko.smoke_burst player @a ~ ~ ~ 3 1 0
 					
+					schedule clear skill:boss_hurt_reset
 					# 隱形，暫時給 effect tag 避免被當攻擊對象
 					function miko:set_variant/invisible
 					tag @s add effect
@@ -2247,6 +2248,7 @@ namespace stage()
 				func clone_setting()
 				{
 					tag @s add effect
+					tag @s add dead_event
 					
 					tag @s add clone
 					tag @s remove new_miko
@@ -2258,7 +2260,6 @@ namespace stage()
 				
 				func call_show_up()
 				{
-					execute if score #DEBUG number matches 1 run say debug call show up
 					scoreboard players reset #ANIM_LOCK number
 					execute as @e[type=armor_stand,tag=miko] at @s run function ARG(_PATH)show_up
 					
@@ -2301,7 +2302,6 @@ namespace stage()
 				func hit_check()
 				{
 					execute if score #GUN_WEAK_ATTACK number matches 1 run function ARG(_PATH)block_damage
-					execute unless score #GUN_WEAK_ATTACK number matches 1 if entity @s[tag=clone] run function ARG(_PATH)clone_break
 					execute unless score #GUN_WEAK_ATTACK number matches 1 if entity @s[tag=boss] run function ARG(_PATH)barrier_check
 				}
 				
