@@ -1,0 +1,195 @@
+{
+  "meta": {
+    "format_version": "0.0",
+    "creation_time": 1647784893,
+    "model_format": "animated_java/ajmodel",
+    "box_uv": false,
+    "settings": {
+      "animatedJava": {
+        "projectName": "abyss",
+        "exporter": "vanillaAnimationExporter",
+        "verbose": true,
+        "rigItem": "minecraft:black_dye",
+        "rigModelsExportFolder": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\enemy\\abyss\\boss",
+        "predicateFilePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\black_dye.json",
+        "transparentTexturePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\empty.png"
+      },
+      "vanillaStatueExporter": {
+        "rootEntityType": "minecraft:marker",
+        "rootEntityNbt": "{}",
+        "markerArmorStands": true,
+        "modelTag": "aj.%projectName",
+        "rootTag": "aj.%projectName.root",
+        "allBonesTag": "aj.%projectName.bone",
+        "boneModelDisplayTag": "aj.%projectName.bone_display",
+        "individualBoneTag": "aj.%projectName.bone.%boneName",
+        "internalScoreboardObjective": "aj.i",
+        "idScoreboardObjective": "aj.id",
+        "exportMode": "mcb",
+        "mcbFilePath": "",
+        "mcbConfigPath": "",
+        "dataPackPath": ""
+      },
+      "vanillaAnimationExporter": {
+        "rootEntityType": "minecraft:armor_stand",
+        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"boss\",\"knockback_resist\",\"object\"],UUID:[I;1,1,1,1]}",
+        "markerArmorStands": true,
+        "autoDistance": true,
+        "autoDistanceMovementThreshold": 1,
+        "manualDistance": 10,
+        "deduplicatePositionFrames": false,
+        "deduplicateRotationFrames": true,
+        "modelTag": "aj.%projectName",
+        "rootTag": "aj.%projectName.root",
+        "allBonesTag": "aj.%projectName.bone",
+        "boneModelDisplayTag": "aj.%projectName.bone_display",
+        "individualBoneTag": "aj.%projectName.bone.%boneName",
+        "internalScoreboardObjective": "aj.i",
+        "idScoreboardObjective": "aj.id",
+        "frameScoreboardObjective": "aj.frame",
+        "animatingFlagScoreboardObjective": "aj.%projectName.animating",
+        "animationLoopModeScoreboardObjective": "aj.%projectName.%animationName.loopMode",
+        "exportMode": "vanilla",
+        "mcbFilePath": "",
+        "mcbConfigPath": "",
+        "dataPackPath": "C:\\Users\\MaugouMio\\AppData\\Roaming\\.minecraft\\saves\\Immortal Soul test1\\datapacks\\immortal soul datapack"
+      },
+      "rawAnimationExporter": {
+        "outputJsonPath": ""
+      }
+    },
+    "variants": {
+      "default": {}
+    },
+    "uuid": "bae5aed4-fa9f-b5ef-6681-37051d52400f"
+  },
+  "name": "abyss",
+  "geometry_name": "",
+  "visible_box": [
+    1,
+    1,
+    0
+  ],
+  "variable_placeholders": "",
+  "resolution": {
+    "width": 16,
+    "height": 16
+  },
+  "elements": [
+    {
+      "name": "maxSizeIndicator",
+      "rescale": false,
+      "locked": false,
+      "from": [
+        -56,
+        -48,
+        -56
+      ],
+      "to": [
+        56,
+        64,
+        56
+      ],
+      "autouv": 1,
+      "color": 5,
+      "visibility": false,
+      "origin": [
+        0,
+        8,
+        0
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "uuid": "17c9bae4-d166-1dd2-5a88-4d3e5edf0d98"
+    }
+  ],
+  "outliner": [
+    {
+      "name": "head",
+      "origin": [
+        0,
+        0,
+        0
+      ],
+      "color": 0,
+      "nbt": "{}",
+      "armAnimationEnabled": false,
+      "uuid": "ce680a75-374a-7a82-5a0d-8125dc6409a1",
+      "export": true,
+      "isOpen": true,
+      "locked": false,
+      "visibility": true,
+      "autouv": 0,
+      "children": [
+        "17c9bae4-d166-1dd2-5a88-4d3e5edf0d98"
+      ]
+    }
+  ],
+  "textures": [],
+  "animations": [
+    {
+      "uuid": "fa9b14fd-59e7-9a4d-2a1a-55955c42ac21",
+      "name": "animation.model.new",
+      "loop": "once",
+      "override": false,
+      "length": 0,
+      "snapping": 20,
+      "selected": false,
+      "saved": true,
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
+      "anim_time_update": "",
+      "blend_weight": "",
+      "start_delay": "",
+      "loop_delay": "",
+      "animators": {}
+    }
+  ]
+}

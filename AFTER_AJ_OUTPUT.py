@@ -1,9 +1,12 @@
-from os import listdir, system
+from os import listdir, system, path
 import json
+
+DP_DIR = r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data"
 
 # animated java 輸出資料包後手動增加 tag @s add effect
 model_list = [
-	r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\miko\functions\summon\zzz\execute"
+	path.join(DP_DIR, r"miko\functions\summon\zzz\execute"),
+	path.join(DP_DIR, r"abyss\functions\summon\zzz\execute")
 ]
 
 for path in model_list:
@@ -14,16 +17,16 @@ for path in model_list:
 				f.write("\ntag @s add effect")
 				
 # 召喚巫女分身會是 invisible 的 variant，這個不要加 UUID 指定
-with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\miko\functions\summon\invisible.mcfunction", "r") as f:
+with open(path.join(DP_DIR, r"miko\functions\summon\invisible.mcfunction", "r") as f:
 	new_summon_func = f.read().replace(",UUID:[I;1,1,1,1]", "")
-with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\miko\functions\summon\invisible.mcfunction", "w") as f:
+with open(path.join(DP_DIR, r"miko\functions\summon\invisible.mcfunction", "w") as f:
 	f.write(new_summon_func)
 	
 # 補被蓋掉的 minecraft tick tag
-with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\minecraft\tags\functions\tick.json", "r") as f:
+with open(path.join(DP_DIR, r"minecraft\tags\functions\tick.json", "r") as f:
 	tick = json.loads(f.read())
 	tick["values"].append("main:main")
-with open(r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data\minecraft\tags\functions\tick.json", "w") as f:
+with open(path.join(DP_DIR, r"minecraft\tags\functions\tick.json", "w") as f:
 	f.write(json.dumps(tick))
 
 system("pause")
