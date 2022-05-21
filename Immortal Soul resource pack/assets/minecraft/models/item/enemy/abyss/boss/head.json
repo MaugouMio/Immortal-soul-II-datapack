@@ -2,8 +2,7 @@
 	"__credit": "Generated using Animated Java (https://animated-java.dev/)",
 	"textures": {
 		"1": "minecraft:item/enemy/abyss/base",
-		"2": "minecraft:item/enemy/abyss/teeth",
-		"3": "minecraft:item/enemy/abyss/eye"
+		"2": "minecraft:item/enemy/abyss/teeth"
 	},
 	"elements": [
 		{
@@ -134,19 +133,6 @@
 			},
 			"to": [4.8, 30.6, 29.6],
 			"from": [-12.8, -14.2, -13.6],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 21, 8]}
-		},
-		{
-			"faces": {
-				"north": {"uv": [0, 0, 1, 16], "texture": "#3"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"south": {"uv": [15, 0, 16, 16], "texture": "#3"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"up": {"uv": [0, 0, 16, 1], "rotation": 90, "texture": "#3"},
-				"down": {"uv": [0, 15, 16, 16], "rotation": 270, "texture": "#3"}
-			},
-			"to": [3.2, 22.6, 22.4],
-			"from": [-14.4, -6.2, -6.4],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 21, 8]}
 		}
 	],

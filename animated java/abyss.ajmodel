@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653115076,
+    "creation_time": 1653121109,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -1365,19 +1365,19 @@
       "locked": false,
       "from": [
         -130,
-        -7,
-        -8
+        0,
+        -1
       ],
       "to": [
         -130,
-        105,
-        104
+        98,
+        97
       ],
       "autouv": 0,
       "color": 2,
       "origin": [
         -130,
-        49,
+        55,
         48
       ],
       "faces": {
@@ -1445,19 +1445,19 @@
       "locked": false,
       "from": [
         -130,
-        -7,
-        -104
+        0,
+        -97
       ],
       "to": [
         -130,
-        105,
-        8
+        98,
+        1
       ],
       "autouv": 0,
       "color": 2,
       "origin": [
         -130,
-        41,
+        51,
         -48
       ],
       "faces": {
@@ -1525,19 +1525,19 @@
       "locked": false,
       "from": [
         -130,
-        -103,
-        -8
+        -96,
+        -1
       ],
       "to": [
         -130,
-        9,
-        104
+        2,
+        97
       ],
       "autouv": 0,
       "color": 2,
       "origin": [
         -130,
-        -55,
+        -63,
         48
       ],
       "faces": {
@@ -1605,19 +1605,19 @@
       "locked": false,
       "from": [
         -130,
-        -103,
-        -104
+        -96,
+        -97
       ],
       "to": [
         -130,
-        9,
-        8
+        2,
+        1
       ],
       "autouv": 0,
       "color": 2,
       "origin": [
         -130,
-        -55,
+        -64,
         -48
       ],
       "faces": {
@@ -1684,20 +1684,20 @@
       "rescale": false,
       "locked": false,
       "from": [
-        -104,
+        -108,
         -36,
         -36
       ],
       "to": [
-        -60,
+        -64,
         36,
         36
       ],
       "autouv": 0,
       "color": 1,
       "origin": [
-        -48,
-        32,
+        -52,
+        -7,
         0
       ],
       "faces": {
@@ -4373,7 +4373,7 @@
       "armAnimationEnabled": false,
       "uuid": "966bd9fa-cd74-0aeb-6554-078c34d06497",
       "export": true,
-      "isOpen": false,
+      "isOpen": true,
       "locked": false,
       "visibility": true,
       "autouv": 0,
@@ -4435,7 +4435,26 @@
           ]
         },
         "057b5580-2cde-8a33-c599-6aaa34560cc9",
-        "36c61503-e829-c41a-600b-fdaceb8f3324"
+        {
+          "name": "eye",
+          "origin": [
+            -52,
+            -7,
+            0
+          ],
+          "color": 0,
+          "nbt": "{HasVisualFire:1b}",
+          "armAnimationEnabled": false,
+          "uuid": "408e594b-45e9-c334-5e79-00a975a795b1",
+          "export": true,
+          "isOpen": true,
+          "locked": false,
+          "visibility": true,
+          "autouv": 0,
+          "children": [
+            "36c61503-e829-c41a-600b-fdaceb8f3324"
+          ]
+        }
       ]
     },
     {
@@ -4450,7 +4469,7 @@
       "armAnimationEnabled": false,
       "uuid": "968e8410-8f45-6c0f-5b9b-22b85e5ab1ec",
       "export": true,
-      "isOpen": false,
+      "isOpen": true,
       "locked": false,
       "visibility": true,
       "autouv": 0,
@@ -4459,11 +4478,11 @@
           "name": "ring1",
           "origin": [
             -130,
-            49,
+            48,
             48
           ],
           "color": 0,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "b6a1fbda-8c6c-2e58-bb1c-5d2d0612467a",
           "export": true,
@@ -4483,7 +4502,7 @@
             48
           ],
           "color": 4,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "4e73a9f8-397e-5f1c-4e78-c2a797219f6e",
           "export": true,
@@ -4501,7 +4520,7 @@
                 48
               ],
               "color": 4,
-              "nbt": "{}",
+              "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
               "uuid": "23af7b56-0c09-d8f4-407b-93ce5a548ea5",
               "export": true,
@@ -4519,7 +4538,7 @@
                     48
                   ],
                   "color": 4,
-                  "nbt": "{}",
+                  "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
                   "uuid": "3f7e3fa6-aea7-edb4-4acc-c397c731a3f3",
                   "export": true,
@@ -4537,7 +4556,7 @@
                         48
                       ],
                       "color": 4,
-                      "nbt": "{}",
+                      "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
                       "uuid": "77d27bef-be38-9e39-8432-af6b1bed2dc1",
                       "export": true,
@@ -4555,7 +4574,7 @@
                             48
                           ],
                           "color": 4,
-                          "nbt": "{}",
+                          "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
                           "uuid": "39cb1e07-4700-81bb-d7d6-41cd72f3079e",
                           "export": true,
@@ -4573,7 +4592,7 @@
                                 48
                               ],
                               "color": 4,
-                              "nbt": "{}",
+                              "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
                               "uuid": "d2f327b1-23f5-7ed8-c96f-ffe1e13d0e7a",
                               "export": true,
@@ -4591,7 +4610,7 @@
                                     48
                                   ],
                                   "color": 4,
-                                  "nbt": "{}",
+                                  "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
                                   "uuid": "dec6ee4a-4cb5-8e92-c45c-247452199354",
                                   "export": true,
@@ -4629,7 +4648,7 @@
       "armAnimationEnabled": false,
       "uuid": "7abe3782-2186-8101-6dee-31f0be83417b",
       "export": true,
-      "isOpen": false,
+      "isOpen": true,
       "locked": false,
       "visibility": true,
       "autouv": 0,
@@ -4638,11 +4657,11 @@
           "name": "ring2",
           "origin": [
             -130,
-            49,
+            48,
             -48
           ],
           "color": 0,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "fd11559e-ddb0-f482-3f71-3b817eb84434",
           "export": true,
@@ -4662,7 +4681,7 @@
             -48
           ],
           "color": 4,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "bad3b1ef-a541-f84b-259a-67ddbe80ae0f",
           "export": true,
@@ -4680,7 +4699,7 @@
                 -48
               ],
               "color": 4,
-              "nbt": "{}",
+              "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
               "uuid": "6c89c8f6-1321-78e4-fb3e-8d34de84a72e",
               "export": true,
@@ -4698,7 +4717,7 @@
                     -48
                   ],
                   "color": 4,
-                  "nbt": "{}",
+                  "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
                   "uuid": "38fe8570-4b60-f037-b711-ec4835f28709",
                   "export": true,
@@ -4716,7 +4735,7 @@
                         -48
                       ],
                       "color": 4,
-                      "nbt": "{}",
+                      "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
                       "uuid": "b86b77c5-d470-2fdd-295f-c793bbd617b0",
                       "export": true,
@@ -4734,7 +4753,7 @@
                             -48
                           ],
                           "color": 4,
-                          "nbt": "{}",
+                          "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
                           "uuid": "27abb87c-d2c4-20ad-2eb7-57f8c7b1c539",
                           "export": true,
@@ -4752,7 +4771,7 @@
                                 -48
                               ],
                               "color": 4,
-                              "nbt": "{}",
+                              "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
                               "uuid": "33d0dc0f-0ebb-cc30-f5ad-788466790a89",
                               "export": true,
@@ -4770,7 +4789,7 @@
                                     -48
                                   ],
                                   "color": 4,
-                                  "nbt": "{}",
+                                  "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
                                   "uuid": "00ffe2a1-5e4e-36c0-2048-69dd282f9230",
                                   "export": true,
@@ -4808,7 +4827,7 @@
       "armAnimationEnabled": false,
       "uuid": "9121331f-4e41-1e33-334e-9b7af20d142e",
       "export": true,
-      "isOpen": false,
+      "isOpen": true,
       "locked": false,
       "visibility": true,
       "autouv": 0,
@@ -4817,11 +4836,11 @@
           "name": "ring3",
           "origin": [
             -130,
-            -47,
+            -48,
             -48
           ],
           "color": 0,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "3cbdbac1-12a3-34d1-f2c4-38cb19556af0",
           "export": true,
@@ -4841,7 +4860,7 @@
             -48
           ],
           "color": 4,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "20be4962-563a-5820-414c-f0d7bafb7db2",
           "export": true,
@@ -4859,7 +4878,7 @@
                 -48
               ],
               "color": 4,
-              "nbt": "{}",
+              "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
               "uuid": "de39c154-46f7-b01f-fbbc-9caabf64df40",
               "export": true,
@@ -4877,7 +4896,7 @@
                     -48
                   ],
                   "color": 4,
-                  "nbt": "{}",
+                  "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
                   "uuid": "473b0000-96ad-a685-8e1d-7e39a58ae469",
                   "export": true,
@@ -4895,7 +4914,7 @@
                         -48
                       ],
                       "color": 4,
-                      "nbt": "{}",
+                      "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
                       "uuid": "748d96ec-484b-1202-33b3-f479e723fc2e",
                       "export": true,
@@ -4913,7 +4932,7 @@
                             -48
                           ],
                           "color": 4,
-                          "nbt": "{}",
+                          "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
                           "uuid": "4d83054c-098f-76f9-6e28-a12f243783f6",
                           "export": true,
@@ -4931,7 +4950,7 @@
                                 -48
                               ],
                               "color": 4,
-                              "nbt": "{}",
+                              "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
                               "uuid": "3da08b2c-c483-effb-b599-9213e7ce7e34",
                               "export": true,
@@ -4949,7 +4968,7 @@
                                     -48
                                   ],
                                   "color": 4,
-                                  "nbt": "{}",
+                                  "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
                                   "uuid": "0b4d38c8-44f5-47ff-2d2f-b4152d61776c",
                                   "export": true,
@@ -4996,11 +5015,11 @@
           "name": "ring4",
           "origin": [
             -130,
-            -47,
+            -48,
             48
           ],
           "color": 0,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "f7ddae2f-b377-9ef4-75d8-2fafcb9a295e",
           "export": true,
@@ -5020,7 +5039,7 @@
             48
           ],
           "color": 4,
-          "nbt": "{}",
+          "nbt": "{HasVisualFire:1b}",
           "armAnimationEnabled": false,
           "uuid": "e3a09e20-165f-1cff-4c2d-b6403766ad1b",
           "export": true,
@@ -5038,7 +5057,7 @@
                 48
               ],
               "color": 4,
-              "nbt": "{}",
+              "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
               "uuid": "807ca21e-7a33-59a0-7ab5-b089ea735f3a",
               "export": true,
@@ -5056,7 +5075,7 @@
                     48
                   ],
                   "color": 4,
-                  "nbt": "{}",
+                  "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
                   "uuid": "096441b8-1986-7bfc-6c6d-54bbed8d11fe",
                   "export": true,
@@ -5074,7 +5093,7 @@
                         48
                       ],
                       "color": 4,
-                      "nbt": "{}",
+                      "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
                       "uuid": "ed54e524-b56d-a22f-9b2a-5b7315b2ed0e",
                       "export": true,
@@ -5092,7 +5111,7 @@
                             48
                           ],
                           "color": 4,
-                          "nbt": "{}",
+                          "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
                           "uuid": "6582203d-6b28-416b-4ec4-1b771d96c30c",
                           "export": true,
@@ -5110,7 +5129,7 @@
                                 48
                               ],
                               "color": 4,
-                              "nbt": "{}",
+                              "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
                               "uuid": "c81a217f-f447-042a-51bb-394242ef646d",
                               "export": true,
@@ -5128,7 +5147,7 @@
                                     48
                                   ],
                                   "color": 4,
-                                  "nbt": "{}",
+                                  "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
                                   "uuid": "a5fd2cac-6fde-41cd-4571-283ff1c1e43b",
                                   "export": true,
@@ -5224,7 +5243,7 @@
       "mode": "bitmap",
       "saved": true,
       "uuid": "e79987be-e8f4-b299-65c7-65604a4e9015",
-      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAxNJREFUWEflV1tT2kAU/rKJJJapCkTFAiJara2dtg997mN/Sn9Cf2Uf2k7tRauISEUNF+lQApKlc6KBALksdJh2pjuTCQ872Y+z53wX6RV709OUJczfU5FM68htp7CxncKD9RUklpcQvT8Pxhj6SwGYAshzAItIsDo98A7ALQDdwTb6xTlH82cLlas6fpxe4uSwhPxhCeUzA61fbZjdOqTXkbc92uwHoN0xoS8n+l9m9sGArEpgqgTe5rBMgN/cPu5lXFWgRjRfALTXF0B0QUMssYB0dm2oAnQ4PYomQdYkWGYPXfOuCp3xCpwVzlGrNNBsmGMV8AWgJxexmtKxub0+dgX2v9cAZZ7Zb6sFdFscVhv2VbiXcwXHh6e4KBkwytdDV+AJIL4SxdajLHb2Nj17YBoA1AMH+8c4+lZA9bLZ7wFPAMl0HJlcUhyAeVcB6gOfCjgAivkyymdVfwCJ1QXsPMnZUyDJHE9f7IZfgQCAT++/omcxuwcOPudRuWjYUzBUAUUFMtnU0BgyGZ5NONQDIQCoCWlE3WNYLJTQvT3/dgp4r4toNOrJA4ZhILeVHYzhaBMGAMgfFaDruucYNptNMEkJB0BEVK9dI56I2SDGmtAHQLVSw1Js0ZeIhgAEEZHDhIXjIrKbGSEAzt4wJgwkIjcVF09K9uH04dxuZpgHRirgHE7vzEYqkIqFAIxScb1Rw3I6NiAiFwDjvNa/Kvr4H1ExVWBWU+CIUWgF/iqAWRGRW44DxUhYCwSY0KFiITEiQ0Jq+H8CIDEiJXz87KGvJRNlQi9L9uXjd5AieooRWTICsJqK4fnLvZkA+PBuHxelmjeAiCZjZS1uy/FEjkigCd2OiOT48ryKjkkuNsAT/hNERLZ8VnI8ZkiCbDnlgmnkmNRwals+egXTyrGXIxLSgqBcMKklmzgXkCklAEK5QHAKJg4mgVSsuoKJAyAgmEykBSK5gKnAnJOMTOCmxcEFAITmAkrHBCCQiikdUz5UKaAyWO3B4TwkHRMVCweTwHguA5SS5QhgUTR3kjEPj+ejweQ34Qx4Ya7vILMAAAAASUVORK5CYII="
+      "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAv1JREFUWEfll/1ummAUxh9AS12rYP2kdF3bpVmya9h/u5TdwK52ydKs7boy/KygdRaVl+WAqCjgq4vZkpkQ/YPAz/ec85znET4InzxZykM+zKJUU6G/rkI7r6BSP4FSzCP3SoYoiph/JECQACkDCFmATYLLYwDcxW30izGG0S8Hdm+AduMJ5kMbxo8Wuk0LzssEjjuA8DHz2aObkwAmEwdqUZ0/WcgAYnZ2HQhgYw9sDLAp4E2jAFbPQjYrJwLQ3YkAuSMZBeUIVa0cOQH612IGkGRAnAG4zgxgsn4CLbODvj3EaOisnUAigFo+xklFhX5eXysBAUgHBCBAlAH2AriOB5fKEANAJTAeGnhqW7A6z5ESxAIoxRzOLjScX+mxPbALAPXAw62Bx3sTdm8074FYgFJVQV0v8QM4sxMYJ59ACNAwuui27GQApXSEN5e6PwWC6OHtu4vNJeAA+Pb1Hh4T/B74fmfA7g79KYicANW1plUiY0jTF9eEkR7YAEBNyBgiY9g023DHQcP6U8AwRe4wF6sDlmVBP9MWY7jahCkAxqMJVVVjx3D0MoKIzGYAEqLB4BmKUgiIOQFsu498/jhRiCIAaUIUKqFpNKDpdS6A8N5NSpgqRMtS3DRb/svpwacX9agOrJQgfDl917RqqhRzAaxK8WDYR7FaWAjREoDV6c9LRQ//IymmE9jXFITLaOMJ/FWAfQnR8jpOXUbcu4BDCUMp5lpGZEhoG/6fALSMaqdlXF6fJVoyXiWMs2R3N49o/uzELyOyZARQqhRw/f5qLwA3X27RbffjAbKyiGK54K/jrRwRRxMuOyJax71OHxOHXGyKJ/wnhIhs+b7W8ZohSbPlgijutI49xna35asl2HUdxzkirl2Qlgu2tWRb5wIypQTAlQs4p2DrYJIqxWTLwmASAqQEk612AU8uoGyYWQKYOl4QUBOSEXcuoHRMAKlSLAXBNJBkAe7Y81/sA2xIxyTF3MEkNZ6LQUAlED+eh8nYz9mLT5wpXQ0mvwFp2XMGzdhrhwAAAABJRU5ErkJggg=="
     }
   ],
   "animations": [
@@ -5235,7 +5254,7 @@
       "override": false,
       "length": 1.8,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
