@@ -9,24 +9,24 @@ model_list = [
 	path.join(DP_DIR, r"abyss\functions\summon\zzz\execute")
 ]
 
-for path in model_list:
-	function_list = listdir(path)
+for p in model_list:
+	function_list = listdir(p)
 	for file in function_list:
 		if int(file[:file.find('.')]) % 3 == 1:
-			with open(path + '\\' + file, "a") as f:
+			with open(p + '\\' + file, "a") as f:
 				f.write("\ntag @s add effect")
 				
 # 召喚巫女分身會是 invisible 的 variant，這個不要加 UUID 指定
-with open(path.join(DP_DIR, r"miko\functions\summon\invisible.mcfunction", "r") as f:
+with open(path.join(DP_DIR, r"miko\functions\summon\invisible.mcfunction"), "r") as f:
 	new_summon_func = f.read().replace(",UUID:[I;1,1,1,1]", "")
-with open(path.join(DP_DIR, r"miko\functions\summon\invisible.mcfunction", "w") as f:
+with open(path.join(DP_DIR, r"miko\functions\summon\invisible.mcfunction"), "w") as f:
 	f.write(new_summon_func)
 	
 # 補被蓋掉的 minecraft tick tag
-with open(path.join(DP_DIR, r"minecraft\tags\functions\tick.json", "r") as f:
+with open(path.join(DP_DIR, r"minecraft\tags\functions\tick.json"), "r") as f:
 	tick = json.loads(f.read())
 	tick["values"].append("main:main")
-with open(path.join(DP_DIR, r"minecraft\tags\functions\tick.json", "w") as f:
+with open(path.join(DP_DIR, r"minecraft\tags\functions\tick.json"), "w") as f:
 	f.write(json.dumps(tick))
 
 system("pause")

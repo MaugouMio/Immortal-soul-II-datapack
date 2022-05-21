@@ -1,18 +1,20 @@
 {
 	"__credit": "Generated using Animated Java (https://animated-java.dev/)",
-	"textures": {},
+	"textures": {
+		"1": "minecraft:item/enemy/abyss/base"
+	},
 	"elements": [
 		{
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#missing"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#missing"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#missing"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#missing"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#missing"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#missing"}
+				"north": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"east": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"south": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"west": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"up": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#1"}
 			},
-			"to": [24.4, 15.8, 30.3],
-			"from": [8.4, 5, -14.3],
+			"to": [24.4, 15.8, 29.5],
+			"from": [10, 5, -13.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 4.6, 7.8]}
 		}
 	],
