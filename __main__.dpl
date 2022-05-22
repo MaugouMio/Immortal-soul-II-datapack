@@ -124,6 +124,16 @@ namespace main()
 		schedule function ARG(_PATH)effect 30s
 	}
 	
+	func y_check()
+	{
+		# 觀察者亂飛
+		execute unless entity @s[gamemode=adventure,scores={player=1..}] at @s run tp @s ~ 6.0 ~
+		# 原則上是打深淵恐懼才會發生，掉到地底去了
+		execute if entity @s[gamemode=adventure,scores={player=1..}] run kill @s
+		
+		advancement revoke @s only main:y_check
+	}
+	
 	folder font_effect_update()
 	{
 		func check()
