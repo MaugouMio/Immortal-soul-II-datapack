@@ -35,6 +35,7 @@ namespace stage()
 		
 		# animated java 模型
 		function miko:install
+		function abyss:install
 	}
 	
 	func main()
@@ -2360,15 +2361,21 @@ namespace stage()
 	{
 		func start()
 		{
+			bossbar set minecraft:boss max 70000
+			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
 			bossbar set minecraft:boss name {"translate":"Root of Fear","color":"white","bold":true}
 			# tp @a x y z rx ry
 			# summon ...
 			schedule function ARG(_PATH)skills/loop 7s
+			schedule function ARG(_PATH)skills/sting/spawn 5s
+			schedule function ARG(_PATH)skills/bite/start 15s
 		}
 		
 		func end()
 		{
 			schedule clear ARG(_PATH)skills/loop
+			schedule clear ARG(_PATH)skills/sting/spawn
+			schedule clear ARG(_PATH)skills/bite/start
 		}
 		
 		func main()
@@ -2381,6 +2388,105 @@ namespace stage()
 			func loop()
 			{
 				schedule function ARG(_PATH)loop 7s
+				
+				scoreboard players set #USE_RANDOM_SKILL number 1
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_trap
+			}
+			
+			func check_trap()
+			{
+				execute if score @s health matches ..21000 unless score #TRAP_CD number matches 1.. run function ARG(_PATH)trap/cast
+				execute if score #USE_RANDOM_SKILL number matches 1 run function ARG(_PATH)check_swallow
+			}
+			
+			func check_swallow()
+			{
+				# CD 到的時候有 50% 機率會放
+				execute if score @s health matches ..35000 unless score #SWALLOW_CD number matches 1.. if predicate stage:swallow_rate run function ARG(_PATH)swallow/cast
+				execute if score #USE_RANDOM_SKILL number matches 1 run function ARG(_PATH)rand_skill
+			}
+			
+			func rand_skill()
+			{
+				function random:rand_rate
+				
+				execute if score #RAND_RESULT number matches 0..24 run function ARG(_PATH)sneak/cast
+				execute if score #RAND_RESULT number matches 25..49 run function ARG(_PATH)raid/cast
+				execute if score #RAND_RESULT number matches 50..74 run function ARG(_PATH)march/cast
+				execute if score #RAND_RESULT number matches 75..84 run function ARG(_PATH)stare/cast
+				execute if score #RAND_RESULT number matches 85..99 run function ARG(_PATH)fear/cast
+			}
+			
+			folder sting()
+			{
+				func spawn()
+				{
+					schedule function ARG(_PATH)spawn 2s
+				}
+			}
+			
+			folder bite()
+			{
+				func start()
+				{
+					schedule function ARG(_PATH)start 15s
+				}
+			}
+			
+			folder sneak()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder raid()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder march()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder stare()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder fear()
+			{
+				func cast()
+				{
+					
+				}
+			}
+			
+			folder swallow()
+			{
+				func cast()
+				{
+					scoreboard players set #USE_RANDOM_SKILL number 0
+				}
+			}
+			
+			folder trap()
+			{
+				func cast()
+				{
+					scoreboard players set #USE_RANDOM_SKILL number 0
+				}
 			}
 		}
 	}
