@@ -2375,12 +2375,16 @@ namespace stage()
 		{
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/sting/spawn
+			schedule clear ARG(_PATH)skills/sting/mark/start
+			schedule clear ARG(_PATH)skills/sting/call_attack
+			schedule clear ARG(_PATH)skills/sting/retrieve
+			schedule clear ARG(_PATH)skills/sting/remove
 			schedule clear ARG(_PATH)skills/bite/start
 		}
 		
 		func main()
 		{
-			
+			execute as @e[type=armor_stand,tag=sting_pos] at @s run function ARG(_PATH)skills/sting/ring
 		}
 		
 		folder skills()
@@ -2421,7 +2425,91 @@ namespace stage()
 			{
 				func spawn()
 				{
-					schedule function ARG(_PATH)spawn 2s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches 35001.. schedule function ARG(_PATH)spawn 3s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches ..35000 schedule function ARG(_PATH)spawn 2s
+					
+					execute as @a[gamemode=adventure,scores={player=1..}] at @s run function ARG(_PATH)sting_pos/summon
+					schedule function ARG(_PATH)mark/start 1t
+					schedule function ARG(_PATH)call_attack 21t
+				}
+				
+				folder sting_pos()
+				{
+					func summon()
+					{
+						summon marker ^ ^ ^-0.001 {Tags:["sting_pos","object","new_pos"]}
+						scoreboard players operation #TEMP number = @s player
+						execute as @e[type=marker,tag=new_pos] run function ARG(_PATH)setting
+					}
+					
+					func setting()
+					{
+						scoreboard players operation @s number = #TEMP number
+						tag @s remove new_pos
+					}
+				}
+				
+				folder mark()
+				{
+					func start()
+					{
+						execute as @a[gamemode=adventure,scores={player=1..}] at @s run function ARG(_PATH)find_pos
+					}
+					
+					func find_pos()
+					{
+						scoreboard players operation #TEMP number = @s player
+						execute as @e[type=marker,tag=sting_pos] if score @s number = #TEMP number run function ARG(_PATH)forward
+					}
+					
+					func forward()
+					{
+						```
+						print(f'execute facing entity @s eyes positioned ~ {int(GROUND_Y[2])} ~ rotated ~ 0 positioned ^ ^ ^-3 run function ARG(_PATH)check_floor')
+						```
+					}
+					
+					func check_floor()
+					{
+						execute unless block ~ ~-1 ~ #skill:canpass run summon armor_stand ~ ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:24,CustomPotionColor:0}}],Tags:["object","effect","sting_summon"]}
+						execute if block ~ ~-1 ~ #skill:canpass positioned ^ ^ ^1 run function ARG(_PATH)check_floor
+					}
+				}
+				
+				func ring()
+				{
+					scoreboard players add @s life 1
+					# 旋轉
+					scoreboard players add @s number 1625
+					# 縮放
+					execute if score @s life matches ..10 run scoreboard players add @s number 1
+					execute if score @s life matches 31..39 run scoreboard players remove @s number 1
+					
+					execute if score @s life matches 40 run kill @s
+				}
+				
+				func call_attack()
+				{
+					execute as @e[type=armor_stand,tag=sting_summon] at @s run function ARG(_PATH)attack
+					execute as @e[type=armor_stand,tag=sting] at @s run tp @s ~ ~5 ~
+					schedule function ARG(_PATH)retrieve 10t
+				}
+				
+				func attack()
+				{
+					effect give @a[gamemode=adventure,scores={player=1..}] minecraft:instant_damage 1 0 true
+					summon armor_stand ~ ~-5 ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:59}}],Tags:["object","effect","sting"]}
+				}
+				
+				func retrieve()
+				{
+					execute as @e[type=armor_stand,tag=sting] at @s run tp @s ~ ~-5 ~
+					schedule function ARG(_PATH)remove 10t
+				}
+				
+				func remove()
+				{
+					kill @e[type=armor_stand,tag=sting]
 				}
 			}
 			
