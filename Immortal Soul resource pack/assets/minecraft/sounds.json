@@ -357,6 +357,25 @@
   
   
   
+  "enemy.abyss.summon_sting": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/summon_sting",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.abyss.sting": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/sting",
+        "stream": true
+      }
+    ]
+  },
+  
+  
+  
   "enemy.target_attack": {
     "sounds": [
       {

@@ -2474,7 +2474,7 @@ namespace stage()
 					
 					func summon()
 					{
-						# TODO: 瞄準音效
+						playsound minecraft:enemy.abyss.summon_sting player @a ~ ~ ~ 1 1 0
 						summon armor_stand ~ ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:24,CustomPotionColor:0}}],Tags:["object","effect","sting_summon"]}
 					}
 				}
@@ -2494,10 +2494,11 @@ namespace stage()
 				
 				func attack()
 				{
-					# TODO: 觸手音效
-					execute positioned ~-0.5 ~ ~-0.5 run effect give @a[gamemode=adventure,scores={player=1..},dx=0,dy=3,dz=0] minecraft:instant_damage 1 0 true
+					playsound minecraft:enemy.abyss.sting player @a ~ ~ ~ 1 1 0
 					summon armor_stand ~ ~-5 ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:59}}],Tags:["object","effect","sting","new_sting"]}
 					execute as @e[type=armor_stand,tag=new_sting,limit=1] run function ARG(_PATH)sting_setting
+					
+					execute positioned ~-0.5 ~ ~-0.5 run effect give @a[gamemode=adventure,scores={player=1..},dx=0,dy=3,dz=0] minecraft:instant_damage 1 0 true
 				}
 				
 				func sting_setting()
