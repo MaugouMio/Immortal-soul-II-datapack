@@ -2376,15 +2376,13 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/sting/spawn
 			schedule clear ARG(_PATH)skills/sting/mark/start
-			schedule clear ARG(_PATH)skills/sting/call_attack
-			schedule clear ARG(_PATH)skills/sting/retrieve
-			schedule clear ARG(_PATH)skills/sting/remove
+			schedule clear ARG(_PATH)skills/sting/call_retrieve
 			schedule clear ARG(_PATH)skills/bite/start
 		}
 		
 		func main()
 		{
-			execute as @e[type=armor_stand,tag=sting_pos] at @s run function ARG(_PATH)skills/sting/ring
+			execute as @e[type=armor_stand,tag=sting_summon] at @s run function ARG(_PATH)skills/sting/ring
 		}
 		
 		folder skills()
@@ -2430,7 +2428,6 @@ namespace stage()
 					
 					execute as @a[gamemode=adventure,scores={player=1..}] at @s run function ARG(_PATH)sting_pos/summon
 					schedule function ARG(_PATH)mark/start 1t
-					schedule function ARG(_PATH)call_attack 21t
 				}
 				
 				folder sting_pos()
@@ -2471,8 +2468,14 @@ namespace stage()
 					
 					func check_floor()
 					{
-						execute unless block ~ ~-1 ~ #skill:canpass run summon armor_stand ~ ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:24,CustomPotionColor:0}}],Tags:["object","effect","sting_summon"]}
+						execute unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)summon
 						execute if block ~ ~-1 ~ #skill:canpass positioned ^ ^ ^1 run function ARG(_PATH)check_floor
+					}
+					
+					func summon()
+					{
+						# TODO: 瞄準音效
+						summon armor_stand ~ ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:24,CustomPotionColor:0}}],Tags:["object","effect","sting_summon"]}
 					}
 				}
 				
@@ -2485,31 +2488,39 @@ namespace stage()
 					execute if score @s life matches ..10 run scoreboard players add @s number 1
 					execute if score @s life matches 31..39 run scoreboard players remove @s number 1
 					
+					execute if score @s life matches 20 run function ARG(_PATH)attack
 					execute if score @s life matches 40 run kill @s
-				}
-				
-				func call_attack()
-				{
-					execute as @e[type=armor_stand,tag=sting_summon] at @s run function ARG(_PATH)attack
-					execute as @e[type=armor_stand,tag=sting] at @s run tp @s ~ ~5 ~
-					schedule function ARG(_PATH)retrieve 10t
 				}
 				
 				func attack()
 				{
-					effect give @a[gamemode=adventure,scores={player=1..}] minecraft:instant_damage 1 0 true
-					summon armor_stand ~ ~-5 ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:59}}],Tags:["object","effect","sting"]}
+					# TODO: 觸手音效
+					execute positioned ~-0.5 ~ ~-0.5 run effect give @a[gamemode=adventure,scores={player=1..},dx=0,dy=3,dz=0] minecraft:instant_damage 1 0 true
+					summon armor_stand ~ ~-5 ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:59}}],Tags:["object","effect","sting","new_sting"]}
+					execute as @e[type=armor_stand,tag=new_sting,limit=1] run function ARG(_PATH)sting_setting
+				}
+				
+				func sting_setting()
+				{
+					execute store result score @s number run schedule function ARG(_PATH)call_retrieve 10t append
+					tp @s ~ ~ ~
+					tag @s remove new_sting
+				}
+				
+				func call_retrieve()
+				{
+					execute store result #CURR_TIME number run time query gametime
+					execute as @e[type=armor_stand,tag=sting] if score @s number = #CURR_TIME number run function ARG(_PATH)retrieve
 				}
 				
 				func retrieve()
 				{
-					execute as @e[type=armor_stand,tag=sting] at @s run tp @s ~ ~-5 ~
-					schedule function ARG(_PATH)remove 10t
-				}
-				
-				func remove()
-				{
-					kill @e[type=armor_stand,tag=sting]
+					scoreboard players add @s life 1
+					# 第一次被 call 到要縮回去，然後再 schedule 第二次
+					execute if score @s life matches 1 at @s run tp @s ~ ~-5 ~
+					execute if score @s life matches 1 store result score @s number run schedule function ARG(_PATH)call_retrieve 10t append
+					# 第二次被 call 到要清除
+					execute if score @s life matches 2 run kill @s
 				}
 			}
 			
