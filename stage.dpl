@@ -2368,7 +2368,7 @@ namespace stage()
 			# summon ...
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/sting/spawn 5s
-			schedule function ARG(_PATH)skills/bite/start 15s
+			schedule function ARG(_PATH)skills/hunt/start 15s
 		}
 		
 		func end()
@@ -2377,7 +2377,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/sting/spawn
 			schedule clear ARG(_PATH)skills/sting/mark/start
 			schedule clear ARG(_PATH)skills/sting/call_retrieve
-			schedule clear ARG(_PATH)skills/bite/start
+			schedule clear ARG(_PATH)skills/hunt/start
 		}
 		
 		func main()
@@ -2525,11 +2525,32 @@ namespace stage()
 				}
 			}
 			
-			folder bite()
+			folder hunt()
 			{
 				func start()
 				{
 					schedule function ARG(_PATH)start 15s
+					
+					execute at @a[gamemode=adventure,scores={player=1..}] positioned ~ ~1.5 ~ run function ARG(_PATH)mark_effect
+					
+					scoreboard players set #HUNT_STING number 10
+					schedule function ARG(_PATH)summon_sting 40t
+				}
+				
+				func mark_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:mark_purple/1"}',CustomNameVisible:1,Duration:11,Tags:['{"text":"","font":"font_animation:mark_purple/1"}', '{"text":"","font":"font_animation:mark_purple/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 10
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
+				}
+				
+				func summon_sting()
+				{
+					scoreboard players remove #HUNT_STING number 1
+					execute if score #HUNT_STING number matches 1.. run schedule function ARG(_PATH)summon_sting 10t
+					```
+					print("execute at @a[gamemode=adventure,scores={player=1..}] positioned ~ %d ~ run function ARG(__PATH)sting/mark/summon" %GROUND_Y[2])
+					```
 				}
 			}
 			
