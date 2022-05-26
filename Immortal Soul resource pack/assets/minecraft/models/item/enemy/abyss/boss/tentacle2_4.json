@@ -13,9 +13,9 @@
 				"up": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#4"},
 				"down": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#4"}
 			},
-			"to": [8.24, 8.84, 10.88],
-			"from": [-5.2, 3.32, 5.36],
-			"rotation": {"angle": 0, "axis": "y", "origin": [-5.44, 5, 8]}
+			"to": [8.3, 9.8, 11.6],
+			"from": [-8.5, 2.9, 4.7],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-8.8, 5, 8]}
 		}
 	],
 	"display": {
