@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653659641,
+    "creation_time": 1653667441,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -35,7 +35,7 @@
         "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"boss\",\"knockback_resist\",\"object\"],UUID:[I;1,1,1,1]}",
         "markerArmorStands": true,
         "autoDistance": true,
-        "autoDistanceMovementThreshold": 1,
+        "autoDistanceMovementThreshold": 30,
         "manualDistance": 10,
         "deduplicatePositionFrames": false,
         "deduplicateRotationFrames": true,
@@ -4362,269 +4362,288 @@
   ],
   "outliner": [
     {
-      "name": "head",
+      "name": "root",
       "origin": [
-        -33.5,
-        37.75,
+        4,
+        35,
         0
       ],
-      "rotation": [
-        0,
-        0,
-        -10
-      ],
       "color": 0,
       "nbt": "{}",
       "armAnimationEnabled": false,
-      "uuid": "966bd9fa-cd74-0aeb-6554-078c34d06497",
+      "uuid": "1b41da3d-4cf0-4cc5-8d9a-51feb60d23a8",
       "export": true,
       "isOpen": true,
       "locked": false,
       "visibility": true,
       "autouv": 0,
       "children": [
-        "9d084e67-7af5-6f52-137e-91ec640a8467",
-        "bfac08e1-21e2-bd82-3e88-d095938e0c20",
-        "e702acf9-5033-7135-9e88-4247bfef279d",
-        "f6a7082e-90a5-2540-3457-5cb709516524",
-        "e9b165a0-414e-f699-b4dd-ed660f2a6f5b",
-        "960b5b7e-c904-0f39-dbed-0a9f55e4276c",
-        "c38e83da-afa3-ca84-4bf5-c98dd127f911",
-        "7a63f600-783f-2f57-4526-70fd25498a78",
-        "40dccff6-f606-aa30-7b21-fa669cb56077",
         {
-          "name": "connect",
-          "origin": [
-            -75.5,
-            2.5,
-            0
-          ],
-          "color": 0,
-          "nbt": "{}",
-          "armAnimationEnabled": false,
-          "uuid": "09be9fff-e3cc-ec65-a447-cfcb06a52e92",
-          "export": true,
-          "isOpen": true,
-          "locked": false,
-          "visibility": true,
-          "autouv": 0,
-          "children": [
-            "4a6e8c97-f0c6-70a5-56d2-bfcef9bdafbf"
-          ]
-        },
-        {
-          "name": "jaw",
+          "name": "head",
           "origin": [
             -33.5,
-            16.75,
+            37.75,
             0
+          ],
+          "rotation": [
+            0,
+            0,
+            -10
           ],
           "color": 0,
           "nbt": "{}",
           "armAnimationEnabled": false,
-          "uuid": "bca9ea63-b37e-2b9c-edce-7d52a17b66ff",
+          "uuid": "966bd9fa-cd74-0aeb-6554-078c34d06497",
           "export": true,
-          "isOpen": true,
+          "isOpen": false,
           "locked": false,
           "visibility": true,
           "autouv": 0,
           "children": [
-            "026b5cd1-32be-9dc8-9661-4337d1a345ba",
-            "724944e9-e30d-7f5a-f187-9b92bcace96f",
-            "6fe3e2ae-54e5-397b-081e-1da288274880",
-            "50a025fb-3095-8755-2ebf-2981dedac0b2",
-            "11d76726-3584-dc94-075e-a1b0c0e5e930",
-            "00f840e1-d664-7c19-1aca-38c99ead2057",
-            "af3522e2-7c0f-5455-8c60-74797daeb27a",
-            "7e7feb7e-606b-dbf1-e127-59fe262814d0"
+            "9d084e67-7af5-6f52-137e-91ec640a8467",
+            "bfac08e1-21e2-bd82-3e88-d095938e0c20",
+            "e702acf9-5033-7135-9e88-4247bfef279d",
+            "f6a7082e-90a5-2540-3457-5cb709516524",
+            "e9b165a0-414e-f699-b4dd-ed660f2a6f5b",
+            "960b5b7e-c904-0f39-dbed-0a9f55e4276c",
+            "c38e83da-afa3-ca84-4bf5-c98dd127f911",
+            "7a63f600-783f-2f57-4526-70fd25498a78",
+            "40dccff6-f606-aa30-7b21-fa669cb56077",
+            {
+              "name": "connect",
+              "origin": [
+                -75.5,
+                2.5,
+                0
+              ],
+              "color": 0,
+              "nbt": "{}",
+              "armAnimationEnabled": false,
+              "uuid": "09be9fff-e3cc-ec65-a447-cfcb06a52e92",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "4a6e8c97-f0c6-70a5-56d2-bfcef9bdafbf"
+              ]
+            },
+            {
+              "name": "jaw",
+              "origin": [
+                -33.5,
+                16.75,
+                0
+              ],
+              "color": 0,
+              "nbt": "{}",
+              "armAnimationEnabled": false,
+              "uuid": "bca9ea63-b37e-2b9c-edce-7d52a17b66ff",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "026b5cd1-32be-9dc8-9661-4337d1a345ba",
+                "724944e9-e30d-7f5a-f187-9b92bcace96f",
+                "6fe3e2ae-54e5-397b-081e-1da288274880",
+                "50a025fb-3095-8755-2ebf-2981dedac0b2",
+                "11d76726-3584-dc94-075e-a1b0c0e5e930",
+                "00f840e1-d664-7c19-1aca-38c99ead2057",
+                "af3522e2-7c0f-5455-8c60-74797daeb27a",
+                "7e7feb7e-606b-dbf1-e127-59fe262814d0"
+              ]
+            },
+            "057b5580-2cde-8a33-c599-6aaa34560cc9",
+            {
+              "name": "eye",
+              "origin": [
+                -36.5,
+                38.5,
+                0
+              ],
+              "color": 0,
+              "nbt": "{HasVisualFire:1b}",
+              "armAnimationEnabled": false,
+              "uuid": "408e594b-45e9-c334-5e79-00a975a795b1",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "36c61503-e829-c41a-600b-fdaceb8f3324"
+              ]
+            }
           ]
         },
-        "057b5580-2cde-8a33-c599-6aaa34560cc9",
         {
-          "name": "eye",
-          "origin": [
-            -36.5,
-            38.5,
-            0
-          ],
-          "color": 0,
-          "nbt": "{HasVisualFire:1b}",
-          "armAnimationEnabled": false,
-          "uuid": "408e594b-45e9-c334-5e79-00a975a795b1",
-          "export": true,
-          "isOpen": true,
-          "locked": false,
-          "visibility": true,
-          "autouv": 0,
-          "children": [
-            "36c61503-e829-c41a-600b-fdaceb8f3324"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "tentacle1",
-      "origin": [
-        -97.5,
-        75.75,
-        36
-      ],
-      "color": 0,
-      "nbt": "{}",
-      "armAnimationEnabled": false,
-      "uuid": "968e8410-8f45-6c0f-5b9b-22b85e5ab1ec",
-      "export": true,
-      "isOpen": true,
-      "locked": false,
-      "visibility": true,
-      "autouv": 0,
-      "children": [
-        {
-          "name": "ring1",
+          "name": "tentacle1",
           "origin": [
             -97.5,
-            81,
+            75.75,
             36
           ],
           "color": 0,
-          "nbt": "{HasVisualFire:1b}",
+          "nbt": "{}",
           "armAnimationEnabled": false,
-          "uuid": "b6a1fbda-8c6c-2e58-bb1c-5d2d0612467a",
+          "uuid": "968e8410-8f45-6c0f-5b9b-22b85e5ab1ec",
           "export": true,
-          "isOpen": true,
+          "isOpen": false,
           "locked": false,
           "visibility": true,
           "autouv": 0,
           "children": [
-            "1f522266-90ec-c7fb-c485-9eaffd445038"
-          ]
-        },
-        {
-          "name": "tentacle1_1",
-          "origin": [
-            -141.75,
-            78,
-            36
-          ],
-          "color": 4,
-          "nbt": "{HasVisualFire:1b}",
-          "armAnimationEnabled": false,
-          "uuid": "4e73a9f8-397e-5f1c-4e78-c2a797219f6e",
-          "export": true,
-          "isOpen": true,
-          "locked": false,
-          "visibility": true,
-          "autouv": 0,
-          "children": [
-            "947ae5ae-e2d2-5d17-5dc3-d95ead3da09d",
             {
-              "name": "tentacle1_2",
+              "name": "ring1",
               "origin": [
-                -134.25,
+                -97.5,
+                81,
+                36
+              ],
+              "color": 0,
+              "nbt": "{HasVisualFire:1b}",
+              "armAnimationEnabled": false,
+              "uuid": "b6a1fbda-8c6c-2e58-bb1c-5d2d0612467a",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "1f522266-90ec-c7fb-c485-9eaffd445038"
+              ]
+            },
+            {
+              "name": "tentacle1_1",
+              "origin": [
+                -141.75,
                 78,
                 36
               ],
               "color": 4,
               "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
-              "uuid": "23af7b56-0c09-d8f4-407b-93ce5a548ea5",
+              "uuid": "4e73a9f8-397e-5f1c-4e78-c2a797219f6e",
               "export": true,
               "isOpen": true,
               "locked": false,
               "visibility": true,
               "autouv": 0,
               "children": [
-                "d0450e7a-0658-aecf-6b03-29a6615ee29d",
+                "947ae5ae-e2d2-5d17-5dc3-d95ead3da09d",
                 {
-                  "name": "tentacle1_3",
+                  "name": "tentacle1_2",
                   "origin": [
-                    -168.75,
+                    -134.25,
                     78,
                     36
                   ],
                   "color": 4,
                   "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
-                  "uuid": "3f7e3fa6-aea7-edb4-4acc-c397c731a3f3",
+                  "uuid": "23af7b56-0c09-d8f4-407b-93ce5a548ea5",
                   "export": true,
                   "isOpen": true,
                   "locked": false,
                   "visibility": true,
                   "autouv": 0,
                   "children": [
-                    "3d427510-f277-7f4c-419d-f1a8d7e335c5",
+                    "d0450e7a-0658-aecf-6b03-29a6615ee29d",
                     {
-                      "name": "tentacle1_4",
+                      "name": "tentacle1_3",
                       "origin": [
-                        -203.25,
+                        -168.75,
                         78,
                         36
                       ],
                       "color": 4,
                       "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
-                      "uuid": "77d27bef-be38-9e39-8432-af6b1bed2dc1",
+                      "uuid": "3f7e3fa6-aea7-edb4-4acc-c397c731a3f3",
                       "export": true,
                       "isOpen": true,
                       "locked": false,
                       "visibility": true,
                       "autouv": 0,
                       "children": [
-                        "ce835611-5773-db33-d502-3e7395a2dab0",
+                        "3d427510-f277-7f4c-419d-f1a8d7e335c5",
                         {
-                          "name": "tentacle1_5",
+                          "name": "tentacle1_4",
                           "origin": [
-                            -237.75,
+                            -203.25,
                             78,
                             36
                           ],
                           "color": 4,
                           "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
-                          "uuid": "39cb1e07-4700-81bb-d7d6-41cd72f3079e",
+                          "uuid": "77d27bef-be38-9e39-8432-af6b1bed2dc1",
                           "export": true,
                           "isOpen": true,
                           "locked": false,
                           "visibility": true,
                           "autouv": 0,
                           "children": [
-                            "0c487a0a-594d-b79e-6c71-3d862827ff15",
+                            "ce835611-5773-db33-d502-3e7395a2dab0",
                             {
-                              "name": "tentacle1_6",
+                              "name": "tentacle1_5",
                               "origin": [
-                                -272.25,
+                                -237.75,
                                 78,
                                 36
                               ],
                               "color": 4,
                               "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
-                              "uuid": "d2f327b1-23f5-7ed8-c96f-ffe1e13d0e7a",
+                              "uuid": "39cb1e07-4700-81bb-d7d6-41cd72f3079e",
                               "export": true,
                               "isOpen": true,
                               "locked": false,
                               "visibility": true,
                               "autouv": 0,
                               "children": [
-                                "c37a8ba6-592e-a54a-f5fe-15f52199c150",
+                                "0c487a0a-594d-b79e-6c71-3d862827ff15",
                                 {
-                                  "name": "tentacle1_7",
+                                  "name": "tentacle1_6",
                                   "origin": [
-                                    -306.75,
+                                    -272.25,
                                     78,
                                     36
                                   ],
                                   "color": 4,
                                   "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
-                                  "uuid": "dec6ee4a-4cb5-8e92-c45c-247452199354",
+                                  "uuid": "d2f327b1-23f5-7ed8-c96f-ffe1e13d0e7a",
                                   "export": true,
                                   "isOpen": true,
                                   "locked": false,
                                   "visibility": true,
                                   "autouv": 0,
                                   "children": [
-                                    "05d900f6-9115-b248-3b59-f6ac09d448ba"
+                                    "c37a8ba6-592e-a54a-f5fe-15f52199c150",
+                                    {
+                                      "name": "tentacle1_7",
+                                      "origin": [
+                                        -306.75,
+                                        78,
+                                        36
+                                      ],
+                                      "color": 4,
+                                      "nbt": "{HasVisualFire:1b}",
+                                      "armAnimationEnabled": false,
+                                      "uuid": "dec6ee4a-4cb5-8e92-c45c-247452199354",
+                                      "export": true,
+                                      "isOpen": true,
+                                      "locked": false,
+                                      "visibility": true,
+                                      "autouv": 0,
+                                      "children": [
+                                        "05d900f6-9115-b248-3b59-f6ac09d448ba"
+                                      ]
+                                    }
                                   ]
                                 }
                               ]
@@ -4638,172 +4657,172 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "tentacle2",
-      "origin": [
-        -97.5,
-        75.75,
-        -36
-      ],
-      "color": 0,
-      "nbt": "{}",
-      "armAnimationEnabled": false,
-      "uuid": "7abe3782-2186-8101-6dee-31f0be83417b",
-      "export": true,
-      "isOpen": true,
-      "locked": false,
-      "visibility": true,
-      "autouv": 0,
-      "children": [
+        },
         {
-          "name": "ring2",
+          "name": "tentacle2",
           "origin": [
             -97.5,
-            81,
+            75.75,
             -36
           ],
           "color": 0,
-          "nbt": "{HasVisualFire:1b}",
+          "nbt": "{}",
           "armAnimationEnabled": false,
-          "uuid": "fd11559e-ddb0-f482-3f71-3b817eb84434",
+          "uuid": "7abe3782-2186-8101-6dee-31f0be83417b",
           "export": true,
-          "isOpen": true,
+          "isOpen": false,
           "locked": false,
           "visibility": true,
           "autouv": 0,
           "children": [
-            "c7d8100c-198c-968d-ba21-cc64f35eb67e"
-          ]
-        },
-        {
-          "name": "tentacle2_1",
-          "origin": [
-            -141.75,
-            78,
-            -36
-          ],
-          "color": 4,
-          "nbt": "{HasVisualFire:1b}",
-          "armAnimationEnabled": false,
-          "uuid": "bad3b1ef-a541-f84b-259a-67ddbe80ae0f",
-          "export": true,
-          "isOpen": true,
-          "locked": false,
-          "visibility": true,
-          "autouv": 0,
-          "children": [
-            "8b4d9215-09d1-6a05-4c7d-42e63b552c0b",
             {
-              "name": "tentacle2_2",
+              "name": "ring2",
               "origin": [
-                -134.25,
+                -97.5,
+                81,
+                -36
+              ],
+              "color": 0,
+              "nbt": "{HasVisualFire:1b}",
+              "armAnimationEnabled": false,
+              "uuid": "fd11559e-ddb0-f482-3f71-3b817eb84434",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "c7d8100c-198c-968d-ba21-cc64f35eb67e"
+              ]
+            },
+            {
+              "name": "tentacle2_1",
+              "origin": [
+                -141.75,
                 78,
                 -36
               ],
               "color": 4,
               "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
-              "uuid": "6c89c8f6-1321-78e4-fb3e-8d34de84a72e",
+              "uuid": "bad3b1ef-a541-f84b-259a-67ddbe80ae0f",
               "export": true,
               "isOpen": true,
               "locked": false,
               "visibility": true,
               "autouv": 0,
               "children": [
-                "5ea61b1d-7d2d-40d7-657f-d3c255cafeb6",
+                "8b4d9215-09d1-6a05-4c7d-42e63b552c0b",
                 {
-                  "name": "tentacle2_3",
+                  "name": "tentacle2_2",
                   "origin": [
-                    -168.75,
+                    -134.25,
                     78,
                     -36
                   ],
                   "color": 4,
                   "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
-                  "uuid": "38fe8570-4b60-f037-b711-ec4835f28709",
+                  "uuid": "6c89c8f6-1321-78e4-fb3e-8d34de84a72e",
                   "export": true,
                   "isOpen": true,
                   "locked": false,
                   "visibility": true,
                   "autouv": 0,
                   "children": [
-                    "5408b5ea-f205-df2c-a470-9e230448792f",
+                    "5ea61b1d-7d2d-40d7-657f-d3c255cafeb6",
                     {
-                      "name": "tentacle2_4",
+                      "name": "tentacle2_3",
                       "origin": [
-                        -203.25,
+                        -168.75,
                         78,
                         -36
                       ],
                       "color": 4,
                       "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
-                      "uuid": "b86b77c5-d470-2fdd-295f-c793bbd617b0",
+                      "uuid": "38fe8570-4b60-f037-b711-ec4835f28709",
                       "export": true,
                       "isOpen": true,
                       "locked": false,
                       "visibility": true,
                       "autouv": 0,
                       "children": [
-                        "6750960a-4881-0d60-c1cf-388614d57238",
+                        "5408b5ea-f205-df2c-a470-9e230448792f",
                         {
-                          "name": "tentacle2_5",
+                          "name": "tentacle2_4",
                           "origin": [
-                            -237.75,
+                            -203.25,
                             78,
                             -36
                           ],
                           "color": 4,
                           "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
-                          "uuid": "27abb87c-d2c4-20ad-2eb7-57f8c7b1c539",
+                          "uuid": "b86b77c5-d470-2fdd-295f-c793bbd617b0",
                           "export": true,
                           "isOpen": true,
                           "locked": false,
                           "visibility": true,
                           "autouv": 0,
                           "children": [
-                            "f9a59fd2-223d-0650-7ff0-7ebf13c7abe0",
+                            "6750960a-4881-0d60-c1cf-388614d57238",
                             {
-                              "name": "tentacle2_6",
+                              "name": "tentacle2_5",
                               "origin": [
-                                -272.25,
+                                -237.75,
                                 78,
                                 -36
                               ],
                               "color": 4,
                               "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
-                              "uuid": "33d0dc0f-0ebb-cc30-f5ad-788466790a89",
+                              "uuid": "27abb87c-d2c4-20ad-2eb7-57f8c7b1c539",
                               "export": true,
                               "isOpen": true,
                               "locked": false,
                               "visibility": true,
                               "autouv": 0,
                               "children": [
-                                "49f58933-18ed-e383-135d-f652ccd15689",
+                                "f9a59fd2-223d-0650-7ff0-7ebf13c7abe0",
                                 {
-                                  "name": "tentacle2_7",
+                                  "name": "tentacle2_6",
                                   "origin": [
-                                    -306.75,
+                                    -272.25,
                                     78,
                                     -36
                                   ],
                                   "color": 4,
                                   "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
-                                  "uuid": "00ffe2a1-5e4e-36c0-2048-69dd282f9230",
+                                  "uuid": "33d0dc0f-0ebb-cc30-f5ad-788466790a89",
                                   "export": true,
                                   "isOpen": true,
                                   "locked": false,
                                   "visibility": true,
                                   "autouv": 0,
                                   "children": [
-                                    "02248413-19a8-6bef-9c47-422c6d5719aa"
+                                    "49f58933-18ed-e383-135d-f652ccd15689",
+                                    {
+                                      "name": "tentacle2_7",
+                                      "origin": [
+                                        -306.75,
+                                        78,
+                                        -36
+                                      ],
+                                      "color": 4,
+                                      "nbt": "{HasVisualFire:1b}",
+                                      "armAnimationEnabled": false,
+                                      "uuid": "00ffe2a1-5e4e-36c0-2048-69dd282f9230",
+                                      "export": true,
+                                      "isOpen": true,
+                                      "locked": false,
+                                      "visibility": true,
+                                      "autouv": 0,
+                                      "children": [
+                                        "02248413-19a8-6bef-9c47-422c6d5719aa"
+                                      ]
+                                    }
                                   ]
                                 }
                               ]
@@ -4817,172 +4836,172 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "tentacle3",
-      "origin": [
-        -97.5,
-        3.75,
-        -36
-      ],
-      "color": 0,
-      "nbt": "{}",
-      "armAnimationEnabled": false,
-      "uuid": "9121331f-4e41-1e33-334e-9b7af20d142e",
-      "export": true,
-      "isOpen": true,
-      "locked": false,
-      "visibility": true,
-      "autouv": 0,
-      "children": [
+        },
         {
-          "name": "ring3",
+          "name": "tentacle3",
           "origin": [
             -97.5,
-            9,
+            3.75,
             -36
           ],
           "color": 0,
-          "nbt": "{HasVisualFire:1b}",
+          "nbt": "{}",
           "armAnimationEnabled": false,
-          "uuid": "3cbdbac1-12a3-34d1-f2c4-38cb19556af0",
+          "uuid": "9121331f-4e41-1e33-334e-9b7af20d142e",
           "export": true,
-          "isOpen": true,
+          "isOpen": false,
           "locked": false,
           "visibility": true,
           "autouv": 0,
           "children": [
-            "972fa872-88c0-81e2-4fbe-42ee12833c6d"
-          ]
-        },
-        {
-          "name": "tentacle3_1",
-          "origin": [
-            -141.75,
-            6,
-            -36
-          ],
-          "color": 4,
-          "nbt": "{HasVisualFire:1b}",
-          "armAnimationEnabled": false,
-          "uuid": "20be4962-563a-5820-414c-f0d7bafb7db2",
-          "export": true,
-          "isOpen": true,
-          "locked": false,
-          "visibility": true,
-          "autouv": 0,
-          "children": [
-            "d2834fec-544f-6d8e-cd98-5eb8f1d736ea",
             {
-              "name": "tentacle3_2",
+              "name": "ring3",
               "origin": [
-                -134.25,
+                -97.5,
+                9,
+                -36
+              ],
+              "color": 0,
+              "nbt": "{HasVisualFire:1b}",
+              "armAnimationEnabled": false,
+              "uuid": "3cbdbac1-12a3-34d1-f2c4-38cb19556af0",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "972fa872-88c0-81e2-4fbe-42ee12833c6d"
+              ]
+            },
+            {
+              "name": "tentacle3_1",
+              "origin": [
+                -141.75,
                 6,
                 -36
               ],
               "color": 4,
               "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
-              "uuid": "de39c154-46f7-b01f-fbbc-9caabf64df40",
+              "uuid": "20be4962-563a-5820-414c-f0d7bafb7db2",
               "export": true,
               "isOpen": true,
               "locked": false,
               "visibility": true,
               "autouv": 0,
               "children": [
-                "7d8a6b22-65f8-f1a9-f4af-02e11c6b2b28",
+                "d2834fec-544f-6d8e-cd98-5eb8f1d736ea",
                 {
-                  "name": "tentacle3_3",
+                  "name": "tentacle3_2",
                   "origin": [
-                    -168.75,
+                    -134.25,
                     6,
                     -36
                   ],
                   "color": 4,
                   "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
-                  "uuid": "473b0000-96ad-a685-8e1d-7e39a58ae469",
+                  "uuid": "de39c154-46f7-b01f-fbbc-9caabf64df40",
                   "export": true,
                   "isOpen": true,
                   "locked": false,
                   "visibility": true,
                   "autouv": 0,
                   "children": [
-                    "e39fdad4-5119-e90a-be48-979410c6ef00",
+                    "7d8a6b22-65f8-f1a9-f4af-02e11c6b2b28",
                     {
-                      "name": "tentacle3_4",
+                      "name": "tentacle3_3",
                       "origin": [
-                        -203.25,
+                        -168.75,
                         6,
                         -36
                       ],
                       "color": 4,
                       "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
-                      "uuid": "748d96ec-484b-1202-33b3-f479e723fc2e",
+                      "uuid": "473b0000-96ad-a685-8e1d-7e39a58ae469",
                       "export": true,
                       "isOpen": true,
                       "locked": false,
                       "visibility": true,
                       "autouv": 0,
                       "children": [
-                        "6cd1d33f-5865-3d06-8798-a3a0bc58b6f4",
+                        "e39fdad4-5119-e90a-be48-979410c6ef00",
                         {
-                          "name": "tentacle3_5",
+                          "name": "tentacle3_4",
                           "origin": [
-                            -237.75,
+                            -203.25,
                             6,
                             -36
                           ],
                           "color": 4,
                           "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
-                          "uuid": "4d83054c-098f-76f9-6e28-a12f243783f6",
+                          "uuid": "748d96ec-484b-1202-33b3-f479e723fc2e",
                           "export": true,
                           "isOpen": true,
                           "locked": false,
                           "visibility": true,
                           "autouv": 0,
                           "children": [
-                            "0cfe748a-0cf6-09ad-0297-8e92bf9efb78",
+                            "6cd1d33f-5865-3d06-8798-a3a0bc58b6f4",
                             {
-                              "name": "tentacle3_6",
+                              "name": "tentacle3_5",
                               "origin": [
-                                -272.25,
+                                -237.75,
                                 6,
                                 -36
                               ],
                               "color": 4,
                               "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
-                              "uuid": "3da08b2c-c483-effb-b599-9213e7ce7e34",
+                              "uuid": "4d83054c-098f-76f9-6e28-a12f243783f6",
                               "export": true,
                               "isOpen": true,
                               "locked": false,
                               "visibility": true,
                               "autouv": 0,
                               "children": [
-                                "17900e7c-bd70-3561-a264-924376340f4f",
+                                "0cfe748a-0cf6-09ad-0297-8e92bf9efb78",
                                 {
-                                  "name": "tentacle3_7",
+                                  "name": "tentacle3_6",
                                   "origin": [
-                                    -306.75,
+                                    -272.25,
                                     6,
                                     -36
                                   ],
                                   "color": 4,
                                   "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
-                                  "uuid": "0b4d38c8-44f5-47ff-2d2f-b4152d61776c",
+                                  "uuid": "3da08b2c-c483-effb-b599-9213e7ce7e34",
                                   "export": true,
                                   "isOpen": true,
                                   "locked": false,
                                   "visibility": true,
                                   "autouv": 0,
                                   "children": [
-                                    "1370fa2b-792a-9c07-72bc-f4ffb3ea6076"
+                                    "17900e7c-bd70-3561-a264-924376340f4f",
+                                    {
+                                      "name": "tentacle3_7",
+                                      "origin": [
+                                        -306.75,
+                                        6,
+                                        -36
+                                      ],
+                                      "color": 4,
+                                      "nbt": "{HasVisualFire:1b}",
+                                      "armAnimationEnabled": false,
+                                      "uuid": "0b4d38c8-44f5-47ff-2d2f-b4152d61776c",
+                                      "export": true,
+                                      "isOpen": true,
+                                      "locked": false,
+                                      "visibility": true,
+                                      "autouv": 0,
+                                      "children": [
+                                        "1370fa2b-792a-9c07-72bc-f4ffb3ea6076"
+                                      ]
+                                    }
                                   ]
                                 }
                               ]
@@ -4996,172 +5015,172 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "name": "tentacle4",
-      "origin": [
-        -97.5,
-        3.75,
-        36
-      ],
-      "color": 0,
-      "nbt": "{}",
-      "armAnimationEnabled": false,
-      "uuid": "28fd51dc-60a2-1602-785f-fd73bf66b198",
-      "export": true,
-      "isOpen": true,
-      "locked": false,
-      "visibility": true,
-      "autouv": 0,
-      "children": [
+        },
         {
-          "name": "ring4",
+          "name": "tentacle4",
           "origin": [
             -97.5,
-            9,
+            3.75,
             36
           ],
           "color": 0,
-          "nbt": "{HasVisualFire:1b}",
+          "nbt": "{}",
           "armAnimationEnabled": false,
-          "uuid": "f7ddae2f-b377-9ef4-75d8-2fafcb9a295e",
+          "uuid": "28fd51dc-60a2-1602-785f-fd73bf66b198",
           "export": true,
-          "isOpen": true,
+          "isOpen": false,
           "locked": false,
           "visibility": true,
           "autouv": 0,
           "children": [
-            "6e2dd0d2-12d4-5db6-de7a-781cb94bb8c0"
-          ]
-        },
-        {
-          "name": "tentacle4_1",
-          "origin": [
-            -141.75,
-            6,
-            36
-          ],
-          "color": 4,
-          "nbt": "{HasVisualFire:1b}",
-          "armAnimationEnabled": false,
-          "uuid": "e3a09e20-165f-1cff-4c2d-b6403766ad1b",
-          "export": true,
-          "isOpen": true,
-          "locked": false,
-          "visibility": true,
-          "autouv": 0,
-          "children": [
-            "09361ec0-abe9-18fa-6bf5-f79f80322718",
             {
-              "name": "tentacle4_2",
+              "name": "ring4",
               "origin": [
-                -134.25,
-                6,
+                -97.5,
+                9,
                 36
               ],
-              "color": 4,
+              "color": 0,
               "nbt": "{HasVisualFire:1b}",
               "armAnimationEnabled": false,
-              "uuid": "807ca21e-7a33-59a0-7ab5-b089ea735f3a",
+              "uuid": "f7ddae2f-b377-9ef4-75d8-2fafcb9a295e",
               "export": true,
               "isOpen": true,
               "locked": false,
               "visibility": true,
               "autouv": 0,
               "children": [
-                "c0bce450-49de-a88d-9199-20ec5cbe48ef",
+                "6e2dd0d2-12d4-5db6-de7a-781cb94bb8c0"
+              ]
+            },
+            {
+              "name": "tentacle4_1",
+              "origin": [
+                -141.75,
+                6,
+                36
+              ],
+              "color": 4,
+              "nbt": "{HasVisualFire:1b}",
+              "armAnimationEnabled": false,
+              "uuid": "e3a09e20-165f-1cff-4c2d-b6403766ad1b",
+              "export": true,
+              "isOpen": true,
+              "locked": false,
+              "visibility": true,
+              "autouv": 0,
+              "children": [
+                "09361ec0-abe9-18fa-6bf5-f79f80322718",
                 {
-                  "name": "tentacle4_3",
+                  "name": "tentacle4_2",
                   "origin": [
-                    -168.75,
+                    -134.25,
                     6,
                     36
                   ],
                   "color": 4,
                   "nbt": "{HasVisualFire:1b}",
                   "armAnimationEnabled": false,
-                  "uuid": "096441b8-1986-7bfc-6c6d-54bbed8d11fe",
+                  "uuid": "807ca21e-7a33-59a0-7ab5-b089ea735f3a",
                   "export": true,
                   "isOpen": true,
                   "locked": false,
                   "visibility": true,
                   "autouv": 0,
                   "children": [
-                    "4810dcba-80f5-6eee-8c41-9ac8c09b2a64",
+                    "c0bce450-49de-a88d-9199-20ec5cbe48ef",
                     {
-                      "name": "tentacle4_4",
+                      "name": "tentacle4_3",
                       "origin": [
-                        -203.25,
+                        -168.75,
                         6,
                         36
                       ],
                       "color": 4,
                       "nbt": "{HasVisualFire:1b}",
                       "armAnimationEnabled": false,
-                      "uuid": "ed54e524-b56d-a22f-9b2a-5b7315b2ed0e",
+                      "uuid": "096441b8-1986-7bfc-6c6d-54bbed8d11fe",
                       "export": true,
                       "isOpen": true,
                       "locked": false,
                       "visibility": true,
                       "autouv": 0,
                       "children": [
-                        "2b5abfe2-e7a4-2380-3c17-5a37ded9a588",
+                        "4810dcba-80f5-6eee-8c41-9ac8c09b2a64",
                         {
-                          "name": "tentacle4_5",
+                          "name": "tentacle4_4",
                           "origin": [
-                            -237.75,
+                            -203.25,
                             6,
                             36
                           ],
                           "color": 4,
                           "nbt": "{HasVisualFire:1b}",
                           "armAnimationEnabled": false,
-                          "uuid": "6582203d-6b28-416b-4ec4-1b771d96c30c",
+                          "uuid": "ed54e524-b56d-a22f-9b2a-5b7315b2ed0e",
                           "export": true,
                           "isOpen": true,
                           "locked": false,
                           "visibility": true,
                           "autouv": 0,
                           "children": [
-                            "e6f8160d-2c08-2333-4fa1-9218c5070661",
+                            "2b5abfe2-e7a4-2380-3c17-5a37ded9a588",
                             {
-                              "name": "tentacle4_6",
+                              "name": "tentacle4_5",
                               "origin": [
-                                -272.25,
+                                -237.75,
                                 6,
                                 36
                               ],
                               "color": 4,
                               "nbt": "{HasVisualFire:1b}",
                               "armAnimationEnabled": false,
-                              "uuid": "c81a217f-f447-042a-51bb-394242ef646d",
+                              "uuid": "6582203d-6b28-416b-4ec4-1b771d96c30c",
                               "export": true,
                               "isOpen": true,
                               "locked": false,
                               "visibility": true,
                               "autouv": 0,
                               "children": [
-                                "3175f5ef-2f9a-4df8-faf2-a3270109eb8b",
+                                "e6f8160d-2c08-2333-4fa1-9218c5070661",
                                 {
-                                  "name": "tentacle4_7",
+                                  "name": "tentacle4_6",
                                   "origin": [
-                                    -306.75,
+                                    -272.25,
                                     6,
                                     36
                                   ],
                                   "color": 4,
                                   "nbt": "{HasVisualFire:1b}",
                                   "armAnimationEnabled": false,
-                                  "uuid": "a5fd2cac-6fde-41cd-4571-283ff1c1e43b",
+                                  "uuid": "c81a217f-f447-042a-51bb-394242ef646d",
                                   "export": true,
                                   "isOpen": true,
                                   "locked": false,
                                   "visibility": true,
                                   "autouv": 0,
                                   "children": [
-                                    "7a3cca41-3d63-36cd-4b61-24b1cf5f2a3e"
+                                    "3175f5ef-2f9a-4df8-faf2-a3270109eb8b",
+                                    {
+                                      "name": "tentacle4_7",
+                                      "origin": [
+                                        -306.75,
+                                        6,
+                                        36
+                                      ],
+                                      "color": 4,
+                                      "nbt": "{HasVisualFire:1b}",
+                                      "armAnimationEnabled": false,
+                                      "uuid": "a5fd2cac-6fde-41cd-4571-283ff1c1e43b",
+                                      "export": true,
+                                      "isOpen": true,
+                                      "locked": false,
+                                      "visibility": true,
+                                      "autouv": 0,
+                                      "children": [
+                                        "7a3cca41-3d63-36cd-4b61-24b1cf5f2a3e"
+                                      ]
+                                    }
                                   ]
                                 }
                               ]
@@ -5260,7 +5279,7 @@
       "length": 1.8,
       "snapping": 20,
       "selected": true,
-      "saved": false,
+      "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -7914,10 +7933,10 @@
       "name": "animation.model.sink",
       "loop": "hold",
       "override": false,
-      "length": 1,
+      "length": 1.1,
       "snapping": 20,
       "selected": false,
-      "saved": false,
+      "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -7982,7 +8001,7 @@
               "uuid": "68e32383-2bd8-11e1-fc4f-c7e2dd124d7b",
               "time": 0.8,
               "color": -1,
-              "interpolation": "linear"
+              "interpolation": "catmullrom"
             },
             {
               "channel": "position",
@@ -8009,6 +8028,34 @@
               ],
               "uuid": "61f39ff4-3fb5-9589-4d47-049b44ca30ec",
               "time": 0.2,
+              "color": -1,
+              "interpolation": "catmullrom"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": -4,
+                  "y": 20,
+                  "z": 0
+                }
+              ],
+              "uuid": "da1e4aec-9f4a-84a7-72b3-9dc252c33dd0",
+              "time": 0.8,
+              "color": -1,
+              "interpolation": "catmullrom"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": -4,
+                  "y": 20,
+                  "z": 0
+                }
+              ],
+              "uuid": "007d92c7-dc2e-dd3a-af5d-c916f75c641a",
+              "time": 0.7,
               "color": -1,
               "interpolation": "catmullrom"
             }
@@ -8472,7 +8519,7 @@
               "uuid": "2ba33cca-d168-f187-e4f5-b7ef634280ad",
               "time": 0.8,
               "color": -1,
-              "interpolation": "linear"
+              "interpolation": "catmullrom"
             }
           ]
         },
@@ -8534,7 +8581,7 @@
               "uuid": "a1815675-8d92-bccc-b0ee-40b6851a48b7",
               "time": 0.8,
               "color": -1,
-              "interpolation": "linear"
+              "interpolation": "catmullrom"
             },
             {
               "channel": "position",
@@ -8561,6 +8608,34 @@
               ],
               "uuid": "f31912a3-0834-fd4b-51dc-6aafd5b558ba",
               "time": 0.2,
+              "color": -1,
+              "interpolation": "catmullrom"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": -4,
+                  "y": 20,
+                  "z": 0
+                }
+              ],
+              "uuid": "3f139d3a-80e1-94fe-cb9d-3804daa1648e",
+              "time": 0.8,
+              "color": -1,
+              "interpolation": "catmullrom"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": -4,
+                  "y": 20,
+                  "z": 0
+                }
+              ],
+              "uuid": "121c6a10-74e5-327b-c314-519a7eb8f269",
+              "time": 0.7,
               "color": -1,
               "interpolation": "catmullrom"
             }
@@ -9038,7 +9113,7 @@
               "uuid": "21a80d3b-a3bf-2765-1ec7-b068d9ec2757",
               "time": 0.8,
               "color": -1,
-              "interpolation": "linear"
+              "interpolation": "catmullrom"
             },
             {
               "channel": "position",
@@ -9528,7 +9603,7 @@
               "uuid": "f6b84aa1-56b8-48a5-6c8e-f98f3e611870",
               "time": 0.8,
               "color": -1,
-              "interpolation": "linear"
+              "interpolation": "catmullrom"
             },
             {
               "channel": "position",
@@ -10049,6 +10124,152 @@
               ],
               "uuid": "f24bae0e-c912-6c70-72f0-2d8124957ef1",
               "time": 1,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "1b41da3d-4cf0-4cc5-8d9a-51feb60d23a8": {
+          "name": "root",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0",
+                  "z": "0"
+                }
+              ],
+              "uuid": "bda3b0e4-f4e5-b728-1c0b-69bea330a636",
+              "time": 0.8,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -65
+                }
+              ],
+              "uuid": "664e8eb3-f054-f36d-33cf-66c0917dcc47",
+              "time": 1.1,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -30
+                }
+              ],
+              "uuid": "23510351-9133-4d45-01fd-ef67ba3883b8",
+              "time": 0.85,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -47
+                }
+              ],
+              "uuid": "142c8408-029f-73b5-61a7-b782fa7dbd10",
+              "time": 0.9,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": -0.018577609402200324,
+                  "y": -0.9852891320615527,
+                  "z": -63.90647696445831
+                }
+              ],
+              "uuid": "cb53054c-203e-ef36-007b-6f9b9ad418e2",
+              "time": 0.95,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0",
+                  "z": "0"
+                }
+              ],
+              "uuid": "bb85212a-1e1c-23c8-c22b-544259d80624",
+              "time": 0.8,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "-35",
+                  "y": "-40",
+                  "z": 0
+                }
+              ],
+              "uuid": "56394c78-d586-db95-b214-5061ce62c99e",
+              "time": 0.85,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "-70",
+                  "y": "-120",
+                  "z": 0
+                }
+              ],
+              "uuid": "24e6b978-25eb-1381-c8de-394ed9f0261f",
+              "time": 0.9,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "-100",
+                  "y": "-450",
+                  "z": 0
+                }
+              ],
+              "uuid": "0b7024f6-b10e-d0f1-06a6-13aa85675b2b",
+              "time": 1.1,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "-100",
+                  "y": "-240",
+                  "z": 0
+                }
+              ],
+              "uuid": "b9e8bdac-0a82-7aea-9c1f-7a097f09e9de",
+              "time": 0.95,
               "color": -1,
               "interpolation": "linear"
             }
