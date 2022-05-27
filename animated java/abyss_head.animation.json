@@ -1,0 +1,58 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.model.bite": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1.05,
+			"bones": {
+				"jaw": {
+					"rotation": {
+						"0.0": [0, 0, -20],
+						"0.2": [0, 0, -20],
+						"0.25": [0, 0, 0]
+					},
+					"position": {
+						"0.0": [15.93923, -28.30541, 0],
+						"0.2": [15.93923, -28.30541, 0],
+						"0.25": [0, 0, 0]
+					}
+				},
+				"connect": {
+					"rotation": {
+						"0.0": [0, 0, -72.5],
+						"0.2": [0, 0, -72.5],
+						"0.25": [0, 0, 0]
+					},
+					"position": {
+						"0.0": [-1.52094, 4.95442, 0],
+						"0.2": [-1.52094, 4.95442, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"0.0": [0, 0, 10],
+						"0.25": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": [12, 0, 0],
+						"0.25": {
+							"post": [0, 120, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"0.75": {
+							"post": [0, 125, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"1.05": {
+							"post": [0, -10, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				}
+			}
+		}
+	}
+}

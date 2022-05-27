@@ -7,6 +7,7 @@ DP_DIR = r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul tes
 model_list = [
 	path.join(DP_DIR, r"miko\functions\summon\zzz\execute"),
 	path.join(DP_DIR, r"abyss\functions\summon\zzz\execute")
+	path.join(DP_DIR, r"abyss_head\functions\summon\zzz\execute")
 ]
 
 for p in model_list:
