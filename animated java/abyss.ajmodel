@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653581774,
+    "creation_time": 1653659641,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -4378,7 +4378,7 @@
       "armAnimationEnabled": false,
       "uuid": "966bd9fa-cd74-0aeb-6554-078c34d06497",
       "export": true,
-      "isOpen": false,
+      "isOpen": true,
       "locked": false,
       "visibility": true,
       "autouv": 0,
@@ -5259,8 +5259,8 @@
       "override": false,
       "length": 1.8,
       "snapping": 20,
-      "selected": false,
-      "saved": true,
+      "selected": true,
+      "saved": false,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -7760,6 +7760,152 @@
               "interpolation": "linear"
             }
           ]
+        },
+        "bca9ea63-b37e-2b9c-edce-7d52a17b66ff": {
+          "name": "jaw",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -5
+                }
+              ],
+              "uuid": "373f609b-b83e-84c5-278e-b1d668e76a9f",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -2.5
+                }
+              ],
+              "uuid": "46fb02c6-4f3a-81e4-d42a-e57f14a5243d",
+              "time": 0.5,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -5
+                }
+              ],
+              "uuid": "3443b61b-8f4f-dcc8-36f7-54127e908d50",
+              "time": 1.8,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -5
+                }
+              ],
+              "uuid": "9fc7555d-f998-5b13-8d00-a111037843b2",
+              "time": 0.9,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 0,
+                  "y": 0,
+                  "z": -2.5
+                }
+              ],
+              "uuid": "9d2b1d0b-e042-6858-8f90-7e4750021918",
+              "time": 1.4,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 3,
+                  "y": -3,
+                  "z": 0
+                }
+              ],
+              "uuid": "8d043d1b-fcd8-26f7-f4ee-c76dbc9506d3",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 2,
+                  "y": -3,
+                  "z": 0
+                }
+              ],
+              "uuid": "ab726858-6ddd-8bb9-3184-1c5ba4d5d5cb",
+              "time": 0.5,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 3,
+                  "y": -3,
+                  "z": 0
+                }
+              ],
+              "uuid": "595c37ea-bd10-bf9c-445b-b393d8864f2e",
+              "time": 1.8,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 3,
+                  "y": -3,
+                  "z": 0
+                }
+              ],
+              "uuid": "e845aec2-159b-35a4-2445-3873ed4aa88b",
+              "time": 0.9,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 2,
+                  "y": -3,
+                  "z": 0
+                }
+              ],
+              "uuid": "202ceb32-62e0-252c-df3e-2dad5974131c",
+              "time": 1.4,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
         }
       }
     },
@@ -7770,7 +7916,7 @@
       "override": false,
       "length": 1,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": false,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
