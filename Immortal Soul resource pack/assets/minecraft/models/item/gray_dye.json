@@ -1,0 +1,66 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "item/gray_dye"
+	},
+	"overrides": [
+		{
+			"predicate": {
+				"custom_model_data": 1
+			},
+			"model": "minecraft:item/enemy/abyss/boss/head"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 2
+			},
+			"model": "minecraft:item/enemy/abyss/boss/connect"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 3
+			},
+			"model": "minecraft:item/enemy/abyss/boss/jaw"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 4
+			},
+			"model": "minecraft:item/enemy/abyss/boss/eye"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 5
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/head"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 6
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/connect"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 7
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/jaw"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 8
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/eye"
+		}
+	],
+	"aj": {
+		"includedRigs": {
+			"bae5aed4-fa9f-b5ef-6681-37051d52400f": {
+				"name": "abyss_head",
+				"usedIDs": [
+					[1, 8]
+				]
+			}
+		}
+	}
+}
