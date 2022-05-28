@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653667441,
+    "creation_time": 1653708405,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -5278,7 +5278,7 @@
       "override": false,
       "length": 1.8,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
@@ -7935,8 +7935,8 @@
       "override": false,
       "length": 1.1,
       "snapping": 20,
-      "selected": false,
-      "saved": true,
+      "selected": true,
+      "saved": false,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -10151,21 +10151,7 @@
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": 0,
-                  "y": 0,
-                  "z": -65
-                }
-              ],
-              "uuid": "664e8eb3-f054-f36d-33cf-66c0917dcc47",
-              "time": 1.1,
-              "color": -1,
-              "interpolation": "linear"
-            },
-            {
-              "channel": "rotation",
-              "data_points": [
-                {
-                  "x": 0,
+                  "x": "15\n",
                   "y": 0,
                   "z": -30
                 }
@@ -10173,13 +10159,13 @@
               "uuid": "23510351-9133-4d45-01fd-ef67ba3883b8",
               "time": 0.85,
               "color": -1,
-              "interpolation": "linear"
+              "interpolation": "catmullrom"
             },
             {
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": 0,
+                  "x": "30",
                   "y": 0,
                   "z": -47
                 }
@@ -10193,13 +10179,27 @@
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": -0.018577609402200324,
-                  "y": -0.9852891320615527,
-                  "z": -63.90647696445831
+                  "x": 42.12829232167405,
+                  "y": -18.852040931182273,
+                  "z": -71.5942191986178
                 }
               ],
               "uuid": "cb53054c-203e-ef36-007b-6f9b9ad418e2",
               "time": 0.95,
+              "color": -1,
+              "interpolation": "catmullrom"
+            },
+            {
+              "channel": "rotation",
+              "data_points": [
+                {
+                  "x": 90.00000000000091,
+                  "y": -25,
+                  "z": -90.00000000000136
+                }
+              ],
+              "uuid": "664e8eb3-f054-f36d-33cf-66c0917dcc47",
+              "time": 1.1,
               "color": -1,
               "interpolation": "linear"
             },
