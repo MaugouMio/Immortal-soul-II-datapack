@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653711501,
+    "creation_time": 1653747791,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -5285,7 +5285,7 @@
       "override": false,
       "length": 1.8,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
@@ -7942,8 +7942,8 @@
       "override": false,
       "length": 1.1,
       "snapping": 20,
-      "selected": false,
-      "saved": true,
+      "selected": true,
+      "saved": false,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -10277,6 +10277,24 @@
               ],
               "uuid": "b9e8bdac-0a82-7aea-9c1f-7a097f09e9de",
               "time": 0.95,
+              "color": -1,
+              "interpolation": "linear"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "function stage:stage3/skills/sneak/set_idle"
+                }
+              ],
+              "uuid": "1de7cd3e-3912-d682-8ef6-b81ebcb62a32",
+              "time": 1.1,
               "color": -1,
               "interpolation": "linear"
             }

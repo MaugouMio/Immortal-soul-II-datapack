@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653710526,
+    "creation_time": 1653725392,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -59,7 +59,14 @@
       }
     },
     "variants": {
-      "default": {}
+      "default": {},
+      "invisible": {
+        "6bb27d69-4658-974c-3678-93e1f1af069c": "transparent",
+        "e7738c25-17b7-ae44-078c-0fa7c18d963e": "transparent",
+        "d1162b5b-7891-68eb-e193-854e4b30aa01": "transparent",
+        "727424df-2b4f-4e8f-4b97-96e3b1de6309": "transparent",
+        "e79987be-e8f4-b299-65c7-65604a4e9015": "transparent"
+      }
     },
     "uuid": "bae5aed4-fa9f-b5ef-6681-37051d52400f"
   },
@@ -1866,7 +1873,7 @@
       "length": 1.05,
       "snapping": 20,
       "selected": true,
-      "saved": true,
+      "saved": false,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss_head.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -2126,6 +2133,24 @@
               "time": 0.75,
               "color": -1,
               "interpolation": "catmullrom"
+            }
+          ]
+        },
+        "effects": {
+          "name": "Effects",
+          "type": "effect",
+          "keyframes": [
+            {
+              "channel": "timeline",
+              "data_points": [
+                {
+                  "script": "scoreboard players set 00000003-0000-0003-0000-000300000003 life 58\n"
+                }
+              ],
+              "uuid": "f6c7f34a-5e3a-4125-356e-bdb8707e6b84",
+              "time": 1.05,
+              "color": -1,
+              "interpolation": "linear"
             }
           ]
         }

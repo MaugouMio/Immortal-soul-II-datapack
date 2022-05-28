@@ -373,6 +373,22 @@
       }
     ]
   },
+  "enemy.abyss.portal": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/portal",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.abyss.bite": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/bite",
+        "stream": true
+      }
+    ]
+  },
   
   
   

@@ -1,8 +1,8 @@
 import utils, loop
 
 ```
-GROUND_Y = [4.0, 4.0, 4.0]
-STAGE_CENTER = [(128, 0), (128, 0), (128, 0)]
+GROUND_Y = [4.0, 4.0, 22.0]
+STAGE_CENTER = [(128, 0), (128, 0), (56.0, 0.0)]
 ```
 
 namespace stage()
@@ -2364,8 +2364,12 @@ namespace stage()
 			bossbar set minecraft:boss max 70000
 			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
 			bossbar set minecraft:boss name {"translate":"Root of Fear","color":"white","bold":true}
+			```
+			print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} run function abyss:summon_default")
 			# tp @a x y z rx ry
-			# summon ...
+			```
+			execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
+			
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/sting/spawn 5s
 			schedule function ARG(_PATH)skills/hunt/start 15s
@@ -2373,6 +2377,9 @@ namespace stage()
 		
 		func end()
 		{
+			scoreboard players reset #BOSS_IN number
+			scoreboard players reset #HUNT_STING number
+			
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/sting/spawn
 			schedule clear ARG(_PATH)skills/sting/mark/start
@@ -2383,13 +2390,17 @@ namespace stage()
 		func main()
 		{
 			execute as @e[type=armor_stand,tag=sting_summon] at @s run function ARG(_PATH)skills/sting/ring
+			execute as 00000002-0000-0002-0000-000200000002 run function ARG(_PATH)skills/sneak/portal
+			execute as 00000003-0000-0003-0000-000300000003 run function ARG(_PATH)skills/sneak/river/main
+			execute if score #BOSS_IN number matches 1.. run function ARG(_PATH)skills/boss_in/main
 		}
 		
 		folder skills()
 		{
 			func loop()
 			{
-				schedule function ARG(_PATH)loop 7s
+				# 每招的動作時間不同，個別決定下一招多久出
+				# schedule function ARG(_PATH)loop 7s
 				
 				scoreboard players set #USE_RANDOM_SKILL number 1
 				execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_trap
@@ -2417,6 +2428,45 @@ namespace stage()
 				execute if score #RAND_RESULT number matches 50..74 run function ARG(_PATH)march/cast
 				execute if score #RAND_RESULT number matches 75..84 run function ARG(_PATH)stare/cast
 				execute if score #RAND_RESULT number matches 85..99 run function ARG(_PATH)fear/cast
+			}
+			
+			folder boss_in()
+			{
+				func start()
+				{
+					scoreboard players set #BOSS_IN number 1
+					schedule function ARG(_PATH)loop 5s
+					
+					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/default
+					execute as 00000001-0000-0001-0000-000100000001 at @s run tp @s ~-0.5 ~ ~
+				}
+				
+				func main()
+				{
+					scoreboard players add #BOSS_IN number 1
+					
+					execute if score #BOSS_IN number matches 2..36 as 00000001-0000-0001-0000-000100000001 at @s run tp @s ~-0.5 ~ ~
+					execute if score #BOSS_IN number matches 36 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)reset_stat
+				}
+				
+				func reset_stat()
+				{
+					function abyss:animations/animation.model.loop/play
+					tag @s remove effect
+					```
+					# 恢復 BOSS 所在地點的屏障
+					print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:barrier")
+					```
+					execute as @a[gamemode=adventure,scores={player=1..}] at @s if block ~ ~ ~ minecraft:barrier run function ARG(_PATH)leave_barrier
+					
+					scoreboard players reset #BOSS_IN number
+				}
+				
+				func leave_barrier()
+				{
+					tp @s ~-0.5 ~ ~
+					execute at @s if block ~ ~ ~ minecraft:barrier run function ARG(_PATH)leave_barrier
+				}
 			}
 			
 			folder sting()
@@ -2558,7 +2608,84 @@ namespace stage()
 			{
 				func cast()
 				{
+					playsound minecraft:enemy.abyss.portal player @a ~ ~ ~ 3 1 1
+					```
+					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:26,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;2,2,2,2]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1]))
+					# 移除 BOSS 所在地點的屏障
+					print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:air")
+					```
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/play
 					
+					# 動畫過程無敵狀態
+					tag 00000001-0000-0001-0000-000100000001 add effect
+				}
+				
+				func portal()
+				{
+					scoreboard players add @s life 1
+					scoreboard players add @s number 512
+					execute if score @s life matches ..10 run scoreboard players add @s number 5
+					execute if score @s life matches 31..40 run scoreboard players remove @s number 5
+					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
+					```
+					print('execute if score @s life matches 33 run summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:25,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;3,3,3,3]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] + 5))
+					```
+					kill @s[scores={life=40}]
+				}
+				
+				folder river()
+				{
+					func main()
+					{
+						scoreboard players add @s life 1
+						execute if score @s life matches 1 run scoreboard players add @s number 8
+						execute if score @s life matches 2..8 run scoreboard players add @s number 7
+						execute if score @s life matches 59..64 at @s run scoreboard players remove @s number 7
+						execute if score @s life matches 65 at @s run scoreboard players remove @s number 8
+						execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
+						
+						execute if score @s life matches 19..58 at @s run function ARG(_PATH)judge
+						
+						# BOSS 回歸位置
+						execute if score @s life matches 71 run function stage:stage3/skills/boss_in/start
+					}
+				
+					func judge()
+					{
+						tp @s ~ ~ ~-0.25
+						execute positioned ~-8 ~-0.5 ~-3 as @a[gamemode=adventure,scores={player=1..},dx=15,dy=0,dz=5,limit=1] run function ARG(_PATH)check_pos
+					}
+					
+					func check_pos()
+					{
+						execute store result score #BITE_POS_X number run data get entity @s Pos[0]
+						```
+						print(f"execute if score #BITE_POS_X number matches ..{int(STAGE_CENTER[2][0] - 6)} positioned {STAGE_CENTER[2][0] - 6} ~ ~ run function ARG(_PATH)bite")
+						print(f"execute if score #BITE_POS_X number matches ..{int(STAGE_CENTER[2][0] + 5)} positioned {STAGE_CENTER[2][0] + 6} ~ ~ run function ARG(_PATH)bite")
+						print(f"execute if score #BITE_POS_X number matches {int(STAGE_CENTER[2][0] - 5)}..{int(STAGE_CENTER[2][0] + 4)} positioned as @s positioned ~ {GROUND_Y[2] - 0.5} {STAGE_CENTER[2][1]} run function ARG(_PATH)bite")
+						```
+					}
+					
+					func bite()
+					{
+						# TODO: 咬人音效
+						function abyss_head:summon_default
+						execute as 00000004-0000-0004-0000-000400000004 run function abyss_head:animations/animation.model.bite/play
+						# 設成一個不會執行到其他功能的 life 分數，咬人動畫執行完會自己設回 58 作結束
+						scoreboard players set 00000003-0000-0003-0000-000300000003 life 1000
+						
+						execute positioned ~-3 ~ ~-3 run effect give @a[gamemode=adventure,scores={player=1..},dx=5,dy=8,dz=5] instant_damage 1 1 true
+					}
+				}
+				
+				func set_idle()
+				{
+					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/invisible
+					```
+					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 23} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
+					```
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/stop
 				}
 			}
 			

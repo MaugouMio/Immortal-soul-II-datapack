@@ -799,6 +799,9 @@
 						"1.1": [-100, -450, 0]
 					}
 				}
+			},
+			"timeline": {
+				"1.1": "function stage:stage3/skills/sneak/set_idle"
 			}
 		},
 		"animation.model.new": {
