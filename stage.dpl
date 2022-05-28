@@ -2669,7 +2669,7 @@ namespace stage()
 					
 					func bite()
 					{
-						# TODO: 咬人音效
+						playsound minecraft:enemy.abyss.bite player @a ~ ~ ~ 1 1 0
 						function abyss_head:summon_default
 						execute as 00000004-0000-0004-0000-000400000004 run function abyss_head:animations/animation.model.bite/play
 						# 設成一個不會執行到其他功能的 life 分數，咬人動畫執行完會自己設回 58 作結束
