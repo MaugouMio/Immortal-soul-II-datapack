@@ -6,7 +6,7 @@ DP_DIR = r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul tes
 # animated java 輸出資料包後手動增加 tag @s add effect
 model_list = [
 	path.join(DP_DIR, r"miko\functions\summon\zzz\execute"),
-	path.join(DP_DIR, r"abyss\functions\summon\zzz\execute")
+	path.join(DP_DIR, r"abyss\functions\summon\zzz\execute"),
 	path.join(DP_DIR, r"abyss_head\functions\summon\zzz\execute")
 ]
 

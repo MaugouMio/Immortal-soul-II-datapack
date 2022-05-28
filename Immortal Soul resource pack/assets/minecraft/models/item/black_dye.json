@@ -219,6 +219,222 @@
 				"custom_model_data": 36
 			},
 			"model": "minecraft:item/enemy/abyss/boss/tentacle4_7"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 37
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/head"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 38
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/connect"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 39
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/jaw"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 40
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/eye"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 41
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/ring1"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 42
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_1"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 43
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 44
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_3"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 45
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_4"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 46
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_5"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 47
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_6"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 48
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle1_7"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 49
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/ring2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 50
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_1"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 51
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 52
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_3"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 53
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_4"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 54
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_5"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 55
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_6"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 56
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle2_7"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 57
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/ring3"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 58
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_1"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 59
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 60
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_3"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 61
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_4"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 62
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_5"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 63
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_6"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 64
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle3_7"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 65
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/ring4"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 66
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_1"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 67
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_2"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 68
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_3"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 69
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_4"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 70
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_5"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 71
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_6"
+		},
+		{
+			"predicate": {
+				"custom_model_data": 72
+			},
+			"model": "minecraft:item/enemy/abyss/boss/invisible/tentacle4_7"
 		}
 	],
 	"aj": {
@@ -226,7 +442,7 @@
 			"bae5aed4-fa9f-b5ef-6681-37051d52400f": {
 				"name": "abyss",
 				"usedIDs": [
-					[1, 36]
+					[1, 72]
 				]
 			}
 		}

@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653668921,
+    "creation_time": 1653710526,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -11,7 +11,7 @@
         "verbose": true,
         "rigItem": "minecraft:gray_dye",
         "rigModelsExportFolder": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\enemy\\abyss\\boss",
-        "predicateFilePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\black_dye.json",
+        "predicateFilePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\gray_dye.json",
         "transparentTexturePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\empty.png"
       },
       "vanillaStatueExporter": {
@@ -32,7 +32,7 @@
       },
       "vanillaAnimationExporter": {
         "rootEntityType": "minecraft:marker",
-        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"object\"],UUID:[I;4,4,4,4]}",
+        "rootEntityNbt": "{Tags:[\"object\"],UUID:[I;4,4,4,4]}",
         "markerArmorStands": true,
         "autoDistance": true,
         "autoDistanceMovementThreshold": 10,
