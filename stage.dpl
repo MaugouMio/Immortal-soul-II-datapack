@@ -2785,6 +2785,12 @@ namespace stage()
 				{
 					
 				}
+				
+				func switch_loop()
+				{
+					function abyss:animations/animation.model.march/stop
+					function abyss:animations/animation.model.march_loop/play
+				}
 			}
 			
 			folder stare()
