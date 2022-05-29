@@ -361,7 +361,7 @@
     "sounds": [
       {
         "name": "enemy/abyss/summon_sting",
-        "stream": true
+        "stream": false
       }
     ]
   },
@@ -369,7 +369,7 @@
     "sounds": [
       {
         "name": "enemy/abyss/sting",
-        "stream": true
+        "stream": false
       }
     ]
   },
@@ -385,6 +385,22 @@
     "sounds": [
       {
         "name": "enemy/abyss/bite",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.abyss.beam_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/beam_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.abyss.beam": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/beam",
         "stream": true
       }
     ]

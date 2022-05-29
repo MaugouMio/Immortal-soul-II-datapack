@@ -30,6 +30,8 @@
 		{"predicate": {"custom_model_data": 23},"model": "item/enemy/miko/blur"},
 		{"predicate": {"custom_model_data": 24},"model": "item/enemy/abyss/sting_prepare"},
 		{"predicate": {"custom_model_data": 25},"model": "item/enemy/abyss/river"},
-		{"predicate": {"custom_model_data": 26},"model": "item/enemy/abyss/portal"}
+		{"predicate": {"custom_model_data": 26},"model": "item/enemy/abyss/portal"},
+		{"predicate": {"custom_model_data": 27},"model": "item/enemy/abyss/raid_aim"},
+		{"predicate": {"custom_model_data": 28},"model": "item/enemy/abyss/raid_aim2"}
 	]
 }

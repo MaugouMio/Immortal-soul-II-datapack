@@ -57,6 +57,10 @@
 		{"predicate": {"custom_model_data": 57},"model": "item/enemy/miko/dust_wave2"},
 		{"predicate": {"custom_model_data": 58},"model": "item/enemy/miko/dust_wave3"},
 		{"predicate": {"custom_model_data": 59},"model": "item/enemy/abyss/sting"},
-		{"predicate": {"custom_model_data": 60},"model": "item/enemy/abyss/tiny"}
+		{"predicate": {"custom_model_data": 60},"model": "item/enemy/abyss/tiny"},
+		{"predicate": {"custom_model_data": 61},"model": "item/enemy/abyss/beam1"},
+		{"predicate": {"custom_model_data": 62},"model": "item/enemy/abyss/beam2"},
+		{"predicate": {"custom_model_data": 63},"model": "item/enemy/abyss/beam3"},
+		{"predicate": {"custom_model_data": 64},"model": "item/enemy/abyss/beam_wave"}
 	]
 }

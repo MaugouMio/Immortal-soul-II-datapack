@@ -1,0 +1,13 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/raid/13.png",
+            "ascent": 128,
+            "height": 256,
+            "chars": [
+                "0"
+            ]
+        }
+    ]
+}

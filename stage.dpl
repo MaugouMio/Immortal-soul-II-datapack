@@ -2385,14 +2385,17 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/sting/mark/start
 			schedule clear ARG(_PATH)skills/sting/call_retrieve
 			schedule clear ARG(_PATH)skills/hunt/start
+			schedule clear ARG(_PATH)skills/raid/call_shoot
+			schedule clear ARG(_PATH)skills/raid/reset
 		}
 		
 		func main()
 		{
+			execute if score #BOSS_IN number matches 1.. run function ARG(_PATH)skills/boss_in/main
 			execute as @e[type=armor_stand,tag=sting_summon] at @s run function ARG(_PATH)skills/sting/ring
 			execute as 00000002-0000-0002-0000-000200000002 run function ARG(_PATH)skills/sneak/portal
 			execute as 00000003-0000-0003-0000-000300000003 run function ARG(_PATH)skills/sneak/river/main
-			execute if score #BOSS_IN number matches 1.. run function ARG(_PATH)skills/boss_in/main
+			execute as @e[type=armor_stand,tag=raid_beam] run function ARG(_PATH)skills/raid/beam
 		}
 		
 		folder skills()
@@ -2435,7 +2438,7 @@ namespace stage()
 				func start()
 				{
 					scoreboard players set #BOSS_IN number 1
-					schedule function ARG(_PATH)loop 5s
+					schedule function ARG(__PATH)loop 5s
 					
 					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/default
 					execute as 00000001-0000-0001-0000-000100000001 at @s run tp @s ~-0.5 ~ ~
@@ -2693,7 +2696,86 @@ namespace stage()
 			{
 				func cast()
 				{
+					function abyss:animations/animation.model.loop/stop
 					
+					# 施放時無敵
+					tag @s add effect
+					```
+					print("execute at @r[gamemode=adventure,scores={player=1..}] run tp @s %.2f %.2f ~" %(STAGE_CENTER[2][0] + 5, GROUND_Y[2] + 0.5))
+					```
+					execute at @s run function ARG(_PATH)cast_effect
+				}
+				
+				func cast_effect()
+				{
+					function abyss:animations/animation.model.raid/play
+					execute positioned ~3 ~1.2 ~ run function ARG(_PATH)raid_effect
+					playsound minecraft:enemy.abyss.beam_prepare player @a ~ ~ ~ 3 1 1
+					```
+					# 攻擊範圍提示
+					print('summon armor_stand %.2f %.2f ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:27,CustomPotionColor:57}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}' %(STAGE_CENTER[2][0] + 4, GROUND_Y[2]))
+					print('summon armor_stand %.2f %.2f ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:28,CustomPotionColor:57}}],Tags:["object","effect"],UUID:[I;6,6,6,6]}' %(STAGE_CENTER[2][0] - 4, GROUND_Y[2]))
+					```
+					schedule function ARG(_PATH)call_shoot 24t
+				}
+				
+				func call_shoot()
+				{
+					# 清除提示物件
+					kill 00000005-0000-0005-0000-000500000005
+					kill 00000006-0000-0006-0000-000600000006
+					```
+					print("execute at 00000001-0000-0001-0000-000100000001 positioned %.2f %.2f ~ run function ARG(_PATH)shoot" %(STAGE_CENTER[2][0], GROUND_Y[2]))
+					```
+					schedule function ARG(_PATH)reset 15t
+				}
+				
+				func shoot()
+				{
+					execute positioned ~-16 ~ ~-2.5 run effect give @a[gamemode=adventure,scores={player=1..},dx=23,dy=4,dz=4] instant_damage 1 1 true
+					
+					# 雷射的衝擊波模型
+					summon armor_stand ~8 ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:64}}],Tags:["object","effect"],UUID:[I;7,7,7,7]}
+					tp 00000007-0000-0007-0000-000700000007 ~-24 ~ ~
+					
+					# 雷射特效模型
+					```
+					for i in range(-14, 7, 4):
+						print('summon armor_stand ~%d ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}],Tags:["object","effect","raid_beam"]}' %i)
+					```
+					playsound minecraft:enemy.abyss.beam player @a ~ ~ ~ 3 1 1
+				}
+				
+				func beam()
+				{
+					scoreboard players add @s life 1
+					execute if score @s life matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 63
+					execute if score @s life matches 2 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 61
+					execute if score @s life matches 4 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 62
+					execute if score @s life matches 6 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 61
+					execute if score @s life matches 8 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 63
+					execute if score @s life matches 9 run kill @s
+				}
+				
+				func reset()
+				{
+					kill 00000007-0000-0007-0000-000700000007
+					
+					execute as 00000001-0000-0001-0000-000100000001 run function abyss:animations/animation.model.raid/stop
+					```
+					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
+					```
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
+					tag 00000001-0000-0001-0000-000100000001 remove effect
+					
+					schedule function ARG(__PATH)loop 3s
+				}
+				
+				func raid_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:raid/2"}',CustomNameVisible:1,Duration:22,Tags:['{"text":"","font":"font_animation:raid/2"}', '{"text":"","font":"font_animation:raid/1"}', '{"text":"","font":"font_animation:raid/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 21
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 			}
 			

@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1653751411,
+    "creation_time": 1653752260,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -10310,13 +10310,47 @@
       "length": 0.25,
       "snapping": 20,
       "selected": true,
-      "saved": true,
+      "saved": false,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
       "start_delay": "",
       "loop_delay": "",
       "animators": {
+        "1b41da3d-4cf0-4cc5-8d9a-51feb60d23a8": {
+          "name": "root",
+          "type": "bone",
+          "keyframes": [
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": "0",
+                  "y": "0",
+                  "z": "0"
+                }
+              ],
+              "uuid": "bab9588a-a7b6-9428-b8e8-0132bbb44066",
+              "time": 0,
+              "color": -1,
+              "interpolation": "linear"
+            },
+            {
+              "channel": "position",
+              "data_points": [
+                {
+                  "x": 100,
+                  "y": -10,
+                  "z": 0
+                }
+              ],
+              "uuid": "e1892242-a6f0-ab02-3e84-42ee077516b8",
+              "time": 0.25,
+              "color": -1,
+              "interpolation": "catmullrom"
+            }
+          ]
+        },
         "966bd9fa-cd74-0aeb-6554-078c34d06497": {
           "name": "head",
           "type": "bone",
@@ -10415,9 +10449,9 @@
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": 55.830886672696124,
-                  "y": -49.81879874388642,
-                  "z": -84.88049588172316
+                  "x": 56.12354574909705,
+                  "y": -52.43698384214986,
+                  "z": -91.67369816729115
                 }
               ],
               "uuid": "6e178d98-0911-a062-d1d5-2e87fdf7829f",
@@ -10667,9 +10701,9 @@
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": -56.75772306100771,
-                  "y": 53.2854562550051,
-                  "z": -85.99374480407914
+                  "x": -57.8326688911211,
+                  "y": 55.805650694034284,
+                  "z": -93.44620185858776
                 }
               ],
               "uuid": "ba8c43b3-edf1-2a3d-9a16-d47e693342cb",
@@ -10933,9 +10967,9 @@
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": 54.06747080119203,
-                  "y": 51.86575555676609,
-                  "z": 82.60680728239868
+                  "x": 54.67751019649131,
+                  "y": 54.60277092323395,
+                  "z": 89.60470876740783
                 }
               ],
               "uuid": "9fa335a5-815b-e982-ad00-5cced5d39f0f",
@@ -11199,9 +11233,9 @@
               "channel": "rotation",
               "data_points": [
                 {
-                  "x": -53.63855226636315,
-                  "y": -53.61428359139336,
-                  "z": 80.49748497740484
+                  "x": -54.60626436765324,
+                  "y": -56.37000703007061,
+                  "z": 87.77808862558277
                 }
               ],
               "uuid": "62d17b1f-0e21-877e-aef3-ef99461fa0ec",
