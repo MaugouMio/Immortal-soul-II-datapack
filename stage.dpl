@@ -2458,9 +2458,9 @@ namespace stage()
 					tag @s remove effect
 					```
 					# 恢復 BOSS 所在地點的屏障
-					print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:barrier")
+					# print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:barrier")
 					```
-					execute as @a[gamemode=adventure,scores={player=1..}] at @s if block ~ ~ ~ minecraft:barrier run function ARG(_PATH)leave_barrier
+					# execute as @a[gamemode=adventure,scores={player=1..}] at @s if block ~ ~ ~ minecraft:barrier run function ARG(_PATH)leave_barrier
 					
 					scoreboard players reset #BOSS_IN number
 				}
@@ -2615,7 +2615,7 @@ namespace stage()
 					```
 					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:26,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;2,2,2,2]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1]))
 					# 移除 BOSS 所在地點的屏障
-					print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:air")
+					# print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:air")
 					```
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/play
