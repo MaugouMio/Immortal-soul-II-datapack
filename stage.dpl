@@ -2387,15 +2387,22 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/hunt/start
 			schedule clear ARG(_PATH)skills/raid/call_shoot
 			schedule clear ARG(_PATH)skills/raid/reset
+			schedule clear ARG(_PATH)skills/march/call_shoot
 		}
 		
 		func main()
 		{
 			execute if score #BOSS_IN number matches 1.. run function ARG(_PATH)skills/boss_in/main
-			execute as @e[type=armor_stand,tag=sting_summon] at @s run function ARG(_PATH)skills/sting/ring
 			execute as 00000002-0000-0002-0000-000200000002 run function ARG(_PATH)skills/sneak/portal
 			execute as 00000003-0000-0003-0000-000300000003 run function ARG(_PATH)skills/sneak/river/main
-			execute as @e[type=armor_stand,tag=raid_beam] run function ARG(_PATH)skills/raid/beam
+			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
+		}
+		
+		func armor_stand_main()
+		{
+			execute at @s[tag=sting_summon] run function ARG(_PATH)skills/sting/ring
+			execute if entity @s[tag=raid_beam] run function ARG(_PATH)skills/raid/beam
+			execute at @s[tag=tiny_abyss] run function ARG(_PATH)skills/march/move
 		}
 		
 		folder skills()
@@ -2765,10 +2772,17 @@ namespace stage()
 					```
 					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
 					```
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
-					tag 00000001-0000-0001-0000-000100000001 remove effect
+					# 回復動作，動畫塞事件接 switch_base
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.raid_end/play
 					
 					schedule function ARG(__PATH)loop 3s
+				}
+				
+				func switch_base()
+				{
+					function abyss:animations/animation.model.raid_end/stop
+					function abyss:animations/animation.model.loop/play
+					tag @s remove effect
 				}
 				
 				func raid_effect()
@@ -2783,13 +2797,93 @@ namespace stage()
 			{
 				func cast()
 				{
+					# 施放中無敵
+					tag 00000001-0000-0001-0000-000100000001 add effect
+					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.abyss.march_prepare player @a ~ ~ ~ 3 1 0
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.march/play
+					```
+					# 生成點
+					print('summon marker %.2f %.2f %.2f {UUID:[I;8,8,8,8],Tags:["object"]}' %(STAGE_CENTER[2][0] + 14, GROUND_Y[2], STAGE_CENTER[2][1]))
+					```
+				}
+				
+				func call_shoot()
+				{
+					execute as 00000008-0000-0008-0000-000800000008 at @s run function ARG(_PATH)shoot
+				}
+				
+				func shoot()
+				{
+					scoreboard players add @s life 1
+					execute if score @s life matches ..8 run schedule function ARG(_PATH)call_shoot 6t
+					```
+					for i in range(1, 10):
+						print(f"execute if score @s life matches {i} run function ARG(_PATH)spawn/{i}") 
+					```
+					execute if score @s life matches 9 run function ARG(_PATH)reset
+				}
+				
+				folder spawn()
+				{
+					```
+					for i in range(1, 10):
+						print(f"func {i}()")
+						print("{")
+						for j in range(4):
+							print('summon husk ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:4.8,Tags:["object","tiny_abyss"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
+						print("}")
+					```
+				}
+				
+				func move()
+				{
+					tp @s ^ ^ ^0.3
+					execute store result score #TEMP number unless block ~ ~ ~ #skill:canpass
+					execute positioned ~-0.5 ~ ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=1,dz=0] run function ARG(_PATH)damage
+					execute if score #TEMP number matches 1 run function ARG(_PATH)destroy
+				}
+				
+				func destroy()
+				{
+					item replace entity @s armor.head with air
+					tp @s ~ -128 ~
+					kill @s
+				}
+				
+				func damage()
+				{
+					scoreboard players set #TEMP number 1
 					
+					effect give @s instant_damage 1 0 true
+				}
+				
+				func reset()
+				{
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)reset_boss
+					kill @s
+					schedule function ARG(__PATH)loop 3s
+				}
+				
+				func reset_boss()
+				{
+					function abyss:animations/animation.model.march_loop/stop
+					# 回復動作，動畫塞事件接 switch_base
+					function abyss:animations/animation.model.march_end/play
 				}
 				
 				func switch_loop()
 				{
 					function abyss:animations/animation.model.march/stop
 					function abyss:animations/animation.model.march_loop/play
+					playsound minecraft:enemy.abyss.march player @a ~ ~ ~ 3 1 0
+					function ARG(_PATH)call_shoot
+				}
+				
+				func switch_base()
+				{
+					function abyss:animations/animation.model.march_end/stop
+					function abyss:animations/animation.model.loop/play
+					tag @s remove effect
 				}
 			}
 			

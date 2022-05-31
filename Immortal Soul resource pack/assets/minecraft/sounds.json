@@ -405,6 +405,22 @@
       }
     ]
   },
+  "enemy.abyss.march_prepare": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/march_prepare",
+        "stream": true
+      }
+    ]
+  },
+  "enemy.abyss.march": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/march",
+        "stream": true
+      }
+    ]
+  },
   
   
   
