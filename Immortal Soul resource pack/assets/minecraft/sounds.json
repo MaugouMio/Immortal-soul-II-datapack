@@ -421,6 +421,14 @@
       }
     ]
   },
+  "enemy.abyss.big_beam": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/big_beam",
+        "stream": true
+      }
+    ]
+  },
   
   
   

@@ -2395,6 +2395,8 @@ namespace stage()
 			execute if score #BOSS_IN number matches 1.. run function ARG(_PATH)skills/boss_in/main
 			execute as 00000002-0000-0002-0000-000200000002 run function ARG(_PATH)skills/sneak/portal
 			execute as 00000003-0000-0003-0000-000300000003 run function ARG(_PATH)skills/sneak/river/main
+			execute as 00000009-0000-0009-0000-000900000009 run function ARG(_PATH)skills/stare/portal
+			execute as 0000000A-0000-000A-0000-000A0000000A if score @s life matches 1.. at @s run function ARG(_PATH)skills/stare/eye
 			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
 		}
 		
@@ -2891,7 +2893,84 @@ namespace stage()
 			{
 				func cast()
 				{
+					playsound minecraft:enemy.abyss.portal player @a ~ ~ ~ 3 1 1
+					```
+					# 傳送門
+					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:26,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;9,9,9,9]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1]))
+					# 眼睛
+					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:65}}],Tags:["object","effect"],UUID:[I;10,10,10,10]}' %(STAGE_CENTER[2][0], GROUND_Y[2] - 1.2, STAGE_CENTER[2][1]))
+					# 衝擊波
+					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:29,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;11,11,11,11]}' %(STAGE_CENTER[2][0], GROUND_Y[2] + 1, STAGE_CENTER[2][1]))
+					# 光束
+					for i in range(3):
+						print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}],Tags:["object","effect","big_beam"]}' %(STAGE_CENTER[2][0], GROUND_Y[2] + i * 7, STAGE_CENTER[2][1]))
+					```
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/play
 					
+					# 動畫過程無敵狀態
+					tag 00000001-0000-0001-0000-000100000001 add effect
+				}
+				
+				func portal()
+				{
+					scoreboard players add @s life 1
+					scoreboard players add @s number 512
+					execute if score @s number matches 65536.. run scoreboard players remove @s number 65536
+					
+					execute if score @s life matches ..10 run scoreboard players add @s number 5
+					
+					# 眼睛特效開始運作
+					execute if score @s life matches 31 run scoreboard players set 0000000A-0000-000A-0000-000A0000000A life 1
+					
+					# 借用計時器做玩家傷害(對應光束特效期間)
+					execute if score @s life matches 61..120 at @s positioned ~-3.5 ~ ~-3.5 run effect give @a[gamemode=adventure,scores={player=1..},dx=6,dy=20,dz=6] instant_damage 1 1 true
+					
+					execute if score @s life matches 141..150 run scoreboard players remove @s number 5
+					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
+					
+					execute if score @s life matches 141 run function stage:stage3/skills/boss_in/start
+					kill @s[scores={life=150}]
+				}
+				
+				func eye()
+				{
+					# 對應 portal 時間 + 30
+					
+					# 眼睛升起
+					execute if score @s life matches 1..10 run tp @s ~ ~0.12 ~
+					# 眼睛微縮(準備發射)
+					execute if score @s life matches 24 run tp @s ~ ~-0.2 ~
+					
+					# 發射光束音效
+					execute if score @s life matches 30 at @s run playsound minecraft:enemy.abyss.big_beam player @a ~ ~ ~ 3 1 0
+					# 設定光束
+					execute if score @s life matches 30 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
+					execute if score @s life matches 31 run tp @s ~ ~0.2 ~
+					
+					# 衝擊波特效
+					execute if score @s life matches 31..35 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int run scoreboard players add @s number 20
+					execute if score @s life matches 36 run kill 0000000B-0000-000B-0000-000B0000000B
+					
+					# 光束特效(傷害由 portal 統一做)
+					execute if score @s life matches 31..90 as @e[type=armor_stand,tag=big_beam] run function ARG(_PATH)beam
+					execute if score @s life matches 91 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
+					execute if score @s life matches 92 run kill @e[type=armor_stand,tag=big_beam]
+					
+					# 眼睛下沉
+					execute if score @s life matches 101..110 run tp @s ~ ~-0.12 ~
+					
+					scoreboard players add @s life 1
+					execute if score @s life matches 111 run kill @s
+				}
+				
+				func beam()
+				{
+					scoreboard players add @s number 1
+					execute if score @s number matches 2 run scoreboard players set @s number 0
+					
+					execute if score @s number matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData 66
+					execute if score @s number matches 0 run data modify entity @s ArmorItems[3].tag.CustomModelData 67
 				}
 			}
 			
