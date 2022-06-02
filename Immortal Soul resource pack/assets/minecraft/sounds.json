@@ -429,6 +429,22 @@
       }
     ]
   },
+  "enemy.abyss.fear": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/fear",
+        "stream": false
+      }
+    ]
+  },
+  "enemy.abyss.tiny_dead": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/tiny_dead",
+        "stream": false
+      }
+    ]
+  },
   
   
   

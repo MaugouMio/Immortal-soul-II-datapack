@@ -100,6 +100,7 @@ namespace skill()
 		execute if entity @s[tag=hell_skeleton] run function stage:stage2/skills/hell/skull_hurt
 		execute if entity @s[tag=flame_bullet] run function stage:stage2/skills/flame/bullet/bullet_hurt
 		execute if entity @s[tag=clone] run function stage:stage2/skills/sikigami/clone_break
+		execute if entity @s[tag=tiny] run function stage:stage3/skills/fear/tiny/dead
 	}
 	
 	func normal_damage()

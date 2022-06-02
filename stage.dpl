@@ -2381,6 +2381,7 @@ namespace stage()
 			scoreboard players reset #HUNT_STING number
 			
 			schedule clear ARG(_PATH)skills/loop
+			schedule clear ARG(_PATH)skills/boss_in/start
 			schedule clear ARG(_PATH)skills/sting/spawn
 			schedule clear ARG(_PATH)skills/sting/mark/start
 			schedule clear ARG(_PATH)skills/sting/call_retrieve
@@ -2388,6 +2389,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/raid/call_shoot
 			schedule clear ARG(_PATH)skills/raid/reset
 			schedule clear ARG(_PATH)skills/march/call_shoot
+			schedule clear ARG(_PATH)skills/fear/tiny/spwan
 		}
 		
 		func main()
@@ -2397,14 +2399,15 @@ namespace stage()
 			execute as 00000003-0000-0003-0000-000300000003 run function ARG(_PATH)skills/sneak/river/main
 			execute as 00000009-0000-0009-0000-000900000009 run function ARG(_PATH)skills/stare/portal
 			execute as 0000000A-0000-000A-0000-000A0000000A if score @s life matches 1.. at @s run function ARG(_PATH)skills/stare/eye
+			execute as 0000000C-0000-000C-0000-000C0000000C if score @s life matches 1.. at @s run function ARG(_PATH)skills/fear/tiny/move
 			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
+			execute as @e[type=zombie,tag=tiny_abyss] at @s run function ARG(_PATH)skills/march/move
 		}
 		
 		func armor_stand_main()
 		{
 			execute at @s[tag=sting_summon] run function ARG(_PATH)skills/sting/ring
 			execute if entity @s[tag=raid_beam] run function ARG(_PATH)skills/raid/beam
-			execute at @s[tag=tiny_abyss] run function ARG(_PATH)skills/march/move
 		}
 		
 		folder skills()
@@ -2832,7 +2835,7 @@ namespace stage()
 						print(f"func {i}()")
 						print("{")
 						for j in range(4):
-							print('summon husk ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:4.8,Tags:["object","tiny_abyss"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
+							print('summon zombie ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:4.8,Tags:["object","dead_event","tiny","tiny_abyss"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
 						print("}")
 					```
 				}
@@ -2978,7 +2981,72 @@ namespace stage()
 			{
 				func cast()
 				{
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.fear/play
 					
+					# 動畫過程無敵狀態
+					tag 00000001-0000-0001-0000-000100000001 add effect
+					
+					scoreboard players set #FEAR_TIMES number 4
+					schedule function ARG(_PATH)tiny/spwan 3s
+				}
+				
+				folder tiny()
+				{
+					func spawn()
+					{
+						scoreboard players remove #FEAR_TIMES number 1
+						
+						# 隨機四個方位
+						function random:rand_rate
+						```
+						print('execute if score #RAND_RESULT number matches 0..24 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[90f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0] + 24, GROUND_Y[2], STAGE_CENTER[2][1]))
+						print('execute if score #RAND_RESULT number matches 25..49 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[270f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0] - 24, GROUND_Y[2], STAGE_CENTER[2][1]))
+						print('execute if score #RAND_RESULT number matches 50..74 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[180f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] + 24))
+						print('execute if score #RAND_RESULT number matches 75..99 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[0f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] - 24))
+						```
+						execute at 0000000C-0000-000C-0000-000C0000000C run playsound minecraft:enemy.abyss.fear player @a ~ ~ ~ 5 1 0
+						
+						execute if score #FEAR_TIMES number matches 1.. run schedule function ARG(_PATH)spwan 4s
+						execute if score #FEAR_TIMES number matches 0 run schedule function stage:stage3/skills/boss_in/start 5s
+					}
+					
+					func move()
+					{
+						execute facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.4
+						
+						execute store result score #TEMP number unless block ~ ~ ~ #skill:canpass
+						execute positioned ~-0.5 ~ ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=1,dz=0] run function ARG(_PATH)damage
+						execute if score #TEMP number matches 1 run function ARG(_PATH)destroy
+					}
+					
+					func destroy()
+					{
+						item replace entity @s armor.head with air
+						tp @s ~ -128 ~
+						kill @s
+					}
+					
+					func damage()
+					{
+						scoreboard players set #TEMP number 1
+						
+						effect give @s instant_damage 1 0 true
+					}
+					
+					func dead()
+					{
+						playsound minecraft:enemy.abyss.tiny_dead player @a ~ ~ ~ 3 1 0
+					}
+				}
+				
+				func set_idle()
+				{
+					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/invisible
+					```
+					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 23} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
+					```
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.fear/stop
 				}
 			}
 			
