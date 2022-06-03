@@ -3083,26 +3083,502 @@
 				"1.2": "function stage:stage3/skills/fear/set_idle"
 			}
 		},
-		"animation.model.new": {
+		"animation.model.swallow": {
 			"loop": "hold_on_last_frame",
-			"animation_length": 0.5,
+			"animation_length": 0.7,
 			"bones": {
 				"jaw": {
 					"rotation": {
 						"0.0": [0, 0, 0],
-						"0.5": [0, 0, -20]
+						"0.7": [0, 0, -20]
 					},
 					"position": {
 						"0.0": [0, 0, 0],
-						"0.5": [12, -29, 0]
+						"0.7": [12, -29, 0]
 					}
 				},
 				"connect": {
 					"rotation": {
 						"0.0": [0, 0, 0],
-						"0.5": [0, 0, -37.5]
+						"0.7": [0, 0, -57.5]
+					}
+				},
+				"head": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.7": [-85.04256, -0.65182, 7.47178]
+					},
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.7": [0, 5, 16]
 					}
 				}
+			}
+		},
+		"animation.model.swallow_shut": {
+			"loop": "hold_on_last_frame",
+			"animation_length": 1.8,
+			"bones": {
+				"root": {
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.25": {
+							"post": [200, -10, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"1.8": [1200, -10, 0]
+					}
+				},
+				"head": {
+					"rotation": {
+						"0.0": [-85.04256, -0.65182, 7.47178],
+						"0.1": [0, 0, 0],
+						"0.3": {
+							"post": [0, 0, -170],
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": [0, 5, 16],
+						"0.1": [0, 0, 0],
+						"0.2": {
+							"post": [-24, 30, 0],
+							"lerp_mode": "catmullrom"
+						},
+						"0.3": [0, 10, 0],
+						"0.5": {
+							"post": [130, 10, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [56.12355, -52.43698, -91.6737],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [-0.10912, 2.49762, -182.50238],
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [-30, 15, 15],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1_2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1_3": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1_4": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1_5": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1_6": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle1_7": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, 15],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [-57.83267, 55.80565, -93.4462],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0.10912, -2.49762, -182.50238],
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [-30, 15, -15],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2_2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2_3": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2_4": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2_5": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2_6": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, 25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle2_7": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, 15],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [54.67751, 54.60277, 89.60471],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [-0.10912, -2.49762, 182.50238],
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [-30, -10, -10],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0, 5, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3_2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3_3": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3_4": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3_5": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, -25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3_6": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle3_7": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, -15],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [-54.60626, -56.37001, 87.77809],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0.10912, 2.49762, 182.50238],
+							"lerp_mode": "catmullrom"
+						}
+					},
+					"position": {
+						"0.0": [0, 0, 0],
+						"0.2": {
+							"post": [-30, -10, 10],
+							"lerp_mode": "catmullrom"
+						},
+						"0.5": {
+							"post": [0, 5, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4_2": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4_3": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4_4": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4_5": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 25, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4_6": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, -25],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"tentacle4_7": {
+					"rotation": {
+						"0.0": [0, 0, 0],
+						"0.1": {
+							"post": [0, 0, -15],
+							"lerp_mode": "catmullrom"
+						},
+						"0.4": {
+							"post": [0, 0, 0],
+							"lerp_mode": "catmullrom"
+						}
+					}
+				},
+				"connect": {
+					"rotation": {
+						"0.0": [0, 0, -57.5],
+						"0.1": [0, 0, 0]
+					}
+				},
+				"jaw": {
+					"rotation": {
+						"0.0": [0, 0, -20],
+						"0.1": [0, 0, 0]
+					},
+					"position": {
+						"0.0": [12, -29, 0],
+						"0.1": [0, 0, 0]
+					}
+				}
+			},
+			"timeline": {
+				"1.8": "function stage:stage3/skills/swallow/set_idle_shut"
 			}
 		}
 	}

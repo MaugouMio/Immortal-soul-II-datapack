@@ -7,6 +7,7 @@ uniform vec2 InSize;
 uniform vec2 OutSize;
 uniform float Time;
 uniform sampler2D VariableSampler;
+uniform sampler2D JudgeSampler;
 
 out vec2 texCoord;
 out vec2 oneTexel;
@@ -38,13 +39,22 @@ void main(){
 	if (anim_time > 0.5)
 	{
 		float r = abs(sin(Time * PI * 8)) * 0.02;
-		float theta = Time * PI * 2;
+		float theta = fract(sin(Time) * 100000.0) * PI * 2;
 		offset = vec2(r * cos(theta), r * sin(theta));
 		
 		if (anim_time < 1.4)
 			scaledPos = outPos.xy * 1.1;
 		else
 			scaledPos = outPos.xy * (2.5 - anim_time);
+	}
+	else {
+		vec4 CheckModeTexel = texture2D(JudgeSampler, vec2(0.5, 0.45));
+		if (CheckModeTexel.r < 0.35 && CheckModeTexel.g > 0.975 && CheckModeTexel.b < 0.35) {
+			float r = abs(sin(Time * PI * 8)) * 0.01;
+			float theta = fract(sin(Time) * 100000.0) * PI * 2;
+			offset = vec2(r * cos(theta), r * sin(theta));
+			scaledPos = outPos.xy * 1.02;
+		}
 	}
 	// ====================================================
 	

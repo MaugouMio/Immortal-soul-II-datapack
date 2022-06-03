@@ -445,6 +445,22 @@
       }
     ]
   },
+  "enemy.abyss.shake": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/shake",
+        "stream": false
+      }
+    ]
+  },
+  "enemy.abyss.swallow": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/swallow",
+        "stream": false
+      }
+    ]
+  },
   
   
   

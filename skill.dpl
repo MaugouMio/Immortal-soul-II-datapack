@@ -100,7 +100,7 @@ namespace skill()
 		execute if entity @s[tag=hell_skeleton] run function stage:stage2/skills/hell/skull_hurt
 		execute if entity @s[tag=flame_bullet] run function stage:stage2/skills/flame/bullet/bullet_hurt
 		execute if entity @s[tag=clone] run function stage:stage2/skills/sikigami/clone_break
-		execute if entity @s[tag=tiny] run function stage:stage3/skills/fear/tiny/dead
+		execute if entity @s[tag=tiny] run function stage:stage3/skills/fear/tiny/hurt
 	}
 	
 	func normal_damage()
@@ -114,6 +114,8 @@ namespace skill()
 		execute store result bossbar minecraft:boss value run scoreboard players get @s health
 		execute unless entity @s[tag=aj_model] run function ARG(_PATH)boss_hurt_color
 		execute if entity @s[tag=miko] run function miko:set_variant/hurt
+		# 深淵恐懼吞噬技能過程，用光束炮打的特殊事件
+		execute if score #SELECTED_STAGE number matches 3 if score #SWALLOW number matches 1 if entity @s[tag=beam_hit] run function stage:stage3/skills/swallow/shut
 		
 		schedule function ARG(_PATH)boss_hurt_reset 5t
 		execute if score @s health matches ..0 run function stage:end
@@ -879,7 +881,9 @@ namespace skill()
 			
 			func reset()
 			{
-				team leave @s
+				execute unless score #SHAKING number matches 1 run team leave @s
+				execute if score #SHAKING number matches 1 run team join green
+				
 				effect clear @s glowing
 				effect clear @s slowness
 				scoreboard players reset @s beamtime

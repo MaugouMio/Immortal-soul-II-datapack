@@ -55,6 +55,8 @@ namespace main()
 		team modify red color red
 		team add blue
 		team modify blue color blue
+		team add green
+		team modify green color green
 		
 		scoreboard objectives add number dummy
 		scoreboard objectives add health dummy

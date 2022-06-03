@@ -29,8 +29,7 @@ int getVar(sampler2D sampler, float id) {
 	return int(var_color.r * 255.0)/4*4096 + int(var_color.g * 255.0)/4*64 + int(var_color.b * 255.0)/4;
 }
 
-vec3 hue(float h)
-{
+vec3 hue(float h) {
     float r = abs(h * 6.0 - 3.0) - 1.0;
     float g = 2.0 - abs(h * 6.0 - 2.0);
     float b = 2.0 - abs(h * 6.0 - 4.0);
@@ -114,8 +113,7 @@ void beamEffect(float anim_time, vec4 CurrTexel, vec4 JudgeTexel) {
 	}
 }
 
-void darkenEffect(float anim_time, vec4 JudgeTexel, vec4 CurrTexel)
-{
+void darkenEffect(float anim_time, vec4 JudgeTexel, vec4 CurrTexel) {
 	if (JudgeTexel.a < 0.1) {
 		float r_square = pow((texCoord.x - 0.5) * InSize.x / InSize.y, 2) + pow(texCoord.y - 0.5, 2);
 		float r_max_square = pow(0.06 + 0.002 * sin(Time * PI * 8), 2) * anim_time * 2;
@@ -141,8 +139,7 @@ void darkenEffect(float anim_time, vec4 JudgeTexel, vec4 CurrTexel)
 	}
 }
 
-void splitEffect(float slash_time, vec4 CurrTexel)
-{
+void splitEffect(float slash_time, vec4 CurrTexel) {
 	vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
 	float white_range = 0.001;
 	float mid_dist = abs(texCoord.x - 0.5);
@@ -210,5 +207,10 @@ void main() {
 	else if (slash_frame > 1) {
 		float slash_time = float(slash_frame) / float(fps);
 		splitEffect(slash_time, CurrTexel);
+	}
+	else {
+		vec4 CheckModeTexel = texture2D(JudgeSampler, vec2(0.5, 0.45));
+		if (CheckModeTexel.r < 0.35 && CheckModeTexel.g > 0.975 && CheckModeTexel.b < 0.35)
+			fragColor = CurrTexel;
 	}
 }
