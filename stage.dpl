@@ -36,6 +36,7 @@ namespace stage()
 		# animated java 模型
 		function miko:install
 		function abyss:install
+		function abyss_head:install
 	}
 	
 	func main()

@@ -19,6 +19,7 @@ out vec4 fragColor;
 #define VAR_FPS 1.0
 #define VAR_BEAM_FRAME 2.0
 #define VAR_SLASH_FRAME 3.0
+#define VAR_SHAKE_FRAME 4.0
 
 int imod(int num, int m) {
 	return num - (num / m * m);

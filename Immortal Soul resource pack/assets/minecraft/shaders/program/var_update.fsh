@@ -20,6 +20,7 @@ out vec4 fragColor;
 #define VAR_FPS 1.0
 #define VAR_BEAM_FRAME 2.0
 #define VAR_SLASH_FRAME 3.0
+#define VAR_SHAKE_FRAME 4.0
 
 int imod(int num, int m) {
 	return num - (num / m * m);
@@ -78,6 +79,14 @@ void update_slash(float fps) {
 		setVar(0, VAR_SLASH_FRAME);
 }
 
+void update_shake(float fps) {
+	int nextFrame = getVar(DiffuseSampler, VAR_SHAKE_FRAME) + 1;
+	if (nextFrame >= 60)  // loop at 60
+		nextFrame = 0;
+	
+	setVar(nextFrame, VAR_SHAKE_FRAME);
+}
+
 void main() {
 	vec4 PrevTexel = texture2D(DiffuseSampler, texCoord);
 	fragColor = PrevTexel;
@@ -95,4 +104,6 @@ void main() {
 		setVar(1, VAR_BEAM_FRAME);
 	else if (judgeTexel.r < 0.35 && judgeTexel.g < 0.35 && judgeTexel.b > 0.95)
 		setVar(1, VAR_SLASH_FRAME);
+	else if (judgeTexel.r < 0.35 && judgeTexel.g > 0.975 && judgeTexel.b < 0.35)
+		update_shake(fps);
 }
