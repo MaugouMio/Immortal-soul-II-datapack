@@ -2367,7 +2367,11 @@ namespace stage()
 			bossbar set minecraft:boss name {"translate":"Root of Fear","color":"white","bold":true}
 			```
 			print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} run function abyss:summon_default")
-			# tp @a x y z rx ry
+			# 碰撞用，不清除，所以不加 object 標籤
+			print('execute unless entity 7fffffff-7fff-ffff-7fff-ffff7fffffff run summon slime %.2f %.2f %.2f {Invulnerable:1b,NoAI:1b,Silent:1b,Tags:["effect"]}' %(STAGE_CENTER[2][0] + 7, GROUND_Y[2] + 1, STAGE_CENTER[2][1]))
+			print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
+			
+			print(f"tp @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} -90 40")
 			```
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
 			
@@ -2378,6 +2382,9 @@ namespace stage()
 		
 		func end()
 		{
+			```
+			print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
+			```
 			scoreboard players reset #BOSS_IN number
 			scoreboard players reset #HUNT_STING number
 			scoreboard players reset #SWALLOW_CD number
@@ -2484,6 +2491,9 @@ namespace stage()
 					```
 					# 恢復 BOSS 所在地點的屏障
 					# print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:barrier")
+					
+					# 不用屏障，改用史萊姆碰撞推擠
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
 					```
 					# execute as @a[gamemode=adventure,scores={player=1..}] at @s if block ~ ~ ~ minecraft:barrier run function ARG(_PATH)leave_barrier
 					
@@ -2641,6 +2651,9 @@ namespace stage()
 					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:26,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;2,2,2,2]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1]))
 					# 移除 BOSS 所在地點的屏障
 					# print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:air")
+					
+					# 移走碰撞用的史萊姆
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/play
@@ -2727,6 +2740,8 @@ namespace stage()
 					tag @s add effect
 					```
 					print("execute at @r[gamemode=adventure,scores={player=1..}] run tp @s %.2f %.2f ~" %(STAGE_CENTER[2][0] + 5, GROUND_Y[2] + 0.5))
+					# 移走碰撞用的史萊姆
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
 					execute at @s run function ARG(_PATH)cast_effect
 				}
@@ -2798,6 +2813,10 @@ namespace stage()
 				
 				func switch_base()
 				{
+					```
+					# 碰撞用的史萊姆移回來
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
+					```
 					function abyss:animations/animation.model.raid_end/stop
 					function abyss:animations/animation.model.loop/play
 					tag @s remove effect
@@ -2822,6 +2841,8 @@ namespace stage()
 					```
 					# 生成點
 					print('summon marker %.2f %.2f %.2f {UUID:[I;8,8,8,8],Tags:["object"]}' %(STAGE_CENTER[2][0] + 14, GROUND_Y[2], STAGE_CENTER[2][1]))
+					# 移走碰撞用的史萊姆
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
 				}
 				
@@ -2899,6 +2920,10 @@ namespace stage()
 				
 				func switch_base()
 				{
+					```
+					# 碰撞用的史萊姆移回來
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
+					```
 					function abyss:animations/animation.model.march_end/stop
 					function abyss:animations/animation.model.loop/play
 					tag @s remove effect
@@ -2911,6 +2936,9 @@ namespace stage()
 				{
 					playsound minecraft:enemy.abyss.portal player @a ~ ~ ~ 3 1 1
 					```
+					# 移走碰撞用的史萊姆
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
+					
 					# 傳送門
 					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:26,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;9,9,9,9]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1]))
 					# 眼睛
@@ -2997,7 +3025,10 @@ namespace stage()
 					# 鑽洞動作
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.fear/play
-					
+					```
+					# 移走碰撞用的史萊姆
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
+					```
 					# 動畫過程無敵狀態
 					tag 00000001-0000-0001-0000-000100000001 add effect
 					
@@ -3077,7 +3108,10 @@ namespace stage()
 					# 鑽洞動作
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.fear/play
-					
+					```
+					# 移走碰撞用的史萊姆
+					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
+					```
 					# 動畫過程無敵狀態
 					tag 00000001-0000-0001-0000-000100000001 add effect
 					
