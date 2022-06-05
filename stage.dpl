@@ -32,6 +32,7 @@ namespace stage()
 		bossbar add bullet_barrier {"translate":"Barrier"}
 		bossbar set minecraft:bullet_barrier visible false
 		execute store result bossbar minecraft:bullet_barrier max run scoreboard players get #BULLET_BARRIER_MAX number
+		bossbar add blind ""
 		
 		# animated java 模型
 		function miko:install
@@ -2365,10 +2366,12 @@ namespace stage()
 			bossbar set minecraft:boss max 70000
 			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
 			bossbar set minecraft:boss name {"translate":"Root of Fear","color":"white","bold":true}
+			
+			bossbar set minecraft:blind players @a[scores={player=1..}]
 			```
 			print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} run function abyss:summon_default")
 			# 碰撞用，不清除，所以不加 object 標籤
-			print('execute unless entity 7fffffff-7fff-ffff-7fff-ffff7fffffff run summon slime %.2f %.2f %.2f {Invulnerable:1b,NoAI:1b,Silent:1b,Tags:["effect"]}' %(STAGE_CENTER[2][0] + 7, GROUND_Y[2] + 1, STAGE_CENTER[2][1]))
+			print('execute unless entity 7fffffff-7fff-ffff-7fff-ffff7fffffff run summon slime %.2f %.2f %.2f {Invulnerable:1b,NoAI:1b,Silent:1b,ActiveEffects:[{Id:14b,Amplifier:0b,Duration:1000000000,Ambient:0b,ShowParticles:0b}],Tags:["effect"]}' %(STAGE_CENTER[2][0] + 7, GROUND_Y[2] + 1, STAGE_CENTER[2][1]))
 			print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
 			
 			print(f"tp @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} -90 40")
@@ -2388,9 +2391,11 @@ namespace stage()
 			scoreboard players reset #BOSS_IN number
 			scoreboard players reset #HUNT_STING number
 			scoreboard players reset #SWALLOW_CD number
-			scoreboard players reset #TRAP_CD number
+			scoreboard players reset #RESONANCE_CD number
 			scoreboard players reset #SHAKING number
 			scoreboard players reset #SWALLOW number
+			scoreboard players reset #EYE_ANIM number
+			scoreboard players reset #BLIND number
 			
 			schedule clear ARG(_PATH)skills/loop
 			schedule clear ARG(_PATH)skills/boss_in/start
@@ -2408,7 +2413,11 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/swallow/stop_shake
 			schedule clear ARG(_PATH)skills/swallow/start_move
 			schedule clear ARG(_PATH)skills/swallow/set_idle
-			schedule clear ARG(_PATH)skills/trap/reset_cd
+			schedule clear ARG(_PATH)skills/resonance/reset_cd
+			schedule clear ARG(_PATH)skills/resonance/start_effect
+			
+			bossbar set minecraft:blind name ""
+			bossbar set minecraft:blind visible false
 		}
 		
 		func main()
@@ -2422,6 +2431,8 @@ namespace stage()
 			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
 			execute as @e[type=zombie,tag=tiny_abyss] at @s run function ARG(_PATH)skills/march/move
 			execute if score #SWALLOW number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/swallow/move
+			execute if score #EYE_ANIM number matches 0.. run function ARG(_PATH)skills/resonance/anim/run
+			execute as @e[type=zombie,tag=eye] at @s run function ARG(_PATH)skills/resonance/eye/move
 		}
 		
 		func armor_stand_main()
@@ -2438,12 +2449,12 @@ namespace stage()
 				# schedule function ARG(_PATH)loop 7s
 				
 				scoreboard players set #USE_RANDOM_SKILL number 1
-				execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_trap
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)check_resonance
 			}
 			
-			func check_trap()
+			func check_resonance()
 			{
-				execute if score @s health matches ..21000 unless score #TRAP_CD number matches 1.. run function ARG(_PATH)trap/cast
+				execute if score @s health matches ..21000 unless score #RESONANCE_CD number matches 1.. run function ARG(_PATH)resonance/cast
 				execute if score #USE_RANDOM_SKILL number matches 1 run function ARG(_PATH)check_swallow
 			}
 			
@@ -2869,7 +2880,7 @@ namespace stage()
 						print(f"func {i}()")
 						print("{")
 						for j in range(4):
-							print('summon zombie ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny","tiny_abyss"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
+							print('summon zombie ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny","tiny_abyss"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
 						print("}")
 					```
 				}
@@ -3045,10 +3056,10 @@ namespace stage()
 						# 隨機四個方位
 						function random:rand_rate
 						```
-						print('execute if score #RAND_RESULT number matches 0..24 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[90f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0] + 24, GROUND_Y[2], STAGE_CENTER[2][1]))
-						print('execute if score #RAND_RESULT number matches 25..49 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[270f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0] - 24, GROUND_Y[2], STAGE_CENTER[2][1]))
-						print('execute if score #RAND_RESULT number matches 50..74 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[180f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] + 24))
-						print('execute if score #RAND_RESULT number matches 75..99 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","tiny"],Rotation:[0f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] - 24))
+						print('execute if score #RAND_RESULT number matches 0..24 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny"],Rotation:[90f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0] + 24, GROUND_Y[2], STAGE_CENTER[2][1]))
+						print('execute if score #RAND_RESULT number matches 25..49 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny"],Rotation:[270f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0] - 24, GROUND_Y[2], STAGE_CENTER[2][1]))
+						print('execute if score #RAND_RESULT number matches 50..74 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny"],Rotation:[180f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] + 24))
+						print('execute if score #RAND_RESULT number matches 75..99 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny"],Rotation:[0f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] - 24))
 						```
 						execute at 0000000C-0000-000C-0000-000C0000000C run playsound minecraft:enemy.abyss.fear player @a ~ ~ ~ 5 1 0
 						
@@ -3116,9 +3127,9 @@ namespace stage()
 					tag 00000001-0000-0001-0000-000100000001 add effect
 					
 					# 暫停圍堵跟捕食
-					schedule clear ARG(_PATH)skills/sting/spawn
-					schedule clear ARG(_PATH)skills/hunt/start
-					schedule clear ARG(_PATH)skills/hunt/summon_sting
+					schedule clear ARG(__PATH)sting/spawn
+					schedule clear ARG(__PATH)hunt/start
+					schedule clear ARG(__PATH)hunt/summon_sting
 					
 					schedule function ARG(_PATH)set_pos 30t
 				}
@@ -3203,8 +3214,8 @@ namespace stage()
 					tag 00000001-0000-0001-0000-000100000001 add effect
 					
 					# 重啟圍堵跟捕食
-					schedule function ARG(_PATH)skills/sting/spawn 3s
-					schedule function ARG(_PATH)skills/hunt/start 15s
+					schedule function ARG(__PATH)sting/spawn 3s
+					schedule function ARG(__PATH)hunt/start 15s
 				}
 				
 				func move()
@@ -3244,18 +3255,138 @@ namespace stage()
 				}
 			}
 			
-			folder trap()
+			folder resonance()
 			{
 				func cast()
 				{
 					scoreboard players set #USE_RANDOM_SKILL number 0
-					scoreboard players set #TRAP_CD number 1
+					scoreboard players set #RESONANCE_CD number 1
 					schedule function ARG(_PATH)reset_cd 90s
+					```
+					print(f"playsound minecraft:enemy.abyss.open_eye player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
+					```
+					# 動畫過程無敵狀態
+					tag 00000001-0000-0001-0000-000100000001 add effect
+					
+					# 暫停圍堵跟捕食
+					schedule clear ARG(__PATH)sting/spawn
+					schedule clear ARG(__PATH)hunt/start
+					schedule clear ARG(__PATH)hunt/summon_sting
+					
+					schedule function ARG(_PATH)start_effect 1s
+				}
+				
+				func start_effect()
+				{
+					title @a times 3 100 0
+					title @a title {"text":"0","font":"ui:main"}
+					
+					scoreboard players set #EYE_ANIM number 0
+				}
+				
+				folder anim()
+				{
+					func run()
+					{
+						scoreboard players add #EYE_ANIM number 1
+						
+						execute if score #EYE_ANIM number matches 20 run title @a times 0 100 0
+						execute if score #EYE_ANIM number matches 21 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"2","font":"ui:main"},{"text":"98","font":"space:default"}]
+						execute if score #EYE_ANIM number matches 22 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"3","font":"ui:main"},{"text":"98","font":"space:default"}]
+						execute if score #EYE_ANIM number matches 23 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"4","font":"ui:main"},{"text":"98","font":"space:default"}]
+						execute if score #EYE_ANIM number matches 24 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"5","font":"ui:main"},{"text":"98","font":"space:default"}]
+						```
+						# 雜訊音效
+						print(f"execute if score #EYE_ANIM number matches 44 run playsound minecraft:enemy.abyss.noise player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
+						```
+						execute if score #EYE_ANIM number matches 44 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"6","font":"ui:main"},{"text":"98","font":"space:default"}]
+						execute if score #EYE_ANIM number matches 46 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"5","font":"ui:main"},{"text":"98","font":"space:default"}]
+						
+						execute if score #EYE_ANIM number matches 60 run function ARG(_PATH)end
+						execute if score #EYE_ANIM number matches 60 run title @a title [{"text":"7","font":"ui:main"}]
+					}
+					
+					func end()
+					{
+						```
+						print(f"playsound minecraft:enemy.abyss.summon_eye player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
+						
+						print(f"execute positioned {STAGE_CENTER[2][0] + 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] + 6} run function ARG(__PATH)eye/summon")
+						print(f"execute positioned {STAGE_CENTER[2][0] + 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] - 6} run function ARG(__PATH)eye/summon")
+						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] + 6} run function ARG(__PATH)eye/summon")
+						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] - 6} run function ARG(__PATH)eye/summon")
+						```
+						execute as @e[type=zombie,tag=new_eye] at @s facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
+						schedule function ARG(__PATH)eye/activate
+						
+						title @a times 0 0 3
+						title @a title [{"text":"7","font":"ui:main"}]
+						
+						# 重新加回無敵
+						tag 00000001-0000-0001-0000-000100000001 add effect
+						
+						# 重啟圍堵跟捕食
+						schedule function stage:stage3/skills/sting/spawn 3s
+						schedule function stage:stage3/skills/hunt/start 15s
+					}
+				}
+				
+				folder eye()
+				{
+					func summon()
+					{
+						summon zombie ~ ~ ~ {Invulnerable:1b,Silent:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:69}}],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:100.0f,Tags:["object","dead_event","new_eye"]}
+						execute positioned ~ ~-1 ~ run function ARG(__PATH)thunder_effect
+					}
+					
+					func activate()
+					{
+						execute as @e[type=zombie,tag=new_eye] run function ARG(_PATH)start_move
+					}
+					
+					func start_move()
+					{
+						tag @s add eye
+						tag @s remove new_eye
+					}
+					
+					func move()
+					{
+						execute positioned ^ ^ ^0.1 facing entity @p[gamemode=adventure,scores={player=1..}] feet positioned ^ ^ ^0.03 facing entity @s feet rotated ~ 0 positioned as @s run tp @s ^ ^ ^-0.1 ~180 ~
+						execute positioned ~-0.5 ~0.8 ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=0,dz=0] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 0 true
+					}
+					
+					func hurt()
+					{
+						execute store result entity @s Health float 0.1 run scoreboard players get @s health
+						execute if score @s health matches ..0 run function ARG(_PATH)dead
+					}
+					
+					func dead()
+					{
+						```
+						print(f"playsound minecraft:enemy.abyss.eye_dead player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
+						```
+						title @a[gamemode=adventure,scores={player=1..}] times 0 0 3
+						title @a[gamemode=adventure,scores={player=1..}] title {"text":"7","font":"ui:main"}
+						
+						execute unless score #BLIND number matches 9 run scoreboard players add #BLIND number 1
+						bossbar set minecraft:blind visible true
+						bossbar set minecraft:blind name {"score":{"name":"#BLIND","objective":"number"},"font":"ui:blind"}
+						kill @s
+					}
+				}
+				
+				func thunder_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:thunder_purple/0"}',CustomNameVisible:1,Duration:5,Tags:['{"text":"","font":"font_animation:thunder_purple/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 3
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 				
 				func reset_cd()
 				{
-					scoreboard players reset #TRAP_CD number
+					scoreboard players reset #RESONANCE_CD number
 				}
 			}
 		}

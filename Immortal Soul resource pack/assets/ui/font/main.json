@@ -17,6 +17,60 @@
 			"chars": [
 				"1"
 			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/eye/0.png",
+			"ascent": 24,
+			"height": 48,
+			"chars": [
+				"2"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/eye/1.png",
+			"ascent": 24,
+			"height": 48,
+			"chars": [
+				"3"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/eye/2.png",
+			"ascent": 24,
+			"height": 48,
+			"chars": [
+				"4"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/eye/3.png",
+			"ascent": 24,
+			"height": 48,
+			"chars": [
+				"5"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/eye/4.png",
+			"ascent": 24,
+			"height": 48,
+			"chars": [
+				"6"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/eye/5.png",
+			"ascent": 2048,
+			"height": 4096,
+			"chars": [
+				"7"
+			]
 		}
 	]
 }

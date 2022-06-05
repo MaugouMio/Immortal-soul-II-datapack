@@ -65,6 +65,7 @@
 		{"predicate": {"custom_model_data": 65},"model": "item/enemy/abyss/big_eye"},
 		{"predicate": {"custom_model_data": 66},"model": "item/enemy/abyss/big_beam1"},
 		{"predicate": {"custom_model_data": 67},"model": "item/enemy/abyss/big_beam2"},
-		{"predicate": {"custom_model_data": 68},"model": "item/enemy/abyss/big_beam3"}
+		{"predicate": {"custom_model_data": 68},"model": "item/enemy/abyss/big_beam3"},
+		{"predicate": {"custom_model_data": 69},"model": "item/enemy/abyss/small_eye"}
 	]
 }

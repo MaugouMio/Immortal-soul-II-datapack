@@ -461,6 +461,30 @@
       }
     ]
   },
+  "enemy.abyss.open_eye": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/open_eye",
+        "stream": false
+      }
+    ]
+  },
+  "enemy.abyss.summon_eye": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/summon_eye",
+        "stream": false
+      }
+    ]
+  },
+  "enemy.abyss.eye_dead": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/eye_dead",
+        "stream": false
+      }
+    ]
+  },
   
   
   
