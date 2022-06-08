@@ -1,0 +1,40 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/bitten/0.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/bitten/1.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/bitten/2.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/bitten/3.png",
+            "ascent": 64,
+            "height": 128,
+            "chars": [
+                "3"
+            ]
+        }
+    ]
+}

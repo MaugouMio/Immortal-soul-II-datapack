@@ -3,14 +3,22 @@
     "requirement": {
       "trigger": "minecraft:location",
       "conditions": {
-        "location": {
-          "position": {
-            "y": {
-              "min": -1000,
-              "max": -5
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "position": {
+                  "y": {
+                    "min": -1000,
+                    "max": -5
+                  }
+                }
+              }
             }
           }
-        }
+        ]
       }
     }
   },

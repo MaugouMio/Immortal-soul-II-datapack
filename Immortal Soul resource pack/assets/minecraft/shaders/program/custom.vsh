@@ -52,7 +52,7 @@ void main(){
 		vec4 CheckModeTexel = texture2D(JudgeSampler, vec2(0.5, 0.45));
 		if (CheckModeTexel.r < 0.35 && CheckModeTexel.g > 0.975 && CheckModeTexel.b < 0.35) {
 			int shake_time = getVar(VariableSampler, VAR_SHAKE_FRAME) * 15 / fps;  // loop at 60, vary every 1/15 second
-			float r = abs(sin(shake_time)) * 0.007;
+			float r = abs(sin(shake_time)) * 0.01;
 			float theta = fract(sin(shake_time) * 100000.0) * PI * 2;
 			offset = vec2(r * cos(theta), r * sin(theta));
 			scaledPos = outPos.xy * 1.02;

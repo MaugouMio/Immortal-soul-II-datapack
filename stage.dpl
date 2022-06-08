@@ -33,6 +33,7 @@ namespace stage()
 		bossbar set minecraft:bullet_barrier visible false
 		execute store result bossbar minecraft:bullet_barrier max run scoreboard players get #BULLET_BARRIER_MAX number
 		bossbar add blind ""
+		bossbar set minecraft:blind color purple
 		
 		# animated java 模型
 		function miko:install
@@ -2369,18 +2370,28 @@ namespace stage()
 			
 			bossbar set minecraft:blind players @a[scores={player=1..}]
 			```
-			print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} run function abyss:summon_default")
+			print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} rotated 0 0 run function ARG(_PATH)summon_boss")
 			# 碰撞用，不清除，所以不加 object 標籤
-			print('execute unless entity 7fffffff-7fff-ffff-7fff-ffff7fffffff run summon slime %.2f %.2f %.2f {Invulnerable:1b,NoAI:1b,Silent:1b,ActiveEffects:[{Id:14b,Amplifier:0b,Duration:1000000000,Ambient:0b,ShowParticles:0b}],Tags:["effect"]}' %(STAGE_CENTER[2][0] + 7, GROUND_Y[2] + 1, STAGE_CENTER[2][1]))
+			print('execute unless entity 7fffffff-7fff-ffff-7fff-ffff7fffffff run summon slime %.2f %.2f %.2f {Invulnerable:1b,NoAI:1b,Size:8.0,Silent:1b,UUID:[I;2147483647,2147483647,2147483647,2147483647],ActiveEffects:[{Id:14b,Amplifier:0b,Duration:1000000000,Ambient:0b,ShowParticles:0b}],Tags:["effect"]}' %(STAGE_CENTER[2][0] + 7, GROUND_Y[2] + 1, STAGE_CENTER[2][1]))
 			print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
 			
 			print(f"tp @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} -90 40")
 			```
+			
+			schedule function ARG(_PATH)skills/loop 5s
+			schedule function ARG(_PATH)skills/sting/spawn 3s
+			schedule function ARG(_PATH)skills/hunt/start 12s
+		}
+		
+		func summon_boss()
+		{
+			function abyss:summon/default
+			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
+			execute store result score 00000001-0000-0001-0000-000100000001 health run bossbar get minecraft:boss max
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
 			
-			schedule function ARG(_PATH)skills/loop 7s
-			schedule function ARG(_PATH)skills/sting/spawn 5s
-			schedule function ARG(_PATH)skills/hunt/start 15s
+			tag 00000001-0000-0001-0000-000100000001 remove effect
+			scoreboard players set #GLOBAL number 1
 		}
 		
 		func end()
@@ -2407,7 +2418,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/raid/call_shoot
 			schedule clear ARG(_PATH)skills/raid/reset
 			schedule clear ARG(_PATH)skills/march/call_shoot
-			schedule clear ARG(_PATH)skills/fear/tiny/spwan
+			schedule clear ARG(_PATH)skills/fear/tiny/spawn
 			schedule clear ARG(_PATH)skills/swallow/reset_cd
 			schedule clear ARG(_PATH)skills/swallow/set_pos
 			schedule clear ARG(_PATH)skills/swallow/stop_shake
@@ -2415,9 +2426,14 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/swallow/set_idle
 			schedule clear ARG(_PATH)skills/resonance/reset_cd
 			schedule clear ARG(_PATH)skills/resonance/start_effect
+			schedule clear ARG(_PATH)skills/resonance/eye/activate
+			schedule clear ARG(_PATH)skills/resonance/eye/aim
 			
 			bossbar set minecraft:blind name ""
 			bossbar set minecraft:blind visible false
+			
+			function abyss:remove/all
+			function abyss_head:remove/all
 		}
 		
 		func main()
@@ -2427,12 +2443,12 @@ namespace stage()
 			execute as 00000003-0000-0003-0000-000300000003 run function ARG(_PATH)skills/sneak/river/main
 			execute as 00000009-0000-0009-0000-000900000009 run function ARG(_PATH)skills/stare/portal
 			execute as 0000000A-0000-000A-0000-000A0000000A if score @s life matches 1.. at @s run function ARG(_PATH)skills/stare/eye
-			execute as 0000000C-0000-000C-0000-000C0000000C if score @s life matches 1.. at @s run function ARG(_PATH)skills/fear/tiny/move
+			execute as 0000000C-0000-000C-0000-000C0000000C at @s run function ARG(_PATH)skills/fear/tiny/move
 			execute as @e[type=armor_stand] run function ARG(_PATH)armor_stand_main
 			execute as @e[type=zombie,tag=tiny_abyss] at @s run function ARG(_PATH)skills/march/move
-			execute if score #SWALLOW number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/swallow/move
+			execute if score #SWALLOW number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/swallow/move
 			execute if score #EYE_ANIM number matches 0.. run function ARG(_PATH)skills/resonance/anim/run
-			execute as @e[type=zombie,tag=eye] at @s run function ARG(_PATH)skills/resonance/eye/move
+			execute as @e[type=zombie,tag=active_eye] at @s run function ARG(_PATH)skills/resonance/eye/move
 		}
 		
 		func armor_stand_main()
@@ -2485,6 +2501,7 @@ namespace stage()
 					
 					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/default
 					execute as 00000001-0000-0001-0000-000100000001 at @s run tp @s ~-0.5 ~ ~
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
 				}
 				
 				func main()
@@ -2497,7 +2514,6 @@ namespace stage()
 				
 				func reset_stat()
 				{
-					function abyss:animations/animation.model.loop/play
 					tag @s remove effect
 					```
 					# 恢復 BOSS 所在地點的屏障
@@ -2522,8 +2538,8 @@ namespace stage()
 			{
 				func spawn()
 				{
-					execute if score 00000001-0000-0001-0000-000100000001 health matches 35001.. schedule function ARG(_PATH)spawn 3s
-					execute if score 00000001-0000-0001-0000-000100000001 health matches ..35000 schedule function ARG(_PATH)spawn 2s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches 35001.. run schedule function ARG(_PATH)spawn 3s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches ..35000 run schedule function ARG(_PATH)spawn 2s
 					
 					execute as @a[gamemode=adventure,scores={player=1..}] at @s run function ARG(_PATH)sting_pos/summon
 					schedule function ARG(_PATH)mark/start 1t
@@ -2563,12 +2579,13 @@ namespace stage()
 						```
 						print(f'execute facing entity @s eyes positioned ~ {int(GROUND_Y[2])} ~ rotated ~ 0 positioned ^ ^ ^-3 run function ARG(_PATH)check_floor')
 						```
+						kill @s
 					}
 					
 					func check_floor()
 					{
 						execute unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)summon
-						execute if block ~ ~-1 ~ #skill:canpass positioned ^ ^ ^1 run function ARG(_PATH)check_floor
+						execute if block ^ ^-1 ^-0.5 #skill:canpass positioned ^ ^ ^1 run function ARG(_PATH)check_floor
 					}
 					
 					func summon()
@@ -2582,10 +2599,11 @@ namespace stage()
 				{
 					scoreboard players add @s life 1
 					# 旋轉
-					scoreboard players add @s number 1625
+					# scoreboard players add @s number 1536
 					# 縮放
-					execute if score @s life matches ..10 run scoreboard players add @s number 1
-					execute if score @s life matches 31..39 run scoreboard players remove @s number 1
+					execute if score @s life matches ..10 run scoreboard players add @s number 1537
+					execute if score @s life matches 31..39 run scoreboard players remove @s number 1537
+					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
 					
 					execute if score @s life matches 20 run function ARG(_PATH)attack
 					execute if score @s life matches 40 run kill @s
@@ -2609,7 +2627,7 @@ namespace stage()
 				
 				func call_retrieve()
 				{
-					execute store result #CURR_TIME number run time query gametime
+					execute store result score #CURR_TIME number run time query gametime
 					execute as @e[type=armor_stand,tag=sting] if score @s number = #CURR_TIME number run function ARG(_PATH)retrieve
 				}
 				
@@ -2666,11 +2684,11 @@ namespace stage()
 					# 移走碰撞用的史萊姆
 					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/play
+					function abyss:animations/animation.model.loop/stop
+					function abyss:animations/animation.model.sink/play
 					
 					# 動畫過程無敵狀態
-					tag 00000001-0000-0001-0000-000100000001 add effect
+					tag @s add effect
 				}
 				
 				func portal()
@@ -2693,20 +2711,22 @@ namespace stage()
 						scoreboard players add @s life 1
 						execute if score @s life matches 1 run scoreboard players add @s number 8
 						execute if score @s life matches 2..8 run scoreboard players add @s number 7
-						execute if score @s life matches 59..64 at @s run scoreboard players remove @s number 7
-						execute if score @s life matches 65 at @s run scoreboard players remove @s number 8
+						execute if score @s life matches 59..65 at @s run scoreboard players remove @s number 7
+						execute if score @s life matches 66 at @s run scoreboard players remove @s number 8
 						execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
 						
 						execute if score @s life matches 19..58 at @s run function ARG(_PATH)judge
 						
 						# BOSS 回歸位置
 						execute if score @s life matches 71 run function stage:stage3/skills/boss_in/start
+						
+						execute if score @s life matches 71 run kill @s
 					}
 				
 					func judge()
 					{
 						tp @s ~ ~ ~-0.25
-						execute positioned ~-8 ~-0.5 ~-3 as @a[gamemode=adventure,scores={player=1..},dx=15,dy=0,dz=5,limit=1] run function ARG(_PATH)check_pos
+						execute positioned ~-8 ~-0.5 ~-3 as @a[gamemode=adventure,scores={player=1..},dx=15,dy=0,dz=5,limit=1] at @s positioned ~ ~-0.5 ~ rotated 0 0 run function ARG(_PATH)check_pos
 					}
 					
 					func check_pos()
@@ -2714,20 +2734,30 @@ namespace stage()
 						execute store result score #BITE_POS_X number run data get entity @s Pos[0]
 						```
 						print(f"execute if score #BITE_POS_X number matches ..{int(STAGE_CENTER[2][0] - 6)} positioned {STAGE_CENTER[2][0] - 6} ~ ~ run function ARG(_PATH)bite")
-						print(f"execute if score #BITE_POS_X number matches ..{int(STAGE_CENTER[2][0] + 5)} positioned {STAGE_CENTER[2][0] + 6} ~ ~ run function ARG(_PATH)bite")
-						print(f"execute if score #BITE_POS_X number matches {int(STAGE_CENTER[2][0] - 5)}..{int(STAGE_CENTER[2][0] + 4)} positioned as @s positioned ~ {GROUND_Y[2] - 0.5} {STAGE_CENTER[2][1]} run function ARG(_PATH)bite")
+						print(f"execute if score #BITE_POS_X number matches {int(STAGE_CENTER[2][0] + 5)}.. positioned {STAGE_CENTER[2][0] + 6} ~ ~ run function ARG(_PATH)bite")
+						print(f"execute if score #BITE_POS_X number matches {int(STAGE_CENTER[2][0] - 5)}..{int(STAGE_CENTER[2][0] + 4)} run function ARG(_PATH)set_pos")
 						```
+					}
+					
+					func set_pos()
+					{
+						summon marker ~ ~ ~ {UUID:[I;13,13,13,13]}
+						
+						data modify entity 0000000D-0000-000D-0000-000D0000000D Pos[0] set from entity @s Pos[0]
+						execute at 0000000D-0000-000D-0000-000D0000000D run function ARG(_PATH)bite
+						
+						kill 0000000D-0000-000D-0000-000D0000000D
 					}
 					
 					func bite()
 					{
 						playsound minecraft:enemy.abyss.bite player @a ~ ~ ~ 1 1 0
-						function abyss_head:summon_default
+						function abyss_head:summon/default
 						execute as 00000004-0000-0004-0000-000400000004 run function abyss_head:animations/animation.model.bite/play
 						# 設成一個不會執行到其他功能的 life 分數，咬人動畫執行完會自己設回 58 作結束
 						scoreboard players set 00000003-0000-0003-0000-000300000003 life 1000
 						
-						execute positioned ~-3 ~ ~-3 run execute as @a[gamemode=adventure,scores={player=1..},dx=5,dy=8,dz=5] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
+						execute positioned ~-3 ~ ~-3 run execute as @a[gamemode=adventure,scores={player=1..},dx=5,dy=3,dz=5] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
 					}
 				}
 				
@@ -2786,13 +2816,13 @@ namespace stage()
 					execute positioned ~-16 ~ ~-2.5 as @a[gamemode=adventure,scores={player=1..},dx=23,dy=4,dz=4] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
 					
 					# 雷射的衝擊波模型
-					summon armor_stand ~8 ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:64}}],Tags:["object","effect"],UUID:[I;7,7,7,7]}
-					tp 00000007-0000-0007-0000-000700000007 ~-24 ~ ~
+					summon armor_stand ~8 ~-0.3 ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:64}}],Tags:["object","effect"],UUID:[I;7,7,7,7]}
+					tp 00000007-0000-0007-0000-000700000007 ~-24 ~-0.3 ~
 					
 					# 雷射特效模型
 					```
 					for i in range(-14, 7, 4):
-						print('summon armor_stand ~%d ~ ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}],Tags:["object","effect","raid_beam"]}' %i)
+						print('summon armor_stand ~%d ~-0.3 ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}],Tags:["object","effect","raid_beam"]}' %i)
 					```
 					playsound minecraft:enemy.abyss.beam player @a ~ ~ ~ 3 1 1
 				}
@@ -2817,6 +2847,7 @@ namespace stage()
 					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
 					```
 					# 回復動作，動畫塞事件接 switch_base
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.raid/stop
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.raid_end/play
 					
 					schedule function ARG(__PATH)loop 3s
@@ -2828,7 +2859,7 @@ namespace stage()
 					# 碰撞用的史萊姆移回來
 					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
 					```
-					function abyss:animations/animation.model.raid_end/stop
+					function abyss:animations/animation.model.raid_end/pause
 					function abyss:animations/animation.model.loop/play
 					tag @s remove effect
 				}
@@ -2846,9 +2877,11 @@ namespace stage()
 				func cast()
 				{
 					# 施放中無敵
-					tag 00000001-0000-0001-0000-000100000001 add effect
-					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.abyss.march_prepare player @a ~ ~ ~ 3 1 0
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.march/play
+					tag @s add effect
+					
+					playsound minecraft:enemy.abyss.march_prepare player @a ~ ~ ~ 3 1 0
+					function abyss:animations/animation.model.loop/stop
+					function abyss:animations/animation.model.march/play
 					```
 					# 生成點
 					print('summon marker %.2f %.2f %.2f {UUID:[I;8,8,8,8],Tags:["object"]}' %(STAGE_CENTER[2][0] + 14, GROUND_Y[2], STAGE_CENTER[2][1]))
@@ -2865,12 +2898,14 @@ namespace stage()
 				func shoot()
 				{
 					scoreboard players add @s life 1
-					execute if score @s life matches ..8 run schedule function ARG(_PATH)call_shoot 6t
+					execute if score @s life matches ..10 run schedule function ARG(_PATH)call_shoot 6t
 					```
 					for i in range(1, 10):
 						print(f"execute if score @s life matches {i} run function ARG(_PATH)spawn/{i}") 
 					```
-					execute if score @s life matches 9 run function ARG(_PATH)reset
+					execute if score @s life matches ..9 as @e[type=zombie,tag=new_tiny] run function ARG(_PATH)tiny_setting
+					
+					execute if score @s life matches 11 run function ARG(_PATH)reset
 				}
 				
 				folder spawn()
@@ -2880,14 +2915,20 @@ namespace stage()
 						print(f"func {i}()")
 						print("{")
 						for j in range(4):
-							print('summon zombie ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny","tiny_abyss"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
+							print('summon zombie ~ ~ ~ {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny","tiny_abyss","new_tiny"],Rotation:[%df,0f]}' %(70 + j * 30 - i * 5))
 						print("}")
 					```
 				}
 				
+				func tiny_setting()
+				{
+					execute store result score @s number run scoreboard players add #GLOBAL number 1
+					tag @s remove new_tiny
+				}
+				
 				func move()
 				{
-					tp @s ^ ^ ^0.3
+					tp @s ^ ^ ^0.4
 					execute store result score #TEMP number unless block ~ ~ ~ #skill:canpass
 					execute positioned ~-0.5 ~ ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=1,dz=0] run function ARG(_PATH)damage
 					execute if score #TEMP number matches 1 run function ARG(_PATH)destroy
@@ -2903,6 +2944,7 @@ namespace stage()
 				func damage()
 				{
 					scoreboard players set #TEMP number 1
+					execute positioned ~ ~0.5 ~ run function ARG(_PATH)bitten_effect
 					
 					execute unless score @s beamtime matches 0.. run effect give @s instant_damage 1 0 true
 				}
@@ -2923,7 +2965,7 @@ namespace stage()
 				
 				func switch_loop()
 				{
-					function abyss:animations/animation.model.march/stop
+					function abyss:animations/animation.model.march/pause
 					function abyss:animations/animation.model.march_loop/play
 					playsound minecraft:enemy.abyss.march player @a ~ ~ ~ 3 1 0
 					function ARG(_PATH)call_shoot
@@ -2935,9 +2977,16 @@ namespace stage()
 					# 碰撞用的史萊姆移回來
 					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0] + 7} {GROUND_Y[2] + 1} {STAGE_CENTER[2][1]}")
 					```
-					function abyss:animations/animation.model.march_end/stop
+					function abyss:animations/animation.model.march_end/pause
 					function abyss:animations/animation.model.loop/play
 					tag @s remove effect
+				}
+				
+				func bitten_effect()
+				{
+					summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:bitten/0"}',CustomNameVisible:1,Duration:5,Tags:['{"text":"","font":"font_animation:bitten/0"}', 'new_font_anim']}
+					scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 4
+					tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 				}
 			}
 			
@@ -2960,11 +3009,11 @@ namespace stage()
 					for i in range(3):
 						print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}],Tags:["object","effect","big_beam"]}' %(STAGE_CENTER[2][0], GROUND_Y[2] + i * 7, STAGE_CENTER[2][1]))
 					```
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.sink/play
+					function abyss:animations/animation.model.loop/stop
+					function abyss:animations/animation.model.sink/play
 					
 					# 動畫過程無敵狀態
-					tag 00000001-0000-0001-0000-000100000001 add effect
+					tag @s add effect
 				}
 				
 				func portal()
@@ -2976,7 +3025,7 @@ namespace stage()
 					execute if score @s life matches ..10 run scoreboard players add @s number 5
 					
 					# 眼睛特效開始運作
-					execute if score @s life matches 31 run scoreboard players set 0000000A-0000-000A-0000-000A0000000A life 1
+					execute if score @s life matches 31 as 0000000A-0000-000A-0000-000A0000000A run scoreboard players set @s life 1
 					
 					# 借用計時器做玩家傷害(對應光束特效期間)
 					execute if score @s life matches 61..120 at @s positioned ~-3.5 ~ ~-3.5 as @a[gamemode=adventure,scores={player=1..},dx=6,dy=20,dz=6] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
@@ -3004,7 +3053,7 @@ namespace stage()
 					execute if score @s life matches 31 run tp @s ~ ~0.2 ~
 					
 					# 衝擊波特效
-					execute if score @s life matches 31..35 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int run scoreboard players add @s number 20
+					execute if score @s life matches 31..35 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players add @s number 20
 					execute if score @s life matches 36 run kill 0000000B-0000-000B-0000-000B0000000B
 					
 					# 光束特效(傷害由 portal 統一做)
@@ -3024,8 +3073,8 @@ namespace stage()
 					scoreboard players add @s number 1
 					execute if score @s number matches 2 run scoreboard players set @s number 0
 					
-					execute if score @s number matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData 66
-					execute if score @s number matches 0 run data modify entity @s ArmorItems[3].tag.CustomModelData 67
+					execute if score @s number matches 1 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 66
+					execute if score @s number matches 0 run data modify entity @s ArmorItems[3].tag.CustomModelData set value 67
 				}
 			}
 			
@@ -3034,17 +3083,17 @@ namespace stage()
 				func cast()
 				{
 					# 鑽洞動作
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.fear/play
+					function abyss:animations/animation.model.loop/stop
+					function abyss:animations/animation.model.fear/play
 					```
 					# 移走碰撞用的史萊姆
 					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
 					# 動畫過程無敵狀態
-					tag 00000001-0000-0001-0000-000100000001 add effect
+					tag @s add effect
 					
 					scoreboard players set #FEAR_TIMES number 4
-					schedule function ARG(_PATH)tiny/spwan 3s
+					schedule function ARG(_PATH)tiny/spawn 3s
 				}
 				
 				folder tiny()
@@ -3061,31 +3110,41 @@ namespace stage()
 						print('execute if score #RAND_RESULT number matches 50..74 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny"],Rotation:[180f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] + 24))
 						print('execute if score #RAND_RESULT number matches 75..99 run summon zombie %.2f %.2f %.2f {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:60}}],Team:"enemy",Health:15.0,Tags:["object","dead_event","knockback_resist","tiny"],Rotation:[0f,0f],UUID:[I;12,12,12,12]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] - 24))
 						```
-						execute at 0000000C-0000-000C-0000-000C0000000C run playsound minecraft:enemy.abyss.fear player @a ~ ~ ~ 5 1 0
-						
-						execute if score #FEAR_TIMES number matches 1.. run schedule function ARG(_PATH)spwan 4s
-						execute if score #FEAR_TIMES number matches 0 run schedule function stage:stage3/skills/boss_in/start 5s
+						execute at 0000000C-0000-000C-0000-000C0000000C run playsound minecraft:enemy.abyss.fear player @a ~ ~ ~ 5 1 1
+						execute as 0000000C-0000-000C-0000-000C0000000C store result score @s number run scoreboard players add #GLOBAL number 1
+					}
+					
+					func check_next()
+					{
+						execute if score #FEAR_TIMES number matches 1.. run schedule function ARG(_PATH)spawn 2s
+						execute if score #FEAR_TIMES number matches 0 run schedule function stage:stage3/skills/boss_in/start 2s
 					}
 					
 					func move()
 					{
-						execute facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.4
+						execute facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.6
 						
-						execute store result score #TEMP number unless block ~ ~ ~ #skill:canpass
-						execute positioned ~-0.5 ~ ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=1,dz=0] run function ARG(_PATH)damage
+						# execute store result score #TEMP number unless block ~ ~ ~ #skill:canpass
+						scoreboard players set #TEMP number 0
+						execute unless score @s health matches ..0 positioned ~-0.5 ~ ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=1,dz=0] run function ARG(_PATH)damage
 						execute if score #TEMP number matches 1 run function ARG(_PATH)destroy
 					}
 					
 					func destroy()
 					{
+						function ARG(_PATH)check_next
+						
 						item replace entity @s armor.head with air
 						tp @s ~ -128 ~
+						
+						scoreboard players set @s health 0
 						kill @s
 					}
 					
 					func damage()
 					{
 						scoreboard players set #TEMP number 1
+						execute positioned ~ ~0.5 ~ run function stage:stage3/skills/march/bitten_effect
 						
 						execute unless score @s beamtime matches 0.. run effect give @s instant_damage 1 0 true
 					}
@@ -3093,8 +3152,15 @@ namespace stage()
 					func hurt()
 					{
 						execute store result entity @s Health float 0.1 run scoreboard players get @s health
-						execute if score @s health matches ..0 run playsound minecraft:enemy.abyss.tiny_dead player @a ~ ~ ~ 3 1 0
-						execute if score @s health matches ..0 run kill @s
+						execute if score @s health matches ..0 run function ARG(_PATH)dead
+					}
+					
+					func dead()
+					{
+						function ARG(_PATH)check_next
+						
+						playsound minecraft:enemy.abyss.tiny_dead player @a ~ ~ ~ 3 1 0
+						kill @s
 					}
 				}
 				
@@ -3117,14 +3183,14 @@ namespace stage()
 					schedule function ARG(_PATH)reset_cd 40s
 					
 					# 鑽洞動作
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/stop
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.fear/play
+					function abyss:animations/animation.model.loop/stop
+					function abyss:animations/animation.model.fear/play
 					```
 					# 移走碰撞用的史萊姆
 					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
 					# 動畫過程無敵狀態
-					tag 00000001-0000-0001-0000-000100000001 add effect
+					tag @s add effect
 					
 					# 暫停圍堵跟捕食
 					schedule clear ARG(__PATH)sting/spawn
@@ -3149,7 +3215,7 @@ namespace stage()
 					execute if score #RAND_RESULT number matches 50..74 run scoreboard players set #ABYSS_FACING number 2
 					execute if score #RAND_RESULT number matches 75..99 run scoreboard players set #ABYSS_FACING number 3
 					
-					schedule function ARG(_PATH)stop_shake 2s
+					schedule function ARG(_PATH)stop_shake 3s
 					# 開始震動特效
 					scoreboard players set #SHAKING number 1
 					execute as @a[gamemode=adventure,scores={player=1..}] run function ARG(_PATH)set_shake
@@ -3168,6 +3234,7 @@ namespace stage()
 				{
 					# 避免距離太遠失效，重新呼叫一次移動
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:move
+					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.abyss.swallow player @a ~ ~ ~ 5 1 1
 					
 					scoreboard players reset #SHAKING number
 					execute as @a[gamemode=adventure,scores={player=1..}] unless score @s beamtime matches 0..2 run function ARG(_PATH)reset_shake
@@ -3184,13 +3251,19 @@ namespace stage()
 				{
 					scoreboard players set #SWALLOW number 1
 					
-					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.abyss.shake player @a ~ ~ ~ 5 1 1
-					
 					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/default
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.swallow/play
 					tag 00000001-0000-0001-0000-000100000001 remove effect
 					
-					schedule function ARG(_PATH)set_idle 72t
+					schedule function ARG(_PATH)set_idle 102t
+				}
+				
+				func switch_keep()
+				{
+					scoreboard players set #SWALLOW number 2
+					
+					function abyss:animations/animation.model.swallow/pause
+					function abyss:animations/animation.model.swallow_loop/play
 				}
 				
 				func set_idle()
@@ -3199,9 +3272,10 @@ namespace stage()
 					
 					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/invisible
 					```
-					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 23} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
+					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 23} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} 0 0")
 					```
-					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.swallow/stop
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:move
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.swallow_loop/stop
 					
 					schedule function stage:stage3/skills/boss_in/start 1s
 				}
@@ -3221,7 +3295,7 @@ namespace stage()
 				func move()
 				{
 					# 場地 48 格，身體長度 22 格，總共大約要移動 70 格
-					tp @s ^-0.5 ^ ^
+					tp @s ^-0.7 ^ ^
 					
 					execute if score #ABYSS_FACING number matches 0 positioned ~ ~-0.5 ~-4.25 as @a[gamemode=adventure,scores={player=1..},dx=21,dy=7,dz=7.5] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 2 true
 					execute if score #ABYSS_FACING number matches 1 positioned ~-22 ~-0.5 ~-4.25 as @a[gamemode=adventure,scores={player=1..},dx=21,dy=7,dz=7.5] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 2 true
@@ -3232,17 +3306,21 @@ namespace stage()
 				# 被光束炮打到，中斷技能
 				func shut()
 				{
-					function ARG(_PATH)stop_move
-					function abyss:animations/animation.model.swallow/stop
+					execute if score #SWALLOW number matches 1 run function abyss:animations/animation.model.swallow/pause
+					execute if score #SWALLOW number matches 2 run function abyss:animations/animation.model.swallow_loop/pause
 					function abyss:animations/animation.model.swallow_shut/play
+					
+					schedule clear ARG(_PATH)set_idle
+					function ARG(_PATH)stop_move
 				}
 				
 				func set_idle_shut()
 				{
 					execute as 00000001-0000-0001-0000-000100000001 run function abyss:set_variant/invisible
 					```
-					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 23} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]}")
+					print(f"tp 00000001-0000-0001-0000-000100000001 {STAGE_CENTER[2][0] + 23} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} 0 0")
 					```
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:move
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.swallow_shut/stop
 					
 					stopsound @a player minecraft:enemy.abyss.shake
@@ -3262,11 +3340,9 @@ namespace stage()
 					scoreboard players set #USE_RANDOM_SKILL number 0
 					scoreboard players set #RESONANCE_CD number 1
 					schedule function ARG(_PATH)reset_cd 90s
-					```
-					print(f"playsound minecraft:enemy.abyss.open_eye player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
-					```
+					
 					# 動畫過程無敵狀態
-					tag 00000001-0000-0001-0000-000100000001 add effect
+					tag @s add effect
 					
 					# 暫停圍堵跟捕食
 					schedule clear ARG(__PATH)sting/spawn
@@ -3278,6 +3354,10 @@ namespace stage()
 				
 				func start_effect()
 				{
+					```
+					print(f"playsound minecraft:enemy.abyss.open_eye player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
+					```
+					execute as @e[type=zombie,tag=active_eye] run function ARG(_PATH)eye/pause
 					title @a times 3 100 0
 					title @a title {"text":"0","font":"ui:main"}
 					
@@ -3303,7 +3383,6 @@ namespace stage()
 						execute if score #EYE_ANIM number matches 46 run title @a title [{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"text":"98","font":"space:default"},{"text":"5","font":"ui:main"},{"text":"98","font":"space:default"}]
 						
 						execute if score #EYE_ANIM number matches 60 run function ARG(_PATH)end
-						execute if score #EYE_ANIM number matches 60 run title @a title [{"text":"7","font":"ui:main"}]
 					}
 					
 					func end()
@@ -3313,11 +3392,10 @@ namespace stage()
 						
 						print(f"execute positioned {STAGE_CENTER[2][0] + 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] + 6} run function ARG(__PATH)eye/summon")
 						print(f"execute positioned {STAGE_CENTER[2][0] + 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] - 6} run function ARG(__PATH)eye/summon")
-						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] + 6} run function ARG(__PATH)eye/summon")
-						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] - 6} run function ARG(__PATH)eye/summon")
+						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1]} run function ARG(__PATH)eye/summon")
 						```
-						execute as @e[type=zombie,tag=new_eye] at @s facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
-						schedule function ARG(__PATH)eye/activate
+						function ARG(__PATH)eye/aim
+						schedule function ARG(__PATH)eye/activate 1s
 						
 						title @a times 0 0 3
 						title @a title [{"text":"7","font":"ui:main"}]
@@ -3328,6 +3406,7 @@ namespace stage()
 						# 重啟圍堵跟捕食
 						schedule function stage:stage3/skills/sting/spawn 3s
 						schedule function stage:stage3/skills/hunt/start 15s
+						schedule function stage:stage3/skills/loop 4s
 					}
 				}
 				
@@ -3335,25 +3414,48 @@ namespace stage()
 				{
 					func summon()
 					{
-						summon zombie ~ ~ ~ {Invulnerable:1b,Silent:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:69}}],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:100.0f,Tags:["object","dead_event","new_eye"]}
+						summon zombie ~ ~ ~ {Invulnerable:1b,Silent:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:69}}],Attributes:[{Name:"minecraft:generic.max_health",Base:1024.0}],Health:100.0f,Tags:["object","dead_event","eye","new_eye","effect"]}
 						execute positioned ~ ~-1 ~ run function ARG(__PATH)thunder_effect
+					}
+					
+					func aim()
+					{
+						execute as @e[type=zombie,tag=eye] at @s facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
+						schedule function ARG(_PATH)aim 5s
 					}
 					
 					func activate()
 					{
+						execute as @e[type=zombie,tag=pause_eye] run function ARG(_PATH)resume
 						execute as @e[type=zombie,tag=new_eye] run function ARG(_PATH)start_move
 					}
 					
 					func start_move()
 					{
-						tag @s add eye
+						tag @s add active_eye
 						tag @s remove new_eye
+						tag @s remove effect
+						execute store result score @s number run scoreboard players add #GLOBAL number 1
 					}
 					
 					func move()
 					{
-						execute positioned ^ ^ ^0.1 facing entity @p[gamemode=adventure,scores={player=1..}] feet positioned ^ ^ ^0.03 facing entity @s feet rotated ~ 0 positioned as @s run tp @s ^ ^ ^-0.1 ~180 ~
+						tp @s ^ ^ ^0.1
 						execute positioned ~-0.5 ~0.8 ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=0,dz=0] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 0 true
+					}
+					
+					func pause()
+					{
+						tag @s remove active_eye
+						tag @s add pause_eye
+						tag @s add effect
+					}
+					
+					func resume()
+					{
+						tag @s add active_eye
+						tag @s remove pause_eye
+						tag @s remove effect
 					}
 					
 					func hurt()

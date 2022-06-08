@@ -15,6 +15,7 @@
 	"options.fovEffectScale": "§a視角廣度效果(關閉)§r",
 	"options.entityDistanceScaling": "§a實體顯示距離(400+)§r",
 	"options.sounds": "§a音樂和音效...§r",
+	"options.directionalAudio": "§a定向音效(建議開啟)§r",
 	"soundCategory.music": "§a音樂(關閉)§r",
 	"soundCategory.player": "§a音效§r",
 	"soundCategory.ambient": "§a環境音效/環境(關閉)§r"

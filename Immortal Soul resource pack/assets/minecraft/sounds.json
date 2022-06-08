@@ -461,6 +461,14 @@
       }
     ]
   },
+  "enemy.abyss.noise": {
+    "sounds": [
+      {
+        "name": "enemy/abyss/noise",
+        "stream": false
+      }
+    ]
+  },
   "enemy.abyss.open_eye": {
     "sounds": [
       {
