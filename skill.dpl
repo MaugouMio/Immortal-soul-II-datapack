@@ -42,7 +42,7 @@ namespace skill()
 		execute as @a[scores={sneaktime=1..}] at @s run function ARG(_PATH)edge/sneak/sneaktime
 		execute as @a[scores={sneaktime2=1..}] at @s run function ARG(_PATH)edge/sneak/sneaktime2
 		
-		function ARG(_PATH)gun/beam/show_bar/update
+		execute if score #GAME_START number matches 1 run function ARG(_PATH)gun/beam/show_bar/update
 		execute as @a if score @s beamtime matches 0.. run function ARG(_PATH)gun/beam/prepare
 		execute as @a unless score @s beamtime matches 0.. at @s run function ARG(_PATH)action_check
 		
@@ -328,7 +328,6 @@ namespace skill()
 		
 		func change_edge()
 		{
-			title @s actionbar ""
 			clear @s minecraft:spyglass{weapon:1b}
 			clear @s minecraft:carrot_on_a_stick{weapon:1b}
 			item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
@@ -956,13 +955,15 @@ namespace skill()
 					scoreboard players add #BEAM_ANIMATION number 1
 					execute if score #BEAM_ANIMATION number matches 30 run scoreboard players set #BEAM_ANIMATION number 0
 					
-					execute if score #BEAM_ANIMATION number matches ..3 run title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"84","font":"space:default"},{"score":{"objective":"number","name":"#BEAM_ANIMATION"}},{"text":"8","font":"space:default"}]
+					# execute if score #BEAM_ANIMATION number matches ..3 run title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"84","font":"space:default"},{"score":{"objective":"number","name":"#BEAM_ANIMATION"}},{"text":"8","font":"space:default"}]
+					execute if score #BEAM_ANIMATION number matches ..3 run title @a actionbar ["",{"nbt":"blind","storage":"skill:main","interpret":true},[{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"84","font":"space:default"},{"score":{"objective":"number","name":"#BEAM_ANIMATION"}},{"text":"8","font":"space:default"}]]
 					execute if score #BEAM_ANIMATION number matches 4.. run function ARG(_PATH)normal
 				}
 				
 				func normal()
 				{
-					title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"\uF82B\uF82A\uF829\uF828\uF824","font":"space:default"}]
+					# title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"\uF82B\uF82A\uF829\uF828\uF824","font":"space:default"}]
+					title @a actionbar ["",{"nbt":"blind","storage":"skill:main","interpret":true},[{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"\uF82B\uF82A\uF829\uF828\uF824","font":"space:default"}]]
 				}
 			}
 		}

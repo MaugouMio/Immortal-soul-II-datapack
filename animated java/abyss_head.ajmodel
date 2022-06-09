@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1654612308,
+    "creation_time": 1654786526,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -1873,7 +1873,7 @@
       "length": 1.05,
       "snapping": 20,
       "selected": true,
-      "saved": false,
+      "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\abyss_head.animation.json",
       "anim_time_update": "",
       "blend_weight": "",
@@ -2144,7 +2144,7 @@
               "channel": "timeline",
               "data_points": [
                 {
-                  "script": "scoreboard players set 00000003-0000-0003-0000-000300000003 life 58\n"
+                  "script": "execute as 00000003-0000-0003-0000-000300000003 run function stage:stage3/skills/sneak/river/bite_end\n"
                 }
               ],
               "uuid": "f6c7f34a-5e3a-4125-356e-bdb8707e6b84",

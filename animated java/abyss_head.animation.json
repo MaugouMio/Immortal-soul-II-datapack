@@ -54,7 +54,7 @@
 				}
 			},
 			"timeline": {
-				"1.05": "scoreboard players set 00000003-0000-0003-0000-000300000003 life 58"
+				"1.05": "execute as 00000003-0000-0003-0000-000300000003 run function stage:stage3/skills/sneak/river/bite_end"
 			}
 		}
 	}

@@ -211,7 +211,9 @@ void main() {
 	}
 	else {
 		vec4 CheckModeTexel = texture2D(JudgeSampler, vec2(0.5, 0.45));
-		if (CheckModeTexel.r < 0.35 && CheckModeTexel.g > 0.975 && CheckModeTexel.b < 0.35)
-			fragColor = CurrTexel;
+		if (CheckModeTexel.r < 0.35 && CheckModeTexel.g > 0.975 && CheckModeTexel.b < 0.35) {
+			if (JudgeTexel.r < 0.975 || JudgeTexel.g < 0.975 || JudgeTexel.b < 0.975)
+				fragColor = CurrTexel;
+		}
 	}
 }
