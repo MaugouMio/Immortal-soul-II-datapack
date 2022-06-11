@@ -84,6 +84,8 @@ namespace skill()
 	{
 		# 領域狀態傷害 20%
 		execute if score #ZONE number matches 1.. unless score #ZONE_BREAK number matches 1 run scoreboard players operation @s display_number /= #5 number
+		# 深淵恐懼吞噬技能過程，用光束炮打的特殊事件
+		execute if score #SELECTED_STAGE number matches 3 if score #SWALLOW number matches 1.. if entity @s[tag=boss,tag=beam_hit] run function stage:stage3/skills/swallow/shut
 		
 		scoreboard players operation @s health -= @s display_number
 		scoreboard players operation @s display_number /= #10 number
@@ -115,8 +117,6 @@ namespace skill()
 		execute store result bossbar minecraft:boss value run scoreboard players get @s health
 		execute unless entity @s[tag=aj_model] run function ARG(_PATH)boss_hurt_color
 		execute if entity @s[tag=miko] run function miko:set_variant/hurt
-		# 深淵恐懼吞噬技能過程，用光束炮打的特殊事件
-		execute if score #SELECTED_STAGE number matches 3 if score #SWALLOW number matches 1.. if entity @s[tag=beam_hit] run function stage:stage3/skills/swallow/shut
 		
 		schedule function ARG(_PATH)boss_hurt_reset 5t
 		execute if score @s health matches ..0 run function stage:end

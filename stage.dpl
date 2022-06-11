@@ -1,7 +1,7 @@
 import utils, loop
 
 ```
-GROUND_Y = [4.0, 4.0, 22.0]
+GROUND_Y = [4.0, 4.0, 4.0]
 STAGE_CENTER = [(128, 0), (128, 0), (56.0, 0.0)]
 ```
 
@@ -129,6 +129,8 @@ namespace stage()
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/end
 		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/end
 		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/end
+		
+		effect give @a instant_health 1 5 true
 	}
 	
 	# 真白之刃
@@ -2432,6 +2434,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/resonance/eye/rotate
 			
 			data modify storage skill:main blind set value ""
+			title @a title ""
 			
 			function abyss:remove/all
 			function abyss_head:remove/all
@@ -2478,7 +2481,7 @@ namespace stage()
 			func check_swallow()
 			{
 				# CD 到的時候有 50% 機率會放
-				execute if score @s health matches ..25000 unless score #SWALLOW_CD number matches 1.. if predicate stage:swallow_rate run function ARG(_PATH)swallow/cast
+				execute if score @s health matches ..35000 unless score #SWALLOW_CD number matches 1.. if predicate stage:swallow_rate run function ARG(_PATH)swallow/cast
 				execute if score #USE_RANDOM_SKILL number matches 1 run function ARG(_PATH)rand_skill
 			}
 			
@@ -2539,8 +2542,8 @@ namespace stage()
 			{
 				func spawn()
 				{
-					execute if score 00000001-0000-0001-0000-000100000001 health matches 35001.. run schedule function ARG(_PATH)spawn 3s
-					execute if score 00000001-0000-0001-0000-000100000001 health matches ..35000 run schedule function ARG(_PATH)spawn 2s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches 35001.. run schedule function ARG(_PATH)spawn 3.5s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches ..35000 run schedule function ARG(_PATH)spawn 2.5s
 					
 					execute as @a[gamemode=adventure,scores={player=1..}] at @s run function ARG(_PATH)sting_pos/summon
 					schedule function ARG(_PATH)mark/start 1t
@@ -2585,7 +2588,7 @@ namespace stage()
 					
 					func check_floor()
 					{
-						execute unless block ~ ~-1 ~ #skill:canpass run function ARG(_PATH)summon
+						execute unless block ^ ^-1 ^-0.5 #skill:canpass run function ARG(_PATH)summon
 						execute if block ^ ^-1 ^-0.5 #skill:canpass positioned ^ ^ ^1 run function ARG(_PATH)check_floor
 					}
 					
@@ -2603,11 +2606,11 @@ namespace stage()
 					# scoreboard players add @s number 1536
 					# 縮放
 					execute if score @s life matches ..10 run scoreboard players add @s number 1537
-					execute if score @s life matches 31..39 run scoreboard players remove @s number 1537
+					execute if score @s life matches 36..44 run scoreboard players remove @s number 1537
 					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
 					
-					execute if score @s life matches 20 run function ARG(_PATH)attack
-					execute if score @s life matches 40 run kill @s
+					execute if score @s life matches 25 run function ARG(_PATH)attack
+					execute if score @s life matches 45 run kill @s
 				}
 				
 				func attack()
@@ -2651,7 +2654,7 @@ namespace stage()
 					
 					execute at @a[gamemode=adventure,scores={player=1..}] positioned ~ ~1.5 ~ run function ARG(_PATH)mark_effect
 					
-					scoreboard players set #HUNT_STING number 10
+					scoreboard players set #HUNT_STING number 7
 					schedule function ARG(_PATH)summon_sting 40t
 				}
 				
@@ -2812,7 +2815,7 @@ namespace stage()
 					print('summon armor_stand %.2f %.2f ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:27,CustomPotionColor:57}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}' %(STAGE_CENTER[2][0] + 4, GROUND_Y[2]))
 					print('summon armor_stand %.2f %.2f ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:28,CustomPotionColor:57}}],Tags:["object","effect"],UUID:[I;6,6,6,6]}' %(STAGE_CENTER[2][0] - 4, GROUND_Y[2]))
 					```
-					schedule function ARG(_PATH)call_shoot 24t
+					schedule function ARG(_PATH)call_shoot 27t
 				}
 				
 				func call_shoot()
@@ -3043,13 +3046,13 @@ namespace stage()
 					execute if score @s life matches 21 as 0000000A-0000-000A-0000-000A0000000A run scoreboard players set @s life 1
 					
 					# 借用計時器做玩家傷害(對應光束特效期間)
-					execute if score @s life matches 41..100 at @s positioned ~-3.5 ~ ~-3.5 as @a[gamemode=adventure,scores={player=1..},dx=6,dy=20,dz=6] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
+					execute if score @s life matches 46..105 at @s positioned ~-3.5 ~ ~-3.5 as @a[gamemode=adventure,scores={player=1..},dx=6,dy=20,dz=6] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
 					
-					execute if score @s life matches 121..130 run scoreboard players remove @s number 5
+					execute if score @s life matches 126..135 run scoreboard players remove @s number 5
 					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
 					
-					execute if score @s life matches 121 run function stage:stage3/skills/boss_in/start
-					kill @s[scores={life=130}]
+					execute if score @s life matches 126 run function stage:stage3/skills/boss_in/start
+					kill @s[scores={life=135}]
 				}
 				
 				func eye()
@@ -3059,28 +3062,28 @@ namespace stage()
 					# 眼睛升起
 					execute if score @s life matches 1..10 run tp @s ~ ~0.12 ~
 					# 眼睛微縮(準備發射)
-					execute if score @s life matches 14 run tp @s ~ ~-0.2 ~
+					execute if score @s life matches 19 run tp @s ~ ~-0.2 ~
 					
 					# 發射光束音效
-					execute if score @s life matches 20 at @s run playsound minecraft:enemy.abyss.big_beam player @a ~ ~ ~ 3 1 0
+					execute if score @s life matches 25 at @s run playsound minecraft:enemy.abyss.big_beam player @a ~ ~ ~ 3 1 0
 					# 設定光束
-					execute if score @s life matches 20 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
-					execute if score @s life matches 21 run tp @s ~ ~0.2 ~
+					execute if score @s life matches 25 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
+					execute if score @s life matches 26 run tp @s ~ ~0.2 ~
 					
 					# 衝擊波特效
-					execute if score @s life matches 21..25 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players add @s number 20
-					execute if score @s life matches 26 run kill 0000000B-0000-000B-0000-000B0000000B
+					execute if score @s life matches 26..30 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players add @s number 20
+					execute if score @s life matches 31 run kill 0000000B-0000-000B-0000-000B0000000B
 					
 					# 光束特效(傷害由 portal 統一做)
-					execute if score @s life matches 21..80 as @e[type=armor_stand,tag=big_beam] run function ARG(_PATH)beam
-					execute if score @s life matches 81 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
-					execute if score @s life matches 82 run kill @e[type=armor_stand,tag=big_beam]
+					execute if score @s life matches 26..85 as @e[type=armor_stand,tag=big_beam] run function ARG(_PATH)beam
+					execute if score @s life matches 86 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
+					execute if score @s life matches 87 run kill @e[type=armor_stand,tag=big_beam]
 					
 					# 眼睛下沉
-					execute if score @s life matches 91..100 run tp @s ~ ~-0.12 ~
+					execute if score @s life matches 96..105 run tp @s ~ ~-0.12 ~
 					
 					scoreboard players add @s life 1
-					execute if score @s life matches 101 run kill @s
+					execute if score @s life matches 106 run kill @s
 				}
 				
 				func beam()
@@ -3320,6 +3323,8 @@ namespace stage()
 				# 被光束炮打到，中斷技能
 				func shut()
 				{
+					scoreboard players operation @s display_number *= #2 number
+					
 					execute if score #SWALLOW number matches 1 run function abyss:animations/animation.model.swallow/pause
 					execute if score #SWALLOW number matches 2 run function abyss:animations/animation.model.swallow_loop/pause
 					function abyss:animations/animation.model.swallow_shut/play
@@ -3405,7 +3410,8 @@ namespace stage()
 						
 						print(f"execute positioned {STAGE_CENTER[2][0] + 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] + 6} run function ARG(__PATH)eye/summon")
 						print(f"execute positioned {STAGE_CENTER[2][0] + 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] - 6} run function ARG(__PATH)eye/summon")
-						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1]} run function ARG(__PATH)eye/summon")
+						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] + 6} run function ARG(__PATH)eye/summon")
+						print(f"execute positioned {STAGE_CENTER[2][0] - 6} {GROUND_Y[2]} {STAGE_CENTER[2][1] - 6} run function ARG(__PATH)eye/summon")
 						```
 						function ARG(__PATH)eye/aim
 						schedule function ARG(__PATH)eye/activate 1s
@@ -3433,7 +3439,6 @@ namespace stage()
 					
 					func aim()
 					{
-						# 試著讓他們瞄準不同點前進，避免擠在一起
 						execute as @e[type=zombie,tag=eye] at @s facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ~ ~ ~ ~ 0
 						schedule function ARG(_PATH)rotate 5s
 					}
