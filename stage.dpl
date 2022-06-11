@@ -2542,8 +2542,8 @@ namespace stage()
 			{
 				func spawn()
 				{
-					execute if score 00000001-0000-0001-0000-000100000001 health matches 35001.. run schedule function ARG(_PATH)spawn 3.5s
-					execute if score 00000001-0000-0001-0000-000100000001 health matches ..35000 run schedule function ARG(_PATH)spawn 2.5s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches 25001.. run schedule function ARG(_PATH)spawn 3.5s
+					execute if score 00000001-0000-0001-0000-000100000001 health matches ..25000 run schedule function ARG(_PATH)spawn 2.5s
 					
 					execute as @a[gamemode=adventure,scores={player=1..}] at @s run function ARG(_PATH)sting_pos/summon
 					schedule function ARG(_PATH)mark/start 1t
@@ -2602,15 +2602,18 @@ namespace stage()
 				func ring()
 				{
 					scoreboard players add @s life 1
-					# 旋轉
-					# scoreboard players add @s number 1536
-					# 縮放
+					# 旋轉縮放
 					execute if score @s life matches ..10 run scoreboard players add @s number 1537
-					execute if score @s life matches 36..44 run scoreboard players remove @s number 1537
+					
+					# 難度反應時間差異
+					execute if score #DIFFICULTY number matches 2..3 if score @s life matches 10 run scoreboard players add @s life 2
+					execute if score #DIFFICULTY number matches 4 if score @s life matches 10 run scoreboard players add @s life 4
+					
+					execute if score @s life matches 39..47 run scoreboard players remove @s number 1537
 					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
 					
-					execute if score @s life matches 25 run function ARG(_PATH)attack
-					execute if score @s life matches 45 run kill @s
+					execute if score @s life matches 28 run function ARG(_PATH)attack
+					execute if score @s life matches 48 run kill @s
 				}
 				
 				func attack()
@@ -2654,7 +2657,10 @@ namespace stage()
 					
 					execute at @a[gamemode=adventure,scores={player=1..}] positioned ~ ~1.5 ~ run function ARG(_PATH)mark_effect
 					
-					scoreboard players set #HUNT_STING number 7
+					execute if score #DIFFICULTY number matches 1 run scoreboard players set #HUNT_STING number 5
+					execute if score #DIFFICULTY number matches 2..3 run scoreboard players set #HUNT_STING number 6
+					execute if score #DIFFICULTY number matches 4 run scoreboard players set #HUNT_STING number 7
+					
 					schedule function ARG(_PATH)summon_sting 40t
 				}
 				
@@ -2682,9 +2688,6 @@ namespace stage()
 					playsound minecraft:enemy.abyss.portal player @a ~ ~ ~ 3 1 1
 					```
 					print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:26,CustomPotionColor:0}}],Tags:["object","effect"],UUID:[I;2,2,2,2]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1]))
-					# 移除 BOSS 所在地點的屏障
-					# print(f"fill {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2])} {int(STAGE_CENTER[2][1] - 2)} {int(STAGE_CENTER[2][0] + 5)} {int(GROUND_Y[2] + 22)} {int(STAGE_CENTER[2][1] + 1)} minecraft:air")
-					
 					# 移走碰撞用的史萊姆
 					print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 					```
@@ -2710,6 +2713,19 @@ namespace stage()
 				folder river()
 				{
 					func summon()
+					{
+						execute if score #DIFFICULTY number matches ..2 run function ARG(_PATH)fixed_summon
+						execute if score #DIFFICULTY number matches 3.. run function ARG(_PATH)rand_summon
+					}
+					
+					func fixed_summon()
+					{
+						```
+						print('summon armor_stand %.2f %.2f %.2f {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:25,CustomPotionColor:0}}],Rotation:[180f,0f],Tags:["object","effect"],UUID:[I;3,3,3,3]}' %(STAGE_CENTER[2][0], GROUND_Y[2], STAGE_CENTER[2][1] + 5))
+						```
+					}
+					
+					func rand_summon()
 					{
 						function random:rand_rate
 						```
@@ -2737,7 +2753,9 @@ namespace stage()
 				
 					func judge()
 					{
-						execute positioned ~-8 ~-0.5 ~-3 as @a[gamemode=adventure,scores={player=1..},dx=15,dy=1,dz=5,limit=1] at 00000003-0000-0003-0000-000300000003 positioned ~ ~-0.5 ~ rotated 0 0 run function ARG(_PATH)check_pos
+						execute if score #DIFFICULTY number matches 1 positioned ~-8 ~-0.5 ~-3 as @a[gamemode=adventure,scores={player=1..},dx=15,dy=0,dz=5,limit=1] at 00000003-0000-0003-0000-000300000003 positioned ~ ~-0.5 ~ rotated 0 0 run function ARG(_PATH)check_pos
+						execute if score #DIFFICULTY number matches 2.. positioned ~-8 ~-0.5 ~-3 as @a[gamemode=adventure,scores={player=1..},dx=15,dy=1,dz=5,limit=1] at 00000003-0000-0003-0000-000300000003 positioned ~ ~-0.5 ~ rotated 0 0 run function ARG(_PATH)check_pos
+						
 						execute if score @s life matches ..58 run tp @s ^ ^ ^0.25
 					}
 					
@@ -2815,7 +2833,10 @@ namespace stage()
 					print('summon armor_stand %.2f %.2f ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:27,CustomPotionColor:57}}],Tags:["object","effect"],UUID:[I;5,5,5,5]}' %(STAGE_CENTER[2][0] + 4, GROUND_Y[2]))
 					print('summon armor_stand %.2f %.2f ~ {Invulnerable:1b,Invisible:1b,NoGravity:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:28,CustomPotionColor:57}}],Tags:["object","effect"],UUID:[I;6,6,6,6]}' %(STAGE_CENTER[2][0] - 4, GROUND_Y[2]))
 					```
-					schedule function ARG(_PATH)call_shoot 27t
+					execute if score #DIFFICULTY number matches 1 run schedule function ARG(_PATH)call_shoot 30t
+					execute if score #DIFFICULTY number matches 2 run schedule function ARG(_PATH)call_shoot 28t
+					execute if score #DIFFICULTY number matches 3 run schedule function ARG(_PATH)call_shoot 27t
+					execute if score #DIFFICULTY number matches 4 run schedule function ARG(_PATH)call_shoot 25t
 				}
 				
 				func call_shoot()
@@ -3045,14 +3066,18 @@ namespace stage()
 					# 眼睛特效開始運作
 					execute if score @s life matches 21 as 0000000A-0000-000A-0000-000A0000000A run scoreboard players set @s life 1
 					
-					# 借用計時器做玩家傷害(對應光束特效期間)
-					execute if score @s life matches 46..105 at @s positioned ~-3.5 ~ ~-3.5 as @a[gamemode=adventure,scores={player=1..},dx=6,dy=20,dz=6] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
+					# 難度反應時間差異設定 (跟 eye function 對應)
+					execute if score #DIFFICULTY number matches 2..3 if score @s life matches 21 run scoreboard players add @s life 5
+					execute if score #DIFFICULTY number matches 4 if score @s life matches 21 run scoreboard players add @s life 10
 					
-					execute if score @s life matches 126..135 run scoreboard players remove @s number 5
+					# 借用計時器做玩家傷害(對應光束特效期間)
+					execute if score @s life matches 56..115 at @s positioned ~-3.5 ~ ~-3.5 as @a[gamemode=adventure,scores={player=1..},dx=6,dy=20,dz=6] unless score @s beamtime matches 0.. run effect give @s instant_damage 1 1 true
+					
+					execute if score @s life matches 136..145 run scoreboard players remove @s number 5
 					execute store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players get @s number
 					
-					execute if score @s life matches 126 run function stage:stage3/skills/boss_in/start
-					kill @s[scores={life=135}]
+					execute if score @s life matches 136 run function stage:stage3/skills/boss_in/start
+					kill @s[scores={life=145}]
 				}
 				
 				func eye()
@@ -3061,29 +3086,34 @@ namespace stage()
 					
 					# 眼睛升起
 					execute if score @s life matches 1..10 run tp @s ~ ~0.12 ~
+					
+					# 難度反應時間差異設定
+					execute if score #DIFFICULTY number matches 2..3 if score @s life matches 10 run scoreboard players add @s life 5
+					execute if score #DIFFICULTY number matches 4 if score @s life matches 10 run scoreboard players add @s life 10
+					
 					# 眼睛微縮(準備發射)
-					execute if score @s life matches 19 run tp @s ~ ~-0.2 ~
+					execute if score @s life matches 29 run tp @s ~ ~-0.2 ~
 					
 					# 發射光束音效
-					execute if score @s life matches 25 at @s run playsound minecraft:enemy.abyss.big_beam player @a ~ ~ ~ 3 1 0
+					execute if score @s life matches 35 at @s run playsound minecraft:enemy.abyss.big_beam player @a ~ ~ ~ 3 1 0
 					# 設定光束
-					execute if score @s life matches 25 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
-					execute if score @s life matches 26 run tp @s ~ ~0.2 ~
+					execute if score @s life matches 35 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
+					execute if score @s life matches 36 run tp @s ~ ~0.2 ~
 					
 					# 衝擊波特效
-					execute if score @s life matches 26..30 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players add @s number 20
-					execute if score @s life matches 31 run kill 0000000B-0000-000B-0000-000B0000000B
+					execute if score @s life matches 36..40 as 0000000B-0000-000B-0000-000B0000000B store result entity @s ArmorItems[3].tag.CustomPotionColor int 1 run scoreboard players add @s number 20
+					execute if score @s life matches 41 run kill 0000000B-0000-000B-0000-000B0000000B
 					
 					# 光束特效(傷害由 portal 統一做)
-					execute if score @s life matches 26..85 as @e[type=armor_stand,tag=big_beam] run function ARG(_PATH)beam
-					execute if score @s life matches 86 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
-					execute if score @s life matches 87 run kill @e[type=armor_stand,tag=big_beam]
+					execute if score @s life matches 36..95 as @e[type=armor_stand,tag=big_beam] run function ARG(_PATH)beam
+					execute if score @s life matches 96 as @e[type=armor_stand,tag=big_beam] run data modify entity @s ArmorItems[3].tag.CustomModelData set value 68
+					execute if score @s life matches 97 run kill @e[type=armor_stand,tag=big_beam]
 					
 					# 眼睛下沉
-					execute if score @s life matches 96..105 run tp @s ~ ~-0.12 ~
+					execute if score @s life matches 106..115 run tp @s ~ ~-0.12 ~
 					
 					scoreboard players add @s life 1
-					execute if score @s life matches 106 run kill @s
+					execute if score @s life matches 116 run kill @s
 				}
 				
 				func beam()
@@ -3140,7 +3170,9 @@ namespace stage()
 					
 					func move()
 					{
-						execute facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.6
+						execute if score #DIFFICULTY number matches 1 facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.5
+						execute if score #DIFFICULTY number matches 2..3 facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.55
+						execute if score #DIFFICULTY number matches 4 facing entity @p[gamemode=adventure,scores={player=1..}] feet run tp @s ^ ^ ^0.6
 						
 						scoreboard players set #TEMP number 0
 						execute unless score @s health matches ..0 positioned ~-0.5 ~ ~-0.5 as @a[gamemode=adventure,scores={player=1..},dx=0,dy=1,dz=0] run function ARG(_PATH)damage
@@ -3486,7 +3518,7 @@ namespace stage()
 					func hurt()
 					{
 						execute store result entity @s Health float 0.1 run scoreboard players get @s health
-						execute if score @s health matches ..0 run function ARG(_PATH)dead
+						execute if score #GAME_START number matches 1 if score @s health matches ..0 run function ARG(_PATH)dead
 					}
 					
 					func dead()
