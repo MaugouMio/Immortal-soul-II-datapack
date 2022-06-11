@@ -76,7 +76,16 @@ void main() {
 			vertexColor = vec4(1.0, 1.0, 1.0, 1.0);
 		}
 		else if (vertexTexel.a < 0.025 && vertexTexel.a > 0.015) {
-			float vertexId = float(mod(gl_VertexID, 4));
+			// float vertexId = mod(gl_VertexID, 4.0);
+			float vertexId = 0.0;
+			if (vertexTexel.r > 0.997)  // 255, 253, 253
+				vertexId = 1.0;
+			else if (vertexTexel.r > 0.993)  // 254, 253, 253
+				vertexId = 2.0;
+			else if (vertexTexel.g > 0.997)  // 253, 255, 253
+				vertexId = 3.0;
+			else if (vertexTexel.g > 0.993)  // 253, 254, 253
+				vertexId = 0.0;
 			mat3 WorldMat = getWorldMat(Light0_Direction, Light1_Direction);
 			
 			float size = Color.b * 51.0;
