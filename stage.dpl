@@ -187,6 +187,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/fly_sword/aim
 			schedule clear ARG(_PATH)skills/fly_sword/start
 			schedule clear ARG(_PATH)skills/revert_action
+			schedule clear ARG(_PATH)skills/slash/reset_cd
 			function ARG(_PATH)skills/sword_dance/shutdown
 			function ARG(_PATH)skills/flaw/shutdown
 			function ARG(_PATH)skills/chop/shutdown
@@ -204,6 +205,7 @@ namespace stage()
 			scoreboard players set #BACKSTEP number 0
 			scoreboard players set #ANIM_LOCK number 0
 			scoreboard players set #REVERT_ACTION number 0
+			scoreboard players reset #SLASH_CD number
 			
 			kill 00000013-0000-0013-0000-001300000013
 			
@@ -293,7 +295,14 @@ namespace stage()
 				execute if score #REVERT_ACTION number matches 1 run function ARG(_PATH)revert_action
 				
 				schedule function ARG(_PATH)loop 5s
-				execute if score #ZONE_ACTIVE number matches 1 unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at 00000064-0000-0064-0000-006400000064 positioned ~ ~0.37 ~ run function ARG(_PATH)rand_skill
+				execute if score #ZONE_ACTIVE number matches 1 unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at 00000064-0000-0064-0000-006400000064 positioned ~ ~0.37 ~ run function ARG(_PATH)check_slash
+			}
+			
+			func check_slash()
+			{
+				scoreboard players set #SLASH_USED number 0
+				execute unless score #SLASH_CD number matches 1 if score @s health matches ..2500 run function ARG(_PATH)slash/cast
+				execute if score #SLASH_USED number matches 0 run function ARG(_PATH)rand_skill
 			}
 			
 			func rand_skill()
@@ -319,9 +328,6 @@ namespace stage()
 			
 			func near_judge()
 			{
-				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 40..59 run function ARG(_PATH)slash/cast
-				# function ARG(_PATH)slash/cast
-				
 				# 近距離有機率3秒就放下一招
 				execute if score #RAND_RESULT number matches 30..69 run schedule function ARG(_PATH)loop 3s
 				
@@ -331,8 +337,8 @@ namespace stage()
 			
 			func far_judge()
 			{
-				execute if score @s health matches ..2500 if score #RAND_RESULT number matches 24..43 run function ARG(_PATH)slash/cast
-				# function ARG(_PATH)slash/cast
+				# 劍舞不連放
+				execute if score #LAST_SKILL number matches 1 run scoreboard players set #RAND_RESULT number 99
 				
 				execute if score #RAND_RESULT number matches 0..29 run function ARG(_PATH)sword_dance/cast
 				execute if score #RAND_RESULT number matches 30..99 run function ARG(_PATH)sanction/cast
@@ -842,6 +848,7 @@ namespace stage()
 			{
 				func cast()
 				{
+					scoreboard players set #SLASH_USED number 1
 					scoreboard players set #LAST_SKILL number 2
 					scoreboard players set #RAND_RESULT number -1
 					# 暫時關閉ZONE
@@ -875,6 +882,15 @@ namespace stage()
 					execute if score #DIFFICULTY number matches 1..2 run scoreboard players set #SLASH_HINT_TIME number 18
 					execute if score #DIFFICULTY number matches 3 run scoreboard players set #SLASH_HINT_TIME number 16
 					execute if score #DIFFICULTY number matches 4 run scoreboard players set #SLASH_HINT_TIME number 14
+					
+					# 設定 CD
+					scoreboard players set #SLASH_CD number 1
+					schedule function ARG(_PATH)reset_cd 30s
+				}
+				
+				func reset_cd()
+				{
+					scoreboard players reset #SLASH_CD number
 				}
 				
 				func rand_slash_time() from random().generate(40, 50, "#SLASH_COUNTDOWN number");
