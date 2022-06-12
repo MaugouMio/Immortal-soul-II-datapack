@@ -215,13 +215,13 @@ namespace stage()
 		func main()
 		{
 			execute at 00000001-0000-0001-0000-000100000001 positioned ~ ~0.8 ~ run tp 00000012-0000-0012-0000-001200000012 ~ ~ ~
-			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #ZONE_BREAK number matches 1 as 00000064-0000-0064-0000-006400000064 at @s facing entity @p[scores={player=1..},gamemode=adventure] feet run function ARG(_PATH)face_player
+			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #SWORD_DANCE number matches 3 unless score #ZONE_BREAK number matches 1 as 00000064-0000-0064-0000-006400000064 at @s facing entity @p[scores={player=1..},gamemode=adventure] feet run function ARG(_PATH)face_player
 			
 			execute if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
 			
-			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=boss_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~180 0
-			execute if score #SWORD_DANCE number matches 1.. as 00000064-0000-0064-0000-006400000064 at @s run function ARG(_PATH)skills/sword_dance/trace
+			execute if score #SWORD_DANCE number matches 1..2 as 00000003-0000-0003-0000-000300000003 at @a[tag=boss_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~180 0
+			execute if score #SWORD_DANCE number matches 1..2 as 00000064-0000-0064-0000-006400000064 at @s run function ARG(_PATH)skills/sword_dance/trace
 			
 			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000064-0000-0064-0000-006400000064 at @s run function ARG(_PATH)skills/slash/slash_countdown
 			execute if score #CHOP_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/chop/chop_countdown
@@ -358,6 +358,7 @@ namespace stage()
 				
 				scoreboard players set #REVERT_ACTION number 0
 				scoreboard players set #WING_OPEN number 0
+				scoreboard players set #SWORD_DANCE number 0
 				schedule clear ARG(_PATH)revert_action
 			}
 			
@@ -726,7 +727,7 @@ namespace stage()
 				
 				func attack()
 				{
-					scoreboard players set #SWORD_DANCE number 0
+					scoreboard players set #SWORD_DANCE number 3
 					
 					execute as @a[tag=boss_target,limit=1] run function ARG(_PATH)damage
 					# 切換揮刀模型
@@ -754,17 +755,17 @@ namespace stage()
 					# data modify entity 00000001-0000-0001-0000-000100000001 Motion set from entity 00000000-0000-0003-0000-000000000003 Pos
 					# kill 00000000-0000-0003-0000-000000000003
 					
-					execute positioned ~ ~1 ~ if block ^ ^ ^3 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^3 ~ ~
-					execute positioned ~ ~1 ~ unless block ^ ^ ^3 #skill:canpass if block ^ ^ ^2 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^2 ~ ~
-					execute positioned ~ ~1 ~ unless block ^ ^ ^3 #skill:canpass unless block ^ ^ ^2 #skill:canpass if block ^ ^ ^1 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^1 ~ ~
+					execute positioned ~ ~2 ~ if block ^ ^ ^3 #skill:canpass positioned ~ ~-2 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^3 ~ ~
+					execute positioned ~ ~2 ~ unless block ^ ^ ^3 #skill:canpass if block ^ ^ ^2 #skill:canpass positioned ~ ~-2 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^2 ~ ~
+					execute positioned ~ ~2 ~ unless block ^ ^ ^3 #skill:canpass unless block ^ ^ ^2 #skill:canpass if block ^ ^ ^2 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^1 ~ ~
 					
-					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity @s Rotation
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
 					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 				}
 				
 				func counter()
 				{
-					scoreboard players set #SWORD_DANCE number 0
+					scoreboard players set #SWORD_DANCE number 3
 					# 切換揮刀模型
 					execute at @a[tag=boss_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
 					function ARG(_PATH)sword_wave/start
@@ -831,7 +832,6 @@ namespace stage()
 					scoreboard players set #REVERT_ACTION number 1
 					schedule function ARG(__PATH)revert_action 1s
 					schedule clear ARG(__PATH)zone/auto_reset_pose
-					scoreboard players set #SWORD_DANCE number 0
 					scoreboard players set #BACKSTEP number 1
 					scoreboard players set #ANIM_LOCK number 0
 				}
