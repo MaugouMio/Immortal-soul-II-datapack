@@ -1,0 +1,35 @@
+{
+	"gui_light": "front",
+	"elements": [
+		{
+			"from": [0, 0, 8],
+			"to": [16, 16, 8],
+			"color": 4,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#icon"},
+				"east": {"uv": [0, 0, 0, 8], "texture": "#icon"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#icon"},
+				"west": {"uv": [0, 0, 0, 8], "texture": "#icon"},
+				"up": {"uv": [0, 0, 8, 0], "texture": "#icon"},
+				"down": {"uv": [0, 0, 8, 0], "texture": "#icon"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"scale": [0, 0, 0]
+		},
+		"thirdperson_lefthand": {
+			"scale": [0, 0, 0]
+		},
+		"firstperson_righthand": {
+			"scale": [0, 0, 0]
+		},
+		"firstperson_lefthand": {
+			"scale": [0, 0, 0]
+		},
+		"ground": {
+			"scale": [0, 0, 0]
+		}
+	}
+}

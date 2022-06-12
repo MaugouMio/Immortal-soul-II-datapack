@@ -1,0 +1,6 @@
+{
+	"parent": "item/ui/button",
+	"textures": {
+		"icon": "gui/right"
+	}
+}
