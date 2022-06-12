@@ -63,6 +63,10 @@ namespace stage()
 	{
 		scoreboard players set #GAME_START number 1
 		
+		# 懶得找為什麼沒重置，再重置一次
+		scoreboard players reset #ZONE number
+		data modify storage skill:main blind set value ""
+		
 		# 人數模式設定成指定模式
 		scoreboard players operation #PLAYER_MODE number = #PLAYER_MODE_SET number
 		
@@ -152,11 +156,13 @@ namespace stage()
 			
 			schedule function ARG(_PATH)skills/loop 7s
 			schedule function ARG(_PATH)skills/fly_sword/start 2s
+			
+			scoreboard players reset #LAST_SKILL number
 		}
 		
 		func summon_boss()
 		{
-			summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,DisabledSlots:4144959,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}
+			summon area_effect_cloud ~ ~-0.37 ~ {Tags:["object"],Duration:2147483647,UUID:[I;100,100,100,100],Passengers:[{id:"minecraft:armor_stand",Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}]}
 			summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"0","font":"skill:zone"}',Tags:["effect","object"],UUID:[I;18,18,18,18]}
 			summon marker ~ ~ ~ {Tags:["object"],UUID:[I;16,16,16,16]}
 			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
@@ -207,15 +213,15 @@ namespace stage()
 		func main()
 		{
 			execute at 00000001-0000-0001-0000-000100000001 positioned ~ ~0.8 ~ run tp 00000012-0000-0012-0000-001200000012 ~ ~ ~
-			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #ZONE_BREAK number matches 1 as 00000001-0000-0001-0000-000100000001 at @s facing entity @p[scores={player=1..},gamemode=adventure] feet run function ARG(_PATH)face_player
+			execute unless score #ANIM_LOCK number matches 1 unless score #REVERT_ACTION number matches 1 unless score #ZONE_BREAK number matches 1 as 00000064-0000-0064-0000-006400000064 at @s facing entity @p[scores={player=1..},gamemode=adventure] feet run function ARG(_PATH)face_player
 			
 			execute if score #ZONE number < #ZONE_MAX number run function ARG(_PATH)skills/zone/recover
 			execute if score #FLYING_SWORD number matches 1 as 00000002-0000-0002-0000-000200000002 at @s run function ARG(_PATH)skills/fly_sword/move
 			
 			execute if score #SWORD_DANCE number matches 1.. as 00000003-0000-0003-0000-000300000003 at @a[tag=boss_target,limit=1] facing entity 00000001-0000-0001-0000-000100000001 eyes run tp @s ~ ~ ~ ~180 0
-			execute if score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/sword_dance/trace
+			execute if score #SWORD_DANCE number matches 1.. as 00000064-0000-0064-0000-006400000064 at @s run function ARG(_PATH)skills/sword_dance/trace
 			
-			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/slash/slash_countdown
+			execute if score #SLASH_COUNTDOWN number matches 1.. as 00000064-0000-0064-0000-006400000064 at @s run function ARG(_PATH)skills/slash/slash_countdown
 			execute if score #CHOP_COUNTDOWN number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)skills/chop/chop_countdown
 			
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)wing/check
@@ -227,17 +233,23 @@ namespace stage()
 		
 		func face_player()
 		{
-			tp 00000010-0000-0010-0000-001000000010 ~ ~ ~ ~ 0
-			data modify entity @s Rotation set from entity 00000010-0000-0010-0000-001000000010 Rotation
-			execute if score #BACKSTEP number matches 1 at @s rotated ~ 0 run function ARG(_PATH)backstep
+			tp @s ~ ~ ~ ~ 0
+			data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+			execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
+			```
+			print(f"execute if score #BACKSTEP number matches 1 at @s positioned ~ {GROUND_Y[0] + 1} ~ rotated ~ 0 run function ARG(_PATH)backstep")
+			```
 		}
 		
 		func backstep()
 		{
-			execute if block ^ ^ ^-3 #skill:canpass run tp @s ^ ^ ^-3
-			execute unless block ^ ^ ^-3 #skill:canpass if block ^ ^ ^-2 #skill:canpass run tp @s ^ ^ ^-2
-			execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass if block ^ ^ ^-1 #skill:canpass run tp @s ^ ^ ^-1
+			execute if block ^ ^ ^-3 #skill:canpass run tp @s ^ ^-1.37 ^-3
+			execute unless block ^ ^ ^-3 #skill:canpass if block ^ ^ ^-2 #skill:canpass run tp @s ^ ^-1.37 ^-2
+			execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass if block ^ ^ ^-1 #skill:canpass run tp @s ^ ^-1.37 ^-1
 			
+			data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+			execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
+
 			scoreboard players set #BACKSTEP number 0
 		}
 		
@@ -274,12 +286,14 @@ namespace stage()
 		{
 			func loop()
 			{
+				```
 				# 有要後退先後退
-				execute if score #BACKSTEP number matches 1 as 00000001-0000-0001-0000-000100000001 at @s rotated ~ 0 run function ARG(__PATH)backstep
+				print(f"execute if score #BACKSTEP number matches 1 as 00000064-0000-0064-0000-006400000064 at @s rotated ~ 0 positioned ~ {GROUND_Y[0] + 1} ~ run function ARG(__PATH)backstep")
+				```
 				execute if score #REVERT_ACTION number matches 1 run function ARG(_PATH)revert_action
 				
 				schedule function ARG(_PATH)loop 5s
-				execute if score #ZONE_ACTIVE number matches 1 unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)rand_skill
+				execute if score #ZONE_ACTIVE number matches 1 unless score #SWORD_DANCE number matches 1.. as 00000001-0000-0001-0000-000100000001 at 00000064-0000-0064-0000-006400000064 positioned ~ ~0.37 ~ run function ARG(_PATH)rand_skill
 			}
 			
 			func rand_skill()
@@ -344,10 +358,13 @@ namespace stage()
 			func inner_revert_action()
 			{
 				```
-				print(f"execute positioned ~ 0.0 ~ if entity @s[dx=0,dy={GROUND_Y[0] - 1},dz=0] run tp @s ~ {GROUND_Y[0]} ~")
+				print(f"tp 00000064-0000-0064-0000-006400000064 ~ {GROUND_Y[0] - 0.37} ~")
 				```
+				data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+				execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
+				
 				function ARG(_PATH)reset_pose
-				data modify entity @s NoGravity set value 0b
+				# data modify entity @s NoGravity set value 0b
 				
 				# particle minecraft:cloud ~ ~1 ~ 0.7 0.7 0.7 0.1 100
 				particle minecraft:flash ~ ~1 ~ 0 0 0 1 1
@@ -373,15 +390,18 @@ namespace stage()
 				func tp()
 				{
 					scoreboard players set #DODGE_SUCCESS number 1
-					tp @s ~ ~ ~
+					tp 00000064-0000-0064-0000-006400000064 ~ ~-0.37 ~
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 				}
 				
 				func random_tp()
 				{
 					```
-					print(f"spreadplayers ~ ~ 0 7 under {int(GROUND_Y[0] + 3)} false @s")
+					print(f"spreadplayers ~ ~ 0 7 under {int(GROUND_Y[0] + 3)} false 00000064-0000-0064-0000-006400000064")
 					```
 					execute at @s unless entity @e[type=armor_stand,tag=blast_target,distance=..2,limit=1] unless entity @a[distance=..5,limit=1] run scoreboard players set #DODGE_SUCCESS number 1
+					execute if score #DODGE_SUCCESS number matches 1 as 00000064-0000-0064-0000-006400000064 at @s run tp @s ~ ~-0.37 ~
+					execute if score #DODGE_SUCCESS number matches 1 store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 					execute if score #DODGE_SUCCESS number matches 0 run function ARG(_PATH)random_tp
 				}
 			}
@@ -455,7 +475,9 @@ namespace stage()
 				func break()
 				{
 					```
-					print(f"tp @s ~ {GROUND_Y[0] - 0.45} ~")
+					print(f"tp 00000064-0000-0064-0000-006400000064 ~ {GROUND_Y[0] - 0.82} ~")
+					print("execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1")
+					
 					print(f"execute positioned ~ {GROUND_Y[0] + 0.35} ~ run function ARG(_PATH)zone_break_effect")
 					print(f"execute positioned ~ {GROUND_Y[0]} ~ run function ARG(_PATH)zone_expand_effect")
 					```
@@ -575,11 +597,12 @@ namespace stage()
 			{
 				func cast()
 				{
+					scoreboard players set #LAST_SKILL number 1
 					# 暫時關閉ZONE，延後快速回復
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players add #FAST_RECOVER number 15
 					execute as @r[scores={player=1..},gamemode=adventure,limit=1,distance=5..] at @s run function ARG(_PATH)mark
-					execute facing entity @a[tag=boss_target,limit=1] feet rotated ~ 0 run tp @s ~ ~ ~ ~ ~
+					execute facing entity @a[tag=boss_target,limit=1] feet run tp 00000064-0000-0064-0000-006400000064 ~ ~-0.37 ~ ~ 0
 					
 					scoreboard players set #ANIM_LOCK number 1
 					function ARG(_PATH)open_wing/start
@@ -608,7 +631,10 @@ namespace stage()
 					{
 						scoreboard players set #WING_OPEN number 1
 						function stage:stage1/wing/fly
-						tp @s ~ ~-0.45 ~
+						
+						tp 00000064-0000-0064-0000-006400000064 ~ ~-0.82 ~
+						data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+						execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 						# 計算右手姿勢
 						execute store result score #R_ARM_X number run data get entity @s Pose.RightArm[0] 10
 						execute store result score #R_ARM_Y number run data get entity @s Pose.RightArm[1] 10
@@ -669,9 +695,12 @@ namespace stage()
 					execute if score #DIFFICULTY number matches 2..3 facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.7 ~ ~
 					execute if score #DIFFICULTY number matches 4 facing entity @a[tag=boss_target,limit=1] feet run tp @s ^ ^ ^0.8 ~ ~
 					
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity @s Rotation
+					execute store result entity @s Air short 1 run scoreboard players add #AIR number 1
+					
 					# 約 8 tick 的反應時間
-					execute if score #SWORD_DANCE number matches 2 at @s if entity @a[tag=boss_target,distance=..1,limit=1] run function ARG(_PATH)attack
-					execute if score #SWORD_DANCE number matches 1 at @s if entity @a[tag=boss_target,distance=..7,limit=1] run function ARG(_PATH)prepare
+					execute if score #SWORD_DANCE number matches 2 at @s positioned ~ ~0.37 ~ if entity @a[tag=boss_target,distance=..1,limit=1] run function ARG(_PATH)attack
+					execute if score #SWORD_DANCE number matches 1 at @s positioned ~ ~0.37 ~ if entity @a[tag=boss_target,distance=..7,limit=1] run function ARG(_PATH)prepare
 					
 					# 追蹤過程持續延後快速回復
 					scoreboard players add #FAST_RECOVER number 1
@@ -683,7 +712,7 @@ namespace stage()
 					title @a[tag=boss_target] times 0 10000 0
 					title @a[tag=boss_target] title {"text":"1","font":"ui:main"}
 					# 切換攻擊預備動作模型
-					data modify entity @s Pose.RightArm set value [260f,350f,100f]
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [260f,350f,100f]
 					particle flash ~ ~1 ~ 0 0 0 1 1
 					
 					scoreboard players set #SWORD_DANCE number 2
@@ -691,7 +720,9 @@ namespace stage()
 				
 				func attack()
 				{
-					execute as @a[tag=boss_target,limit=1] unless score @s beamtime matches 0.. run function ARG(_PATH)damage
+					scoreboard players set #SWORD_DANCE number 0
+					
+					execute as @a[tag=boss_target,limit=1] run function ARG(_PATH)damage
 					# 切換揮刀模型
 					function ARG(_PATH)sword_wave/start
 					
@@ -704,26 +735,30 @@ namespace stage()
 				
 				func damage()
 				{
-					# 讓 BOSS 穿過玩家 1.5 格
+					# 讓 BOSS 穿過玩家 3 格
 					execute facing entity @s feet positioned as @s run function ARG(_PATH)set_boss_motion
-					effect give @s minecraft:instant_damage 1 2 true
+					execute unless score @s beamtime matches 0.. run effect give @s minecraft:instant_damage 1 2 true
 					execute at @s run particle flash ~ ~1 ~ 0 0 0 1 1
 				}
 				
 				func set_boss_motion()
 				{
 					# 設定穿過去後的動能
-					execute positioned 0 0 0 run summon marker ^ ^ ^1.5 {UUID:[I;0,3,0,3]}
-					data modify entity 00000001-0000-0001-0000-000100000001 Motion set from entity 00000000-0000-0003-0000-000000000003 Pos
-					kill 00000000-0000-0003-0000-000000000003
+					# execute positioned 0 0 0 run summon marker ^ ^ ^1.5 {UUID:[I;0,3,0,3]}
+					# data modify entity 00000001-0000-0001-0000-000100000001 Motion set from entity 00000000-0000-0003-0000-000000000003 Pos
+					# kill 00000000-0000-0003-0000-000000000003
 					
-					execute if block ^ ^ ^1.5 #skill:canpass run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^1.5 ~ ~
-					execute unless block ^ ^ ^1.5 #skill:canpass if block ^ ^ ^1 #skill:canpass run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^1 ~ ~
-					execute unless block ^ ^ ^1.5 #skill:canpass unless block ^ ^ ^1 #skill:canpass if block ^ ^ ^0.5 #skill:canpass run tp 00000001-0000-0001-0000-000100000001 ^ ^ ^0.5 ~ ~
+					execute positioned ~ ~1 ~ if block ^ ^ ^3 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^3 ~ ~
+					execute positioned ~ ~1 ~ unless block ^ ^ ^3 #skill:canpass if block ^ ^ ^2 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^2 ~ ~
+					execute positioned ~ ~1 ~ unless block ^ ^ ^3 #skill:canpass unless block ^ ^ ^2 #skill:canpass if block ^ ^ ^1 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^1 ~ ~
+					
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity @s Rotation
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 				}
 				
 				func counter()
 				{
+					scoreboard players set #SWORD_DANCE number 0
 					# 切換揮刀模型
 					execute at @a[tag=boss_target,limit=1] facing entity @s feet rotated ~ 0 run function ARG(_PATH)set_counter_effect
 					function ARG(_PATH)sword_wave/start
@@ -738,9 +773,9 @@ namespace stage()
 				{
 					func start()
 					{
-						data modify entity @s ArmorItems[3].tag.CustomModelData set value 7
-						data modify entity @s HandItems[0].tag.CustomModelData set value 15
-						data modify entity @s Pose.RightArm set value [30f,350f,100f]
+						data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value 7
+						data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 15
+						data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [30f,350f,100f]
 					
 						title @a[tag=boss_target] title ""
 						tag @a remove boss_target
@@ -763,7 +798,10 @@ namespace stage()
 				
 				func set_counter_effect()
 				{
-					tp @s ^ ^ ^1 ~180 ~
+					tp 00000064-0000-0064-0000-006400000064 ^ ^-0.37 ^1 ~180 ~
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity @s Rotation
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
+					
 					execute positioned ^ ^1 ^0.5 run function ARG(_PATH)counter_effect
 					execute positioned ^ ^1 ^0.5 run playsound minecraft:enemy.sword.clash player @a ~ ~ ~ 3 1 0
 				}
@@ -780,10 +818,10 @@ namespace stage()
 					# 繼續啟用ZONE的效果
 					scoreboard players set #ZONE_ACTIVE number 1
 					
-					data modify entity 00000001-0000-0001-0000-000100000001 NoGravity set value 0b
-					```
-					print(f"execute as 00000001-0000-0001-0000-000100000001 at @s positioned ~ 0.0 ~ if entity @s[dx=0,dy={GROUND_Y[0] - 1},dz=0] run tp @s ~ {GROUND_Y[0]} ~")
-					```
+					# data modify entity 00000001-0000-0001-0000-000100000001 NoGravity set value 0b
+					# ``
+					# print(f"execute as 00000001-0000-0001-0000-000100000001 at @s positioned ~ 0.0 ~ if entity @s[dx=0,dy={GROUND_Y[0] - 1},dz=0] run tp @s ~ {GROUND_Y[0]} ~")
+					# ``
 					scoreboard players set #REVERT_ACTION number 1
 					schedule function ARG(__PATH)revert_action 1s
 					schedule clear ARG(__PATH)zone/auto_reset_pose
@@ -804,6 +842,7 @@ namespace stage()
 			{
 				func cast()
 				{
+					scoreboard players set #LAST_SKILL number 2
 					scoreboard players set #RAND_RESULT number -1
 					# 暫時關閉ZONE
 					scoreboard players set #ZONE_ACTIVE number 0
@@ -871,10 +910,10 @@ namespace stage()
 				func calc_pose()
 				{
 					# 右手
-					execute store result entity @s Pose.RightArm[0] float 0.1 run scoreboard players operation #R_ARM_X number += #R_ARM_DIFF_X number
-					execute store result entity @s Pose.RightArm[2] float 0.1 run scoreboard players operation #R_ARM_Z number += #R_ARM_DIFF_Z number
+					execute store result entity 00000001-0000-0001-0000-000100000001 Pose.RightArm[0] float 0.1 run scoreboard players operation #R_ARM_X number += #R_ARM_DIFF_X number
+					execute store result entity 00000001-0000-0001-0000-000100000001 Pose.RightArm[2] float 0.1 run scoreboard players operation #R_ARM_Z number += #R_ARM_DIFF_Z number
 					# 左手
-					execute store result entity @s Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number += #L_ARM_DIFF_X number
+					execute store result entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm[0] float 1 run scoreboard players operation #L_ARM_X number += #L_ARM_DIFF_X number
 				}
 				
 				func end()
@@ -887,16 +926,18 @@ namespace stage()
 					schedule clear ARG(__PATH)zone/auto_reset_pose
 					
 					# 更換劈砍姿勢模型
-					data modify entity @s HandItems[0].tag.CustomModelData set value 14
-					data modify entity @s ArmorItems[3].tag.CustomModelData set value 12
-					data modify entity @s Pose.RightArm set value [350f,350f,320f]
-					data modify entity @s Pose.LeftArm set value [350f,200f,30f]
+					data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
+					data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value 12
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [350f,350f,320f]
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm set value [350f,200f,30f]
 					
 					particle minecraft:explosion ~ ~ ~ 0 0 0 3 5
 					kill 0000000b-0000-000b-0000-000b0000000b
 					execute as 0000000a-0000-000a-0000-000a0000000a at @s run function ARG(_PATH)slash
-					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ~ ~ ~ ~ ~
+					execute facing entity 0000000a-0000-000a-0000-000a0000000a feet rotated ~ 0 positioned as 0000000a-0000-000a-0000-000a0000000a run tp @s ~ ~-0.37 ~ ~ ~
 					execute at @s run function ARG(_PATH)move/run
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 					
 					kill 0000000a-0000-000a-0000-000a0000000a
 					kill 00000011-0000-0011-0000-001100000011
@@ -972,6 +1013,7 @@ namespace stage()
 			{
 				func cast()
 				{
+					scoreboard players set #LAST_SKILL number 3
 					# 暫時關閉ZONE
 					scoreboard players set #ZONE_ACTIVE number 0
 					scoreboard players set #ANIM_LOCK number 1
@@ -990,29 +1032,26 @@ namespace stage()
 				
 				func positioned_effect()
 				{
-					summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;12,12,12,12],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:35}}],Tags:["object","effect","slash","skill_effect"]}
+					summon area_effect_cloud ~ ~-0.37 ~ {Duration:1000000,Tags:["object"],UUID:[I;101,101,101,101],Passengers:[{id:"minecraft:armor_stand",Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;12,12,12,12],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:35}}],Tags:["object","effect","slash","skill_effect"]}]}
 					scoreboard players set 0000000c-0000-000c-0000-000c0000000c number 36
 					scoreboard players set 0000000c-0000-000c-0000-000c0000000c life -100000
 					
-					execute rotated ~ 0 run function ARG(_PATH)tp_back
-					tp 0000000c-0000-000c-0000-000c0000000c ~ ~ ~ ~180 0
-					# 嘗試強迫刷新 tp 顯示
-					schedule function ARG(_PATH)update_display_rotation 1t
-					schedule function ARG(_PATH)update_display_rotation 2t append
-					schedule function ARG(_PATH)update_display_rotation 3t append
+					execute as 00000064-0000-0064-0000-006400000064 rotated ~ 0 run function ARG(_PATH)tp_back
+					
+					tp 00000065-0000-0065-0000-006500000065 ~ ~-0.37 ~ ~180 0
+					data modify entity 0000000c-0000-000c-0000-000c0000000c Rotation set from entity 00000065-0000-0065-0000-006500000065 Rotation
+					execute store result entity 00000065-0000-0065-0000-006500000065 Air short 1 run scoreboard players add #AIR number 1
 				}
 				
 				func tp_back()
 				{
-					execute if block ^ ^ ^-3 #skill:canpass run tp @s ^ ^ ^-3 ~ 0
-					execute unless block ^ ^ ^-3 #skill:canpass if block ^ ^ ^-2 #skill:canpass run tp @s ^ ^ ^-2 ~ 0
-					execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass if block ^ ^ ^-1 #skill:canpass run tp @s ^ ^ ^-1 ~ 0
-					execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass unless block ^ ^ ^-1 #skill:canpass run tp @s ^ ^ ^-0.5 ~ 0
-				}
-				
-				func update_display_rotation()
-				{
-					execute as 00000001-0000-0001-0000-000100000001 at @s run tp @s ~ ~ ~ ~1 ~
+					execute if block ^ ^ ^-3 #skill:canpass run tp @s ^ ^-0.37 ^-3 ~ 0
+					execute unless block ^ ^ ^-3 #skill:canpass if block ^ ^ ^-2 #skill:canpass run tp @s ^ ^-0.37 ^-2 ~ 0
+					execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass if block ^ ^ ^-1 #skill:canpass run tp @s ^ ^-0.37 ^-1 ~ 0
+					execute unless block ^ ^ ^-3 #skill:canpass unless block ^ ^ ^-2 #skill:canpass unless block ^ ^ ^-1 #skill:canpass run tp @s ^ ^-0.37 ^-0.5 ~ 0
+					
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 				}
 				
 				func attack()
@@ -1021,15 +1060,17 @@ namespace stage()
 					execute as 0000000c-0000-000c-0000-000c0000000c store result entity @s ArmorItems[3].tag.CustomModelData int 1 run scoreboard players get @s number
 					
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)attack_effect
-					execute as 00000001-0000-0001-0000-000100000001 at 0000000c-0000-000c-0000-000c0000000c facing entity @s feet rotated ~ 0 run function ARG(_PATH)attack_move
+					execute as 00000064-0000-0064-0000-006400000064 at 0000000c-0000-000c-0000-000c0000000c facing entity @s feet rotated ~ 0 run function ARG(_PATH)attack_move
 					execute as @a[scores={player=1..},gamemode=adventure] unless score @s beamtime matches 0.. at 0000000c-0000-000c-0000-000c0000000c if predicate stage:flaw_range run effect give @s instant_damage 1 0 true
 				}
 				
 				func attack_move()
 				{
-					execute if block ^ ^ ^0.8 #skill:canpass run tp @s ^ ^ ^0.8 ~180 ~
-					execute unless block ^ ^ ^0.8 #skill:canpass if block ^ ^ ^0.4 #skill:canpass run tp @s ^ ^ ^0.4 ~180 ~
-					execute unless block ^ ^ ^0.8 #skill:canpass unless block ^ ^ ^0.4 #skill:canpass run tp @s ~ ~ ~ ~180 ~
+					execute if block ^ ^ ^0.8 #skill:canpass run tp @s ^ ^-0.37 ^0.8 ~180 ~
+					execute unless block ^ ^ ^0.8 #skill:canpass if block ^ ^ ^0.4 #skill:canpass run tp @s ^ ^-0.37 ^0.4 ~180 ~
+					execute unless block ^ ^ ^0.8 #skill:canpass unless block ^ ^ ^0.4 #skill:canpass run tp @s ~ ~-0.37 ~ ~180 ~
+					
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 				}
 				
 				func attack_effect()
@@ -1071,12 +1112,13 @@ namespace stage()
 					schedule function ARG(__PATH)revert_action 1s
 					schedule clear ARG(__PATH)zone/auto_reset_pose
 					scoreboard players set #ANIM_LOCK number 0
+					
+					kill 00000065-0000-0065-0000-006500000065
 				}
 				
 				func shutdown()
 				{
 					schedule clear ARG(_PATH)attack
-					schedule clear ARG(_PATH)update_display_rotation
 					schedule clear ARG(_PATH)sword_wave/anim1
 					schedule clear ARG(_PATH)sword_wave/anim2
 					schedule clear ARG(_PATH)end
@@ -1087,6 +1129,7 @@ namespace stage()
 			{
 				func cast()
 				{
+					scoreboard players set #LAST_SKILL number 4
 					# 劈砍有機率接破綻
 					execute if score #RAND_RESULT number matches 50..74 run function ARG(_PATH)follow_skill
 					
@@ -1119,7 +1162,10 @@ namespace stage()
 				
 				func set_target()
 				{
-					execute positioned as @s run tp @s ~ ~ ~ ~ ~
+					tp 00000064-0000-0064-0000-006400000064 ~ ~-0.37 ~ ~ ~
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
+					
 					summon armor_stand ^ ^ ^1.5 {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,UUID:[I;13,13,13,13],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:39}}],Tags:["object","effect"]}
 				}
 				
@@ -1158,7 +1204,9 @@ namespace stage()
 				
 				func attack()
 				{
-					execute at 0000000d-0000-000d-0000-000d0000000d facing entity @s feet rotated ~180 0 run tp @s ^ ^-0.15 ^-1
+					execute at 0000000d-0000-000d-0000-000d0000000d facing entity @s feet rotated ~180 0 run tp 00000064-0000-0064-0000-006400000064 ^ ^-0.52 ^-1
+					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
+					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
 					# 更換劈砍姿勢模型
 					function ARG(_PATH)sword_wave/start
 					playsound minecraft:skill.basic2 player @a ~ ~ ~ 3 1 0
@@ -1216,6 +1264,8 @@ namespace stage()
 			{
 				func cast()
 				{
+					scoreboard players set #LAST_SKILL number 5
+					
 					function ARG(_PATH)flip
 					```
 					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] + 0.7} ~ run function ARG(_PATH)surround")
