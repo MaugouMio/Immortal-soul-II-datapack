@@ -7,6 +7,7 @@
 		{"predicate": {"custom_model_data": 1},"model": "item/ui/select"},
 		{"predicate": {"custom_model_data": 2},"model": "item/ui/back"},
 		{"predicate": {"custom_model_data": 3},"model": "item/ui/left"},
-		{"predicate": {"custom_model_data": 4},"model": "item/ui/right"}
+		{"predicate": {"custom_model_data": 4},"model": "item/ui/right"},
+		{"predicate": {"custom_model_data": 5},"model": "item/ui/join"}
 	]
 }
