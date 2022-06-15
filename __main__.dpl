@@ -1,4 +1,4 @@
-import utils, skill, stage
+import utils, skill, stage, lobby
 
 description = "Immortal Soul II datapack"
 
@@ -71,6 +71,7 @@ namespace main()
 		function number:install
 		function skill:install
 		function stage:install
+		function lobby:install
 		
 		function ARG(_PATH)effect
 	}
@@ -81,6 +82,7 @@ namespace main()
 		execute as @e[type=area_effect_cloud,scores={font_animation=1..}] run function ARG(_PATH)font_effect_update/check
 		function stage:main
 		function skill:main
+		function lobby:main
 	}
 	
 	func new_player()

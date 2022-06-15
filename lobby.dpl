@@ -1,0 +1,150 @@
+namespace lobby()
+{
+	func install()
+	{
+		bossbar add player {"translate":"Players: ","bold":true,"font":"minecraft:uniform"}
+		bossbar set minecraft:player color purple
+		
+		bossbar add lobby ""
+		bossbar set minecraft:lobby color purple
+		
+		bossbar add difficulty {"text":"A","font":"ui:lobby"}
+		bossbar set minecraft:difficulty color purple
+		
+		bossbar add difficulty_word {"text":"FCG","font":"ui:lobby"}
+		bossbar set minecraft:difficulty_word color purple
+		
+		scoreboard objectives add page dummy
+		scoreboard objectives add choose dummy
+		scoreboard objectives add ui_click minecraft.used:minecraft.warped_fungus_on_a_stick
+	}
+	
+	func display()
+	{
+		bossbar set minecraft:player visible true
+		bossbar set minecraft:lobby visible true
+		bossbar set minecraft:difficulty visible true
+		bossbar set minecraft:difficulty_word visible true
+		
+		bossbar set minecraft:player players @a
+		bossbar set minecraft:lobby players @a
+		bossbar set minecraft:difficulty players @a
+		bossbar set minecraft:difficulty_word players @a
+		
+		scoreboard players reset * ui_click
+	}
+	
+	func hide()
+	{
+		bossbar set minecraft:player visible false
+		bossbar set minecraft:lobby visible false
+		bossbar set minecraft:difficulty visible false
+		bossbar set minecraft:difficulty_word visible false
+	}
+	
+	func reset_item()
+	{
+		item replace entity @a hotbar.0 with minecraft:warped_fungus_on_a_stick{CustomModelData:1,display:{Name:'{"translate":"Select","bold":true,"italic":false}'}}
+		item replace entity @a hotbar.1 with minecraft:warped_fungus_on_a_stick{CustomModelData:2,display:{Name:'{"translate":"Back","bold":true,"italic":false}'}}
+		item replace entity @a hotbar.2 with minecraft:warped_fungus_on_a_stick{CustomModelData:3,display:{Name:'{"translate":"Left","bold":true,"italic":false}'}}
+		item replace entity @a hotbar.3 with minecraft:warped_fungus_on_a_stick{CustomModelData:4,display:{Name:'{"translate":"Right","bold":true,"italic":false}'}}
+		
+		item replace entity @a hotbar.8 with minecraft:warped_fungus_on_a_stick{CustomModelData:5,display:{Name:'{"translate":"Join/Leave","bold":true,"italic":false}'}}
+	}
+	
+	func main()
+	{
+		execute as @a[scores={ui_click=1..}] run function ARG(_PATH)click/check
+	}
+	
+	folder click()
+	{
+		func check()
+		{
+			execute store result score #CLICK_TYPE number run data get entity @s SelectedItem.tag.CustomModelData
+			execute if score #CLICK_TYPE number matches 0 store result score #CLICK_TYPE number run data get entity @s Inventory[{Slot:-106b}].tag.CustomModelData
+			
+			execute if score #CLICK_TYPE number matches 1 run function ARG(_PATH)select
+			execute if score #CLICK_TYPE number matches 2 run function ARG(_PATH)back
+			execute if score #CLICK_TYPE number matches 3 run function ARG(_PATH)left
+			execute if score #CLICK_TYPE number matches 4 run function ARG(_PATH)right
+			execute if score #CLICK_TYPE number matches 5 run function ARG(_PATH)join_player/check
+			
+			scoreboard players reset @s ui_click
+		}
+		
+		func select()
+		{
+			
+		}
+		
+		func back()
+		{
+			
+		}
+		
+		func left()
+		{
+			
+		}
+		
+		func right()
+		{
+			
+		}
+		
+		folder join_player()
+		{
+			func update_display()
+			{
+				bossbar set minecraft:player name [{"translate":"Players: ","bold":true,"font":"minecraft:uniform"},{"selector":"@a[scores={player=1},limit=1]","color":"aqua"}," ",{"selector":"@a[scores={player=1},limit=1]","color":"light_purple"}]
+			}
+			
+			func check()
+			{
+				execute if score @s player matches 1.. run function ARG(_PATH)leave
+				execute unless score @s player matches 0.. run function ARG(_PATH)join_check
+				
+				# 退出隊伍不直接 reset，避免上面判斷錯誤
+				execute if score @s player matches 0 run scoreboard players reset @s player
+			}
+			
+			func leave()
+			{
+				# 玩家1 退出要把 玩家2 改 玩家1
+				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run scoreboard players set @s player 1
+				scoreboard players set @s player 0
+				
+				tellraw @s {"translate":"Player queue leaved."}
+				function ARG(_PATH)update_display
+			}
+			
+			func join_check()
+			{
+				execute if score #PLAYER_MODE number matches 1 run function ARG(_PATH)single
+				execute if score #PLAYER_MODE number matches 2.. run function ARG(_PATH)multi
+			}
+			
+			func single()
+			{
+				execute if entity @a[scores={player=1}] run tellraw @s {"translate":"The player queue is full."}
+				execute unless entity @a[scores={player=1}] run function ARG(_PATH)join
+			}
+			
+			func multi()
+			{
+				execute if entity @a[scores={player=2}] run tellraw @s {"translate":"The player queue is full."}
+				execute unless entity @a[scores={player=2}] run function ARG(_PATH)join
+			}
+			
+			func join()
+			{
+				execute if entity @a[scores={player=1}] run scoreboard players set @s player 2
+				execute unless entity @a[scores={player=1}] run scoreboard players set @s player 1
+				
+				tellraw @s {"translate":"Player queue joined."}
+				function ARG(_PATH)update_display
+			}
+		}
+	}
+}

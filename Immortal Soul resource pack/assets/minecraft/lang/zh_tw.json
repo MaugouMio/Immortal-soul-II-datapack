@@ -10,6 +10,17 @@
 	"Zone": "領域",
 	"Barrier": "結界",
 	
+	"Select": "選擇",
+	"Back": "返回",
+	"Left": "向左",
+	"Right": "向右",
+	"Join/Leave": "加入/退出",
+	
+	"Players: ": "當前玩家: ",
+	"The player queue is full.": "玩家人數已滿",
+	"Player queue leaved.": "退出玩家",
+	"Player queue joined.": "加入玩家",
+	
 	"menu.options": "§a選項...§r",
 	"options.video": "§a顯示設定...§r",
 	"options.fovEffectScale": "§a視角廣度效果(關閉)§r",
