@@ -102,7 +102,7 @@
 		{
 			"type": "bitmap",
 			"file": "ui:font/lobby/easy.png",
-			"ascent": 0,
+			"ascent": 7,
 			"height": 15,
 			"chars": [
 				"B"
@@ -111,7 +111,7 @@
 		{
 			"type": "bitmap",
 			"file": "ui:font/lobby/normal.png",
-			"ascent": 0,
+			"ascent": 7,
 			"height": 15,
 			"chars": [
 				"C"
@@ -120,7 +120,7 @@
 		{
 			"type": "bitmap",
 			"file": "ui:font/lobby/hard.png",
-			"ascent": 0,
+			"ascent": 7,
 			"height": 15,
 			"chars": [
 				"D"
@@ -129,10 +129,28 @@
 		{
 			"type": "bitmap",
 			"file": "ui:font/lobby/hell.png",
-			"ascent": 0,
+			"ascent": 7,
 			"height": 15,
 			"chars": [
 				"E"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/lobby/difficulty_select.png",
+			"ascent": 2,
+			"height": 4,
+			"chars": [
+				"F"
+			]
+		},
+		{
+			"type": "bitmap",
+			"file": "ui:font/lobby/difficulty_select2.png",
+			"ascent": 2,
+			"height": 4,
+			"chars": [
+				"G"
 			]
 		}
 	]
