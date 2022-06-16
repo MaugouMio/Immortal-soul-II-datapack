@@ -137,6 +137,14 @@ namespace stage()
 		effect give @a instant_health 1 5 true
 	}
 	
+	func victory()
+	{
+		execute if score #SELECTED_STAGE number matches 1 unless score #UNLOCK_STAGE number matches 2.. run function ARG(_PATH)stage2/unlock
+		execute if score #SELECTED_STAGE number matches 2 unless score #UNLOCK_STAGE number matches 3.. run function ARG(_PATH)stage3/unlock
+		
+		function ARG(_PATH)end
+	}
+	
 	# 真白之刃
 	folder stage1()
 	{
@@ -1455,6 +1463,12 @@ namespace stage()
 	# 呪縛巫女
 	folder stage2()
 	{
+		func unlock()
+		{
+			scoreboard players set #UNLOCK_STAGE number 2
+			data modify storage lobby:main miko set value "2"
+		}
+		
 		func start()
 		{
 			bossbar set minecraft:boss max 50000
@@ -2434,6 +2448,12 @@ namespace stage()
 	# 深淵恐懼
 	folder stage3()
 	{
+		func unlock()
+		{
+			scoreboard players set #UNLOCK_STAGE number 3
+			data modify storage lobby:main miko set value "4"
+		}
+		
 		func start()
 		{
 			bossbar set minecraft:boss max 50000

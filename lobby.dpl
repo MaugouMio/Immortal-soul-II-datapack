@@ -14,9 +14,19 @@ namespace lobby()
 		bossbar add difficulty_word {"text":"FCG","font":"ui:lobby"}
 		bossbar set minecraft:difficulty_word color purple
 		
-		scoreboard objectives add page dummy
-		scoreboard objectives add choose dummy
+		data modify storage lobby:main mode set value "7"
+		data modify storage lobby:main miko set value "1"
+		data modify storage lobby:main abyss set value "3"
+		
+		scoreboard players set #PAGE number 1
+		scoreboard players set #MAIN_CHOOSE number 1
 		scoreboard objectives add ui_click minecraft.used:minecraft.warped_fungus_on_a_stick
+	}
+	
+	func start()
+	{
+		scoreboard players set #PAGE number 1
+		scoreboard players set #MAIN_CHOOSE number 1
 	}
 	
 	func display()
@@ -54,7 +64,7 @@ namespace lobby()
 	
 	func main()
 	{
-		execute as @a[scores={ui_click=1..}] run function ARG(_PATH)click/check
+		execute as @a[scores={ui_click=1..}] at @s run function ARG(_PATH)click/check
 	}
 	
 	folder click()
@@ -66,11 +76,41 @@ namespace lobby()
 			
 			execute if score #CLICK_TYPE number matches 1 run function ARG(_PATH)select
 			execute if score #CLICK_TYPE number matches 2 run function ARG(_PATH)back
-			execute if score #CLICK_TYPE number matches 3 run function ARG(_PATH)left
-			execute if score #CLICK_TYPE number matches 4 run function ARG(_PATH)right
+			execute if score #CLICK_TYPE number matches 3 run function ARG(_PATH)move/left
+			execute if score #CLICK_TYPE number matches 4 run function ARG(_PATH)move/right
 			execute if score #CLICK_TYPE number matches 5 run function ARG(_PATH)join_player/check
 			
 			scoreboard players reset @s ui_click
+		}
+		
+		folder update_display()
+		{
+			func player()
+			{
+				bossbar set minecraft:player name [{"translate":"Players: ","bold":true,"font":"minecraft:uniform"},{"selector":"@a[scores={player=1},limit=1]","color":"aqua"}," ",{"selector":"@a[scores={player=1},limit=1]","color":"light_purple"}]
+			}
+			
+			func main()
+			{
+				execute if score #MAIN_CHOOSE number matches 1 run bossbar set minecraft:lobby name [{"text":"87","font":"space:default"},{"text":"5","font":"ui:lobby"},{"text":"BA981","font":"space:default"},{"text":"6","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"nbt":"mode","storage":"lobby:main","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"text":"9","font":"ui:lobby"}]
+				execute if score #MAIN_CHOOSE number matches 2 run bossbar set minecraft:lobby name [{"text":"6","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"text":"87","font":"space:default"},{"text":"5","font":"ui:lobby"},{"text":"BA981","font":"space:default"},{"nbt":"mode","storage":"lobby:main","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"text":"9","font":"ui:lobby"}]
+				execute if score #MAIN_CHOOSE number matches 3 run bossbar set minecraft:lobby name [{"text":"6","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"nbt":"mode","storage":"lobby:main","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"text":"87","font":"space:default"},{"text":"5","font":"ui:lobby"},{"text":"BA981","font":"space:default"},{"text":"9","font":"ui:lobby"}]
+			}
+			
+			func stage()
+			{
+				execute if score #SELECTED_STAGE number matches 1 run bossbar set minecraft:lobby name [{"text":"87","font":"space:default"},{"text":"5","font":"ui:lobby"},{"text":"BA981","font":"space:default"},{"text":"0","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"nbt":"miko","storage":"lobby:main","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"nbt":"miko","storage":"lobby:main","font":"ui:lobby"}]
+				execute if score #SELECTED_STAGE number matches 2 run bossbar set minecraft:lobby name [{"text":"0","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"text":"87","font":"space:default"},{"text":"5","font":"ui:lobby"},{"text":"BA981","font":"space:default"},{"nbt":"miko","storage":"lobby:main","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"nbt":"miko","storage":"lobby:main","font":"ui:lobby"}]
+				execute if score #SELECTED_STAGE number matches 3 run bossbar set minecraft:lobby name [{"text":"0","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"nbt":"miko","storage":"lobby:main","font":"ui:lobby"},{"text":"\uF829","font":"space:default"},{"text":"87","font":"space:default"},{"text":"5","font":"ui:lobby"},{"text":"BA981","font":"space:default"},{"nbt":"miko","storage":"lobby:main","font":"ui:lobby"}]
+			}
+			
+			func difficulty()
+			{
+				execute if score #DIFFICULTY number matches 1 run bossbar set minecraft:difficulty_word name {"text":"FBG","font":"ui:lobby"}
+				execute if score #DIFFICULTY number matches 2 run bossbar set minecraft:difficulty_word name {"text":"FCG","font":"ui:lobby"}
+				execute if score #DIFFICULTY number matches 3 run bossbar set minecraft:difficulty_word name {"text":"FDG","font":"ui:lobby"}
+				execute if score #DIFFICULTY number matches 4 run bossbar set minecraft:difficulty_word name {"text":"FEG","font":"ui:lobby"}
+			}
 		}
 		
 		func select()
@@ -83,23 +123,46 @@ namespace lobby()
 			
 		}
 		
-		func left()
+		folder move()
 		{
+			func left()
+			{
+				execute if score #PAGE number matches 0 run scoreboard players remove #MAIN_CHOOSE number 1
+				execute if score #PAGE number matches 1 run scoreboard players remove #SELECTED_STAGE number 1
+				execute if score #PAGE number matches 2 run scoreboard players remove #DIFFICULTY number 1
+				
+				execute if score #MAIN_CHOOSE number matches 0 run scoreboard players set #MAIN_CHOOSE number 3
+				execute if score #SELECTED_STAGE number matches 0 run scoreboard players set #SELECTED_STAGE number 3
+				execute if score #DIFFICULTY number matches 0 run scoreboard players set #DIFFICULTY number 4
+				
+				function ARG(_PATH)update
+			}
 			
-		}
-		
-		func right()
-		{
+			func right()
+			{
+				execute if score #PAGE number matches 0 run scoreboard players add #MAIN_CHOOSE number 1
+				execute if score #PAGE number matches 1 run scoreboard players add #SELECTED_STAGE number 1
+				execute if score #PAGE number matches 2 run scoreboard players add #DIFFICULTY number 1
+				
+				execute if score #MAIN_CHOOSE number matches 4 run scoreboard players set #MAIN_CHOOSE number 1
+				execute if score #SELECTED_STAGE number matches 4 run scoreboard players set #SELECTED_STAGE number 1
+				execute if score #DIFFICULTY number matches 5 run scoreboard players set #DIFFICULTY number 1
+				
+				function ARG(_PATH)update
+			}
 			
+			func update()
+			{
+				playsound minecraft:ui.click player @a
+				
+				execute if score #PAGE number matches 1 run function ARG(__PATH)update_display/main
+				execute if score #PAGE number matches 2 run function ARG(__PATH)update_display/stage
+				execute if score #PAGE number matches 3 run function ARG(__PATH)update_display/difficulty
+			}
 		}
 		
 		folder join_player()
 		{
-			func update_display()
-			{
-				bossbar set minecraft:player name [{"translate":"Players: ","bold":true,"font":"minecraft:uniform"},{"selector":"@a[scores={player=1},limit=1]","color":"aqua"}," ",{"selector":"@a[scores={player=1},limit=1]","color":"light_purple"}]
-			}
-			
 			func check()
 			{
 				execute if score @s player matches 1.. run function ARG(_PATH)leave
@@ -115,8 +178,9 @@ namespace lobby()
 				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run scoreboard players set @s player 1
 				scoreboard players set @s player 0
 				
+				playsound minecraft:ui.start player @s
 				tellraw @s {"translate":"Player queue leaved."}
-				function ARG(_PATH)update_display
+				function ARG(__PATH)update_display/player
 			}
 			
 			func join_check()
@@ -127,12 +191,14 @@ namespace lobby()
 			
 			func single()
 			{
+				execute if entity @a[scores={player=1}] run playsound minecraft:ui.invalid player @s
 				execute if entity @a[scores={player=1}] run tellraw @s {"translate":"The player queue is full."}
 				execute unless entity @a[scores={player=1}] run function ARG(_PATH)join
 			}
 			
 			func multi()
 			{
+				execute if entity @a[scores={player=2}] run playsound minecraft:ui.invalid player @s
 				execute if entity @a[scores={player=2}] run tellraw @s {"translate":"The player queue is full."}
 				execute unless entity @a[scores={player=2}] run function ARG(_PATH)join
 			}
@@ -142,9 +208,15 @@ namespace lobby()
 				execute if entity @a[scores={player=1}] run scoreboard players set @s player 2
 				execute unless entity @a[scores={player=1}] run scoreboard players set @s player 1
 				
+				playsound minecraft:ui.start player @s
 				tellraw @s {"translate":"Player queue joined."}
-				function ARG(_PATH)update_display
+				function ARG(__PATH)update_display/player
 			}
 		}
 	}
+}
+
+tag load
+{
+	lobby:start
 }

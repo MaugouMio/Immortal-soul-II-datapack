@@ -496,6 +496,41 @@
   
   
   
+  "ui.start": {
+    "sounds": [
+      {
+        "name": "ui/start",
+        "stream": false
+      }
+    ]
+  },
+  "ui.leave": {
+    "sounds": [
+      {
+        "name": "ui/leave",
+        "stream": false
+      }
+    ]
+  },
+  "ui.click": {
+    "sounds": [
+      {
+        "name": "ui/click",
+        "stream": false
+      }
+    ]
+  },
+  "ui.invalid": {
+    "sounds": [
+      {
+        "name": "ui/invalid",
+        "stream": false
+      }
+    ]
+  },
+  
+  
+  
   "enemy.target_attack": {
     "sounds": [
       {
