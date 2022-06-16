@@ -74,8 +74,11 @@ namespace lobby()
 			execute store result score #CLICK_TYPE number run data get entity @s SelectedItem.tag.CustomModelData
 			execute if score #CLICK_TYPE number matches 0 store result score #CLICK_TYPE number run data get entity @s Inventory[{Slot:-106b}].tag.CustomModelData
 			
+			# 轉場動畫中不給按
+			execute if score #LOCK_UI number matches 1 run scoreboard players reset @s ui_click
+			
 			execute if score #CLICK_TYPE number matches 1 run function ARG(_PATH)select
-			execute if score #CLICK_TYPE number matches 2 run function ARG(_PATH)back
+			execute if score #CLICK_TYPE number matches 2 run function ARG(_PATH)back/check
 			execute if score #CLICK_TYPE number matches 3 run function ARG(_PATH)move/left
 			execute if score #CLICK_TYPE number matches 4 run function ARG(_PATH)move/right
 			execute if score #CLICK_TYPE number matches 5 run function ARG(_PATH)join_player/check
@@ -118,9 +121,50 @@ namespace lobby()
 			
 		}
 		
-		func back()
+		folder back()
 		{
+			func check()
+			{
+				execute unless score #PAGE number matches 2.. run playsound minecraft:ui.invalid player @s
+				execute if score #PAGE number matches 2.. run function ARG(_PATH)switch
+			}
 			
+			func switch()
+			{
+				scoreboard players remove #PAGE number 1
+				
+				execute if score #PAGE number matches 1 run function ARG(_PATH)fade
+				execute if score #PAGE number matches 2 run function ARG(_PATH)stage
+				
+				playsound minecraft:ui.leave player @a
+			}
+			
+			func fade()
+			{
+				scoreboard players set #LOCK_UI number 1
+				
+				title @a times 5 5 5
+				title @a title {"text":"0","font":"ui:main"}
+				
+				schedule function ARG(_PATH)main 7t
+			}
+			
+			func main()
+			{
+				function ARG(__PATH)update_display/main
+				schedule function ARG(_PATH)fade_end 8t
+			}
+			
+			func fade_end()
+			{
+				scoreboard players reset #LOCK_UI number
+			}
+			
+			func stage()
+			{
+				bossbar set minecraft:difficulty visible false
+				bossbar set minecraft:difficulty_word visible false
+			}
 		}
 		
 		folder move()

@@ -57,7 +57,7 @@
 		{
 			"type": "bitmap",
 			"file": "ui:font/lobby/stage.png",
-			"ascent": 0,
+			"ascent": -16,
 			"height": 128,
 			"chars": [
 				"6"
