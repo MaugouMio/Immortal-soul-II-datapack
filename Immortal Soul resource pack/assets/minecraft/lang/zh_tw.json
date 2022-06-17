@@ -22,6 +22,12 @@
 	"Player queue joined.": "加入玩家",
 	
 	"You need %s player(s) with this mode.": "此模式需要 %s 名玩家",
+	"Single": "單人",
+	"Switch": "雙人切換",
+	
+	"Victory": "挑戰成功",
+	"Fail": "挑戰失敗",
+	"Challenge Time: ": "挑戰時間: ",
 	
 	"menu.options": "§a選項...§r",
 	"options.video": "§a顯示設定...§r",

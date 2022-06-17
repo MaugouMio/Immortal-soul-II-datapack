@@ -3,7 +3,7 @@ import utils, skill, stage, lobby
 description = "Immortal Soul II datapack"
 
 ```
-constants = [-1, 1, 2, 3, 5, 10, 20, 60, 100, 140, 255, 256]
+constants = [-1, 1, 2, 3, 5, 10, 20, 50, 60, 100, 140, 255, 256, 1200]
 constants = set(constants)
 ```
 
@@ -113,6 +113,7 @@ namespace main()
 			```
 			scoreboard players reset @s player
 			function skill:reset_action
+			gamemode adventure @s
 			
 			# 難度設定的能力值
 			attribute @s minecraft:generic.max_health modifier remove c655e15b-1539-43df-80c9-55feb92b4e2b

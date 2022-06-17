@@ -55,12 +55,15 @@ namespace stage()
 		scoreboard players set @s player 0
 		scoreboard players reset @s death
 		gamemode spectator @s
-		execute unless entity @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)end
+		execute unless entity @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)failed
 	}
 	
 	# 點告示牌觸發，需先決定好2P(只要設定player分數為2就好)
 	func start()
 	{
+		# 挑戰計時
+		execute store result score #CHALLENGE_BEGIN number run time query gametime
+		
 		scoreboard players set #GAME_START number 1
 		
 		# 懶得找為什麼沒重置，再重置一次
@@ -120,6 +123,10 @@ namespace stage()
 	
 	func end()
 	{
+		# 挑戰計時
+		execute store result score #CHALLENGE_END number run time query gametime
+		scoreboard players operation #CHALLENGE_END number -= #CHALLENGE_BEGIN number
+		
 		scoreboard players reset #GAME_START number
 		
 		bossbar set minecraft:boss visible false
@@ -138,18 +145,45 @@ namespace stage()
 		```
 		raise Warning("TODO: tp all player back to lobby")
 		```
-		
-		title @a times 0 10 5
-		title @a title {"text":"0","font":"ui:main"}
-		schedule function lobby:return 14t
 	}
 	
 	func victory()
 	{
+		function ARG(_PATH)end
+		
 		execute if score #SELECTED_STAGE number matches 1 unless score #UNLOCK_STAGE number matches 2.. run function ARG(_PATH)stage2/unlock
 		execute if score #SELECTED_STAGE number matches 2 unless score #UNLOCK_STAGE number matches 3.. run function ARG(_PATH)stage3/unlock
 		
+		title @a times 10 20 10
+		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Victory","color":"yellow"}]
+		schedule function lobby:return 39t
+		
+		# 戰鬥資訊
+		tellraw @a ["\n",{"translate":"Victory!","bold":true,"color":"yellow"}]
+		execute if score #SELECTED_STAGE number matches 1 run data modify storage stage:main boss_name set value '{"translate":"Sacred Knight"}'
+		execute if score #SELECTED_STAGE number matches 2 run data modify storage stage:main boss_name set value '{"translate":"Cursed Miko"}'
+		execute if score #SELECTED_STAGE number matches 3 run data modify storage stage:main boss_name set value '{"translate":"Root of Fear"}'
+		execute if score #PLAYER_MODE_SET number matches 1 run data modify storage stage:main player_mode set value '{"translate":"Single"}'
+		execute if score #PLAYER_MODE_SET number matches 2 run data modify storage stage:main player_mode set value '{"translate":"Switch"}'
+		tellraw @a [{"nbt":"boss_name","storage":"stage:main","interpret":true}," - ",{"nbt":"player_mode","storage":"stage:main","interpret":true}]
+		scoreboard players operation #CHALLENGE_MINUTE number = #CHALLENGE_END number
+		scoreboard players operation #CHALLENGE_MINUTE number /= #1200 number
+		scoreboard players operation #CHALLENGE_SECOND number = #CHALLENGE_END number
+		scoreboard players operation #CHALLENGE_SECOND number %= #1200 number
+		scoreboard players operation #CHALLENGE_MILLI number = #CHALLENGE_SECOND number
+		scoreboard players operation #CHALLENGE_SECOND number /= #20 number
+		scoreboard players operation #CHALLENGE_MILLI number %= #20 number
+		scoreboard players operation #CHALLENGE_MILLI number *= #50 number
+		tellraw @a [{"translate":"Challenge Time: "},{"score":{"name":"#CHALLENGE_MINUTE","objective":"number"},"color":"aqua"},":",{"score":{"name":"#CHALLENGE_SECOND","objective":"number"},"color":"aqua"},".",{"score":{"name":"#CHALLENGE_MILLI","objective":"number"},"color":"aqua"}]
+	}
+	
+	func failed()
+	{
 		function ARG(_PATH)end
+		
+		title @a times 10 20 10
+		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Fail","color":"dark_red"}]
+		schedule function lobby:return 39t
 	}
 	
 	func start_tutorial()
