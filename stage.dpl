@@ -126,8 +126,8 @@ namespace stage()
 		kill @e[tag=object]
 		kill @e[scores={font_animation=0..}]
 		clear @a
+		execute as @a run function skill:reset_action
 		scoreboard players set @a weapon_mode 1
-		scoreboard players set @a player 0
 		title @a actionbar ""
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/end
@@ -135,6 +135,13 @@ namespace stage()
 		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/end
 		
 		effect give @a instant_health 1 5 true
+		```
+		raise Warning("TODO: tp all player back to lobby")
+		```
+		
+		title @a times 0 10 5
+		title @a title {"text":"0","font":"ui:main"}
+		schedule function lobby:return 14t
 	}
 	
 	func victory()
@@ -143,6 +150,43 @@ namespace stage()
 		execute if score #SELECTED_STAGE number matches 2 unless score #UNLOCK_STAGE number matches 3.. run function ARG(_PATH)stage3/unlock
 		
 		function ARG(_PATH)end
+	}
+	
+	func start_tutorial()
+	{
+		# 懶得找為什麼沒重置，再重置一次
+		scoreboard players reset #ZONE number
+		data modify storage skill:main blind set value ""
+		
+		clear @s
+		function main:effect
+		scoreboard players set @a weapon_mode 1
+		
+		scoreboard players set #PLAYER_MODE number 1
+		
+		item replace entity @a weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+		item replace entity @a weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
+		
+		# reset beam CD
+		data modify storage skill:main beam_bar set value ["4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4"]
+		scoreboard players set #BEAM_CD number -1
+		
+		effect give @a instant_health 1 5 true
+		```
+		raise Warning("TODO: tp all player to tutorial")
+		```
+	}
+	
+	func leave_tutorial()
+	{
+		```
+		raise Warning("TODO: tp all player back to lobby")
+		```
+		execute as @a run function skill:reset_action
+		
+		title @a times 0 10 5
+		title @a title {"text":"0","font":"ui:main"}
+		schedule function lobby:return 14t
 	}
 	
 	# 真白之刃

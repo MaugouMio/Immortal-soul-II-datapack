@@ -18,28 +18,40 @@ namespace lobby()
 		data modify storage lobby:main miko set value "1"
 		data modify storage lobby:main abyss set value "3"
 		
+		scoreboard players set #IN_LOBBY number 1
 		scoreboard players set #PAGE number 1
 		scoreboard players set #MAIN_CHOOSE number 1
 		scoreboard objectives add ui_click minecraft.used:minecraft.warped_fungus_on_a_stick
 	}
 	
-	func start()
+	# 從關卡或教學回來大廳
+	func return()
 	{
-		scoreboard players set #PAGE number 1
-		scoreboard players set #MAIN_CHOOSE number 1
+		scoreboard players set #IN_LOBBY number 1
+		# 選一般關卡最後頁面會是選難度，跳回選關卡
+		execute if score #PAGE number matches 3 run scoreboard players set #PAGE number 2
+		function ARG(_PATH)display
+		
+		execute as @a run function ARG(_PATH)reset_item
 	}
 	
 	func display()
 	{
+		# 為了確保顯示順序要先關掉
+		bossbar set minecraft:player visible false
+		bossbar set minecraft:lobby visible false
+		bossbar set minecraft:difficulty visible false
+		bossbar set minecraft:difficulty_word visible false
+		
 		bossbar set minecraft:player visible true
 		bossbar set minecraft:lobby visible true
-		bossbar set minecraft:difficulty visible true
-		bossbar set minecraft:difficulty_word visible true
+		execute if score #PAGE matches 3 run bossbar set minecraft:difficulty visible true
+		execute if score #PAGE matches 3 run bossbar set minecraft:difficulty_word visible true
 		
 		bossbar set minecraft:player players @a
 		bossbar set minecraft:lobby players @a
-		bossbar set minecraft:difficulty players @a
-		bossbar set minecraft:difficulty_word players @a
+		execute if score #PAGE matches 3 run bossbar set minecraft:difficulty players @a
+		execute if score #PAGE matches 3 run bossbar set minecraft:difficulty_word players @a
 		
 		scoreboard players reset * ui_click
 	}
@@ -54,17 +66,22 @@ namespace lobby()
 	
 	func reset_item()
 	{
-		item replace entity @a hotbar.0 with minecraft:warped_fungus_on_a_stick{CustomModelData:1,display:{Name:'{"translate":"Select","bold":true,"italic":false}'}}
-		item replace entity @a hotbar.1 with minecraft:warped_fungus_on_a_stick{CustomModelData:2,display:{Name:'{"translate":"Back","bold":true,"italic":false}'}}
-		item replace entity @a hotbar.2 with minecraft:warped_fungus_on_a_stick{CustomModelData:3,display:{Name:'{"translate":"Left","bold":true,"italic":false}'}}
-		item replace entity @a hotbar.3 with minecraft:warped_fungus_on_a_stick{CustomModelData:4,display:{Name:'{"translate":"Right","bold":true,"italic":false}'}}
+		clear @s
 		
-		item replace entity @a hotbar.8 with minecraft:warped_fungus_on_a_stick{CustomModelData:5,display:{Name:'{"translate":"Join/Leave","bold":true,"italic":false}'}}
+		item replace entity @s hotbar.0 with minecraft:warped_fungus_on_a_stick{CustomModelData:1,display:{Name:'{"translate":"Select","bold":true,"italic":false}'}}
+		item replace entity @s hotbar.1 with minecraft:warped_fungus_on_a_stick{CustomModelData:2,display:{Name:'{"translate":"Back","bold":true,"italic":false}'}}
+		item replace entity @s hotbar.2 with minecraft:warped_fungus_on_a_stick{CustomModelData:3,display:{Name:'{"translate":"Left","bold":true,"italic":false}'}}
+		item replace entity @s hotbar.3 with minecraft:warped_fungus_on_a_stick{CustomModelData:4,display:{Name:'{"translate":"Right","bold":true,"italic":false}'}}
+		
+		item replace entity @s hotbar.8 with minecraft:warped_fungus_on_a_stick{CustomModelData:5,display:{Name:'{"translate":"Join/Leave","bold":true,"italic":false}'}}
 	}
 	
 	func main()
 	{
 		execute as @a[scores={ui_click=1..}] at @s run function ARG(_PATH)click/check
+		```
+		raise Warning("TODO: actionbar 顯示當前選項敘述")
+		```
 	}
 	
 	folder click()
@@ -77,7 +94,7 @@ namespace lobby()
 			# 轉場動畫中不給按
 			execute if score #LOCK_UI number matches 1 run scoreboard players reset @s ui_click
 			
-			execute if score #CLICK_TYPE number matches 1 run function ARG(_PATH)select
+			execute if score #CLICK_TYPE number matches 1 run function ARG(_PATH)select/check
 			execute if score #CLICK_TYPE number matches 2 run function ARG(_PATH)back/check
 			execute if score #CLICK_TYPE number matches 3 run function ARG(_PATH)move/left
 			execute if score #CLICK_TYPE number matches 4 run function ARG(_PATH)move/right
@@ -116,16 +133,158 @@ namespace lobby()
 			}
 		}
 		
-		func select()
+		folder select()
 		{
+			func check()
+			{
+				execute if score #PAGE number matches 1 run function ARG(_PATH)main/check
+				execute if score #PAGE number matches 2 run function ARG(_PATH)difficulty
+				execute if score #PAGE number matches 3 run function ARG(_PATH)start/check
+			}
 			
+			folder main()
+			{
+				func check()
+				{
+					execute if score #MAIN_CHOOSE number matches 1 run function ARG(_PATH)stage/click
+					execute if score #MAIN_CHOOSE number matches 2 run function ARG(_PATH)mode
+					execute if score #MAIN_CHOOSE number matches 3 run function ARG(_PATH)tutorial/click
+					
+					playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
+				}
+				
+				folder stage()
+				{
+					func click()
+					{
+						scoreboard players add #PAGE number 1
+						scoreboard players set #LOCK_UI number 1
+						
+						title @a times 5 5 5
+						title @a title {"text":"0","font":"ui:main"}
+						
+						schedule function ARG(_PATH)stage 7t
+					}
+					
+					func stage()
+					{
+						function lobby:click/update_display/stage
+						schedule function ARG(_PATH)fade_end 8t
+					}
+					
+					func fade_end()
+					{
+						scoreboard players reset #LOCK_UI number
+					}
+				}
+				
+				func mode()
+				{
+					scoreboard players add #PLAYER_MODE_SET number 1
+					execute if score #PLAYER_MODE_SET number matches 3 run scoreboard players set #PLAYER_MODE_SET number 1
+					
+					function lobby:click/update_display/main
+				}
+				
+				folder tutorial()
+				{
+					func click()
+					{
+						scoreboard players set #LOCK_UI number 1
+						
+						playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
+						title @a times 5 10 5
+						title @a title {"text":"0","font":"ui:main"}
+						
+						schedule function ARG(_PATH)update 14t
+					}
+					
+					func update()
+					{
+						scoreboard players reset #IN_LOBBY number
+						function lobby:hide
+						function stage:start_tutorial
+						
+						schedule function ARG(_PATH)fade_end 6t
+					}
+					
+					func fade_end()
+					{
+						scoreboard players reset #LOCK_UI number
+					}
+				}
+			}
+			
+			func difficulty()
+			{
+				playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
+				
+				bossbar set minecraft:difficulty visible true
+				bossbar set minecraft:difficulty players @a
+				bossbar set minecraft:difficulty_word visible true
+				bossbar set minecraft:difficulty_word players @a
+				
+				function ARG(__PATH)update_display/difficulty
+			}
+			
+			folder start()
+			{
+				func check()
+				{
+					scoreboard players set #PLAYER_ENOUGH number 1
+					
+					execute if score #PLAYER_MODE_SET number matches 1 unless entity @a[scores={player=1}] run function ARG(_PATH)no_player
+					execute if score #PLAYER_MODE_SET number matches 2.. unless entity @a[scores={player=2}] run function ARG(_PATH)no_player2
+					
+					execute if score #PLAYER_ENOUGH number matches 1 run function ARG(_PATH)fade
+				}
+				
+				func no_player()
+				{
+					scoreboard players reset #PLAYER_ENOUGH number
+					playsound minecraft:ui.invalid player @s ~ ~ ~ 3 1 1
+					tellraw @s {"translate":"You need %s player(s) with this mode.","with":["1"]}
+				}
+				
+				func no_player2()
+				{
+					scoreboard players reset #PLAYER_ENOUGH number
+					playsound minecraft:ui.invalid player @s ~ ~ ~ 3 1 1
+					tellraw @s {"translate":"You need %s player(s) with this mode.","with":["2"]}
+				}
+				
+				func fade()
+				{
+					scoreboard players set #LOCK_UI number 1
+					
+					playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
+					title @a times 5 10 5
+					title @a title {"text":"0","font":"ui:main"}
+					
+					schedule function ARG(_PATH)update 14t
+				}
+				
+				func update()
+				{
+					scoreboard players reset #IN_LOBBY number
+					function lobby:hide
+					function stage:start
+					
+					schedule function ARG(_PATH)fade_end 6t
+				}
+				
+				func fade_end()
+				{
+					scoreboard players reset #LOCK_UI number
+				}
+			}
 		}
 		
 		folder back()
 		{
 			func check()
 			{
-				execute unless score #PAGE number matches 2.. run playsound minecraft:ui.invalid player @s
+				execute unless score #PAGE number matches 2.. run playsound minecraft:ui.invalid player @s ~ ~ ~ 3 1 1
 				execute if score #PAGE number matches 2.. run function ARG(_PATH)switch
 			}
 			
@@ -136,7 +295,7 @@ namespace lobby()
 				execute if score #PAGE number matches 1 run function ARG(_PATH)fade
 				execute if score #PAGE number matches 2 run function ARG(_PATH)stage
 				
-				playsound minecraft:ui.leave player @a
+				playsound minecraft:ui.leave player @a ~ ~ ~ 3 1 1
 			}
 			
 			func fade()
@@ -197,7 +356,7 @@ namespace lobby()
 			
 			func update()
 			{
-				playsound minecraft:ui.click player @a
+				playsound minecraft:ui.click player @a ~ ~ ~ 3 1 1
 				
 				execute if score #PAGE number matches 1 run function ARG(__PATH)update_display/main
 				execute if score #PAGE number matches 2 run function ARG(__PATH)update_display/stage
@@ -222,27 +381,27 @@ namespace lobby()
 				execute if score @s player matches 1 as @a[scores={player=2},limit=1] run scoreboard players set @s player 1
 				scoreboard players set @s player 0
 				
-				playsound minecraft:ui.start player @s
+				playsound minecraft:ui.start player @s ~ ~ ~ 3 1 1
 				tellraw @s {"translate":"Player queue leaved."}
 				function ARG(__PATH)update_display/player
 			}
 			
 			func join_check()
 			{
-				execute if score #PLAYER_MODE number matches 1 run function ARG(_PATH)single
-				execute if score #PLAYER_MODE number matches 2.. run function ARG(_PATH)multi
+				execute if score #PLAYER_MODE_SET number matches 1 run function ARG(_PATH)single
+				execute if score #PLAYER_MODE_SET number matches 2.. run function ARG(_PATH)multi
 			}
 			
 			func single()
 			{
-				execute if entity @a[scores={player=1}] run playsound minecraft:ui.invalid player @s
+				execute if entity @a[scores={player=1}] run playsound minecraft:ui.invalid player @s ~ ~ ~ 3 1 1
 				execute if entity @a[scores={player=1}] run tellraw @s {"translate":"The player queue is full."}
 				execute unless entity @a[scores={player=1}] run function ARG(_PATH)join
 			}
 			
 			func multi()
 			{
-				execute if entity @a[scores={player=2}] run playsound minecraft:ui.invalid player @s
+				execute if entity @a[scores={player=2}] run playsound minecraft:ui.invalid player @s ~ ~ ~ 3 1 1
 				execute if entity @a[scores={player=2}] run tellraw @s {"translate":"The player queue is full."}
 				execute unless entity @a[scores={player=2}] run function ARG(_PATH)join
 			}
@@ -252,15 +411,10 @@ namespace lobby()
 				execute if entity @a[scores={player=1}] run scoreboard players set @s player 2
 				execute unless entity @a[scores={player=1}] run scoreboard players set @s player 1
 				
-				playsound minecraft:ui.start player @s
+				playsound minecraft:ui.start player @s ~ ~ ~ 3 1 1
 				tellraw @s {"translate":"Player queue joined."}
 				function ARG(__PATH)update_display/player
 			}
 		}
 	}
-}
-
-tag load
-{
-	lobby:start
 }

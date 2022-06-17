@@ -21,6 +21,8 @@
 	"Player queue leaved.": "退出玩家",
 	"Player queue joined.": "加入玩家",
 	
+	"You need %s player(s) with this mode.": "此模式需要 %s 名玩家",
+	
 	"menu.options": "§a選項...§r",
 	"options.video": "§a顯示設定...§r",
 	"options.fovEffectScale": "§a視角廣度效果(關閉)§r",
