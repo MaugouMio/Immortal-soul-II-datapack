@@ -79,9 +79,55 @@ namespace lobby()
 	func main()
 	{
 		execute as @a[scores={ui_click=1..}] at @s run function ARG(_PATH)click/check
-		```
-		raise Warning("TODO: actionbar 顯示當前選項敘述")
-		```
+		function ARG(_PATH)description/check
+	}
+	
+	folder description()
+	{
+		func check()
+		{
+			execute if score #PAGE number matches 1 run function ARG(_PATH)main/check
+			execute if score #PAGE number matches 2.. run function ARG(_PATH)stage/check
+		}
+		
+		folder main()
+		{
+			func check()
+			{
+				execute if score #MAIN_CHOOSE number matches 1 run title @a actionbar {"translate":"Select Stage","bold":true}
+				execute if score #MAIN_CHOOSE number matches 2 run function ARG(_PATH)mode
+				execute if score #MAIN_CHOOSE number matches 3 run title @a actionbar {"translate":"Tutorial","bold":true}
+			}
+			
+			func mode()
+			{
+				execute if score #PLAYER_MODE_SET number matches 1 run data modify storage lobby:main player_mode set value '{"translate":"Single"}'
+				execute if score #PLAYER_MODE_SET number matches 2 run data modify storage lobby:main player_mode set value '{"translate":"Switch"}'
+				title @a actionbar [{"translate":"Player Mode","bold":true}," - ",{"nbt":"player_mode","storage":"lobby:main","interpret":true,"color":"yellow"}]
+			}
+		}
+		
+		folder stage()
+		{
+			func check()
+			{
+				execute if score #SELECTED_STAGE matches 1 run title @a actionbar {"translate":"Sacred Knight","bold":true}
+				execute if score #SELECTED_STAGE matches 2 run function ARG(_PATH)miko
+				execute if score #SELECTED_STAGE matches 3 run function ARG(_PATH)abyss
+			}
+			
+			func miko()
+			{
+				execute unless score #UNLOCK_STAGE number matches 2.. run title @a actionbar [{"translate":"Cursed Miko","bold":true}," ",{"translate":"(Locked)","color":"red"}]
+				execute if score #UNLOCK_STAGE number matches 2.. run title @a actionbar {"translate":"Cursed Miko","bold":true}
+			}
+			
+			func abyss()
+			{
+				execute unless score #UNLOCK_STAGE number matches 3 run title @a actionbar [{"translate":"Root of Fear","bold":true}," ",{"translate":"(Locked)","color":"red"}]
+				execute if score #UNLOCK_STAGE number matches 3 run title @a actionbar {"translate":"Root of Fear","bold":true}
+			}
+		}
 	}
 	
 	folder click()
