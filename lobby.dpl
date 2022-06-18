@@ -314,6 +314,7 @@ namespace lobby()
 					scoreboard players set #PLAYER_ENOUGH number 1
 					
 					execute if score #PLAYER_MODE_SET number matches 1 unless entity @a[scores={player=1}] run function ARG(_PATH)no_player
+					execute if score #PLAYER_MODE_SET number matches 2.. unless entity @a[scores={player=1}] run function ARG(_PATH)no_player2
 					execute if score #PLAYER_MODE_SET number matches 2.. unless entity @a[scores={player=2}] run function ARG(_PATH)no_player2
 					
 					execute if score #PLAYER_ENOUGH number matches 1 run function ARG(_PATH)fade
@@ -348,7 +349,7 @@ namespace lobby()
 				{
 					scoreboard players reset #IN_LOBBY number
 					function lobby:hide
-					execute as @a[scores={player=1},limit=1] run function stage:start
+					function stage:start_anim
 					
 					schedule function ARG(_PATH)fade_end 6t
 				}

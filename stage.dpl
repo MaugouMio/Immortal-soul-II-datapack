@@ -40,6 +40,10 @@ namespace stage()
 		function miko:install
 		function abyss:install
 		function abyss_head:install
+		
+		```
+		raise Warning("TODO: forceload BOSS chunks for anim")
+		```
 	}
 	
 	func main()
@@ -53,13 +57,20 @@ namespace stage()
 	
 	func check_end()
 	{
-		scoreboard players set @s player 0
 		scoreboard players reset @s death
 		gamemode spectator @s
 		execute unless entity @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)failed
 	}
 	
-	# 點告示牌觸發，需先決定好2P(只要設定player分數為2就好)
+	func start_anim()
+	{
+		gamemode spectator @a
+		
+		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start_anim/play
+		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start_anim/play
+		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/start_anim/play
+	}
+	
 	func start()
 	{
 		# 挑戰計時
@@ -83,8 +94,8 @@ namespace stage()
 		item replace entity @s weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
 		item replace entity @s weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
 		
-		gamemode spectator @a[scores={player=0}]
-		execute unless score #PLAYER_MODE number matches 3 run gamemode spectator @a[scores={player=2}]
+		gamemode adventure @s
+		# execute if score #PLAYER_MODE number matches 3 run gamemode adventure @a[scores={player=2},limit=1]
 		# reset beam CD
 		data modify storage skill:main beam_bar set value ["4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4"]
 		scoreboard players set #BEAM_CD number 10
@@ -193,7 +204,7 @@ namespace stage()
 		scoreboard players reset #ZONE number
 		data modify storage skill:main blind set value ""
 		
-		clear @s
+		clear @a
 		function main:effect
 		scoreboard players set @a weapon_mode 1
 		
@@ -228,6 +239,101 @@ namespace stage()
 	# 真白之刃
 	folder stage1()
 	{
+		folder start_anim()
+		{
+			func play()
+			{
+				```
+				print(f"execute positioned {STAGE_CENTER[0][0]} {GROUND_Y[0]} {STAGE_CENTER[0][1] - 8} run function ARG(_PATH)summon")
+				```
+				scoreboard players reset #START_ANIM number
+				function ARG(_PATH)loop
+			}
+			
+			func loop()
+			{
+				scoreboard players add #START_ANIM number 1
+				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				
+				execute if score #START_ANIM number matches ..20 as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~0.05 ~
+				execute if score #START_ANIM number matches 20 run function ARG(_PATH)swing/play
+				execute if score #START_ANIM number matches 45 run function ARG(_PATH)fade
+				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop
+				execute if score #START_ANIM number matches 65 run function ARG(_PATH)end
+			}
+			
+			func end()
+			{
+				kill 000000c8-0000-00c8-0000-00c8000000c8
+				execute as @a[scores={player=1},limit=1] run function stage:start
+			}
+			
+			folder swing()
+			{
+				func play()
+				{
+					execute as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~ ~2.8 180 20
+					data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value 2
+					data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
+					execute as 00000001-0000-0001-0000-000100000001 at @s run function stage:stage1/wing/check
+					
+					execute at 000000c8-0000-00c8-0000-00c8000000c8 run playsound minecraft:enemy.sword.dance_attack player @a ~ ~ ~ 3 1 1
+					
+					schedule function ARG(_PATH)anim1 2t
+				}
+				
+				func anim1()
+				{
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [166f,150f,0f]
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm set value [45f,105f,355f]
+					schedule function ARG(_PATH)anim2 2t
+				}
+				
+				func anim2()
+				{
+					data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 15
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [245f,120f,0f]
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm set value [355f,0f,350f]
+					schedule function ARG(_PATH)anim3 2t
+				}
+				
+				func anim3()
+				{
+					data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 16
+					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [324f,80f,0f]
+					schedule function ARG(_PATH)end 2t
+				}
+				
+				func end()
+				{
+					data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
+				}
+			}
+			
+			func fade()
+			{
+				title @a times 10 10 5
+				title @a title {"text":"0","font":"ui:main"}
+			}
+			
+			func summon()
+			{
+				summon area_effect_cloud ~ ~-0.37 ~ {Tags:["object"],Duration:2147483647,UUID:[I;100,100,100,100],Passengers:[{id:"minecraft:armor_stand",Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:30,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:3,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[87f,150f,0f],LeftArm:[95f,210f,0f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}]}
+				
+				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
+				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
+				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
+				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
+				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
+				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
+				effect give @e[type=husk,tag=wing] invisibility 1000000 0 true
+				
+				# 攝影機
+				summon armor_stand ~ ~-1 ~-2.3 {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[180f,-3f],UUID:[I;200,200,200,200]}
+				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+			}
+		}
+		
 		func start()
 		{
 			bossbar set minecraft:boss max 5000
@@ -250,7 +356,7 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			summon area_effect_cloud ~ ~-0.37 ~ {Tags:["object"],Duration:2147483647,UUID:[I;100,100,100,100],Passengers:[{id:"minecraft:armor_stand",Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}]}
+			# summon area_effect_cloud ~ ~-0.37 ~ {Tags:["object"],Duration:2147483647,UUID:[I;100,100,100,100],Passengers:[{id:"minecraft:armor_stand",Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:2,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:14,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[324f,80f,0f],LeftArm:[355f,0f,350f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}]}
 			summon armor_stand ~ ~0.8 ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,CustomNameVisible:1b,CustomName:'{"text":"0","font":"skill:zone"}',Tags:["effect","object"],UUID:[I;18,18,18,18]}
 			summon marker ~ ~ ~ {Tags:["object"],UUID:[I;16,16,16,16]}
 			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
@@ -258,13 +364,13 @@ namespace stage()
 			# 飛劍
 			summon armor_stand ~2 ~ ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Tags:["effect","object"],UUID:[I;2,2,2,2],Rotation:[180f,0f]}
 			# 翅膀裝飾
-			summon husk ~1.63135 ~-1.2 ~-0.76071 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
-			summon husk ~1.13278 ~-1.1 ~-1.39886 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
-			summon husk ~0.40491 ~-1 ~-1.75387 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
-			summon husk ~-0.40491 ~-1 ~-1.75387 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
-			summon husk ~-1.13278 ~-1.1 ~-1.39886 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
-			summon husk ~-1.63135 ~-1.2 ~-0.76071 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
-			effect give @e[type=husk,tag=wing] invisibility 1000000 0 true
+			# summon husk ~1.63135 ~-1.2 ~-0.76071 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
+			# summon husk ~1.13278 ~-1.1 ~-1.39886 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
+			# summon husk ~0.40491 ~-1 ~-1.75387 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
+			# summon husk ~-0.40491 ~-1 ~-1.75387 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
+			# summon husk ~-1.13278 ~-1.1 ~-1.39886 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
+			# summon husk ~-1.63135 ~-1.2 ~-0.76071 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
+			# effect give @e[type=husk,tag=wing] invisibility 1000000 0 true
 		}
 		
 		func end()
@@ -581,7 +687,7 @@ namespace stage()
 					data modify entity @s ArmorItems[3].tag.CustomModelData set value 9
 					data modify entity @s Pose.RightArm set value [87f,150f,0f]
 					data modify entity @s Pose.LeftArm set value [95f,210f,0f]
-					data modify entity @s NoGravity set value 1b
+					# data modify entity @s NoGravity set value 1b
 					particle flash ~ ~1 ~ 0 0 0 1 2
 					playsound minecraft:enemy.sword.strike_big player @a ~ ~ ~ 3 1 0
 					
@@ -1372,8 +1478,8 @@ namespace stage()
 					
 					function ARG(_PATH)flip
 					```
-					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] + 0.7} ~ run function ARG(_PATH)surround")
-					print(f"execute if score #SANCTION_FLIP number matches 1 as @r[scores={{player=1..}}] at @s positioned ~ {GROUND_Y[0] - 0.7} ~ run function ARG(_PATH)surround")
+					print(f"execute if score #SANCTION_FLIP number matches 0 as @r[scores={{player=1..}},gamemode=adventure] at @s positioned ~ {GROUND_Y[0] + 0.7} ~ run function ARG(_PATH)surround")
+					print(f"execute if score #SANCTION_FLIP number matches 1 as @r[scores={{player=1..}},gamemode=adventure] at @s positioned ~ {GROUND_Y[0] - 0.7} ~ run function ARG(_PATH)surround")
 					```
 					execute if score #DIFFICULTY number matches 1 run function ARG(_PATH)schedule_sting/easy
 					execute if score #DIFFICULTY number matches 2..3 run function ARG(_PATH)schedule_sting/normal
@@ -2531,7 +2637,7 @@ namespace stage()
 		func unlock()
 		{
 			scoreboard players set #UNLOCK_STAGE number 3
-			data modify storage lobby:main miko set value "4"
+			data modify storage lobby:main abyss set value "4"
 		}
 		
 		func start()
@@ -3433,7 +3539,7 @@ namespace stage()
 					schedule function ARG(_PATH)stop_shake 3s
 					# 開始震動特效
 					scoreboard players set #SHAKING number 1
-					execute as @a[gamemode=adventure,scores={player=1..}] run function ARG(_PATH)set_shake
+					execute as @a[scores={player=1..}] run function ARG(_PATH)set_shake
 					```
 					print(f"playsound minecraft:enemy.abyss.shake player @a {STAGE_CENTER[2][0]} {GROUND_Y[2]} {STAGE_CENTER[2][1]} 5 1 1")
 					```
@@ -3452,7 +3558,7 @@ namespace stage()
 					execute at 00000001-0000-0001-0000-000100000001 run playsound minecraft:enemy.abyss.swallow player @a ~ ~ ~ 5 1 1
 					
 					scoreboard players reset #SHAKING number
-					execute as @a[gamemode=adventure,scores={player=1..}] unless score @s beamtime matches 0..2 run function ARG(_PATH)reset_shake
+					execute as @a[scores={player=1..}] unless score @s beamtime matches 0..2 run function ARG(_PATH)reset_shake
 					schedule function ARG(_PATH)start_move 1s
 				}
 				

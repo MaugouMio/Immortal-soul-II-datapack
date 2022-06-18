@@ -33,6 +33,8 @@
 		{"predicate": {"custom_model_data": 26},"model": "item/enemy/abyss/portal"},
 		{"predicate": {"custom_model_data": 27},"model": "item/enemy/abyss/raid_aim"},
 		{"predicate": {"custom_model_data": 28},"model": "item/enemy/abyss/raid_aim2"},
-		{"predicate": {"custom_model_data": 29},"model": "item/enemy/abyss/big_beam_wave"}
+		{"predicate": {"custom_model_data": 29},"model": "item/enemy/abyss/big_beam_wave"},
+		
+		{"predicate": {"custom_model_data": 30},"model": "item/enemy/sword/boss_close_eye"}
 	]
 }
