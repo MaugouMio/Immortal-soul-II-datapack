@@ -190,9 +190,6 @@ namespace skill()
 		
 		func check_mode()
 		{
-			```
-			raise Warning("TODO: set #PLAYER_MODE number before game starts")
-			```
 			# 1 = single ; 2 = switch ; 3 = swap
 			execute if score #PLAYER_MODE number matches 1 run function ARG(_PATH)single
 			execute if score #PLAYER_MODE number matches 2 run function ARG(_PATH)switch/find

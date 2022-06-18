@@ -3,6 +3,7 @@ import utils, loop
 ```
 GROUND_Y = [4.0, 4.0, 4.0]
 STAGE_CENTER = [(128, 0), (128, 0), (56.0, 0.0)]
+LOBBY_POS = "0 4 0 0 40"
 ```
 
 namespace stage()
@@ -143,7 +144,7 @@ namespace stage()
 		
 		effect give @a instant_health 1 5 true
 		```
-		raise Warning("TODO: tp all player back to lobby")
+		print(f"tp @a {LOBBY_POS}")
 		```
 	}
 	
@@ -159,7 +160,7 @@ namespace stage()
 		schedule function lobby:return 39t
 		
 		# 戰鬥資訊
-		tellraw @a ["\n",{"translate":"Victory!","bold":true,"color":"yellow"}]
+		tellraw @a ""
 		execute if score #SELECTED_STAGE number matches 1 run data modify storage stage:main boss_name set value '{"translate":"Sacred Knight"}'
 		execute if score #SELECTED_STAGE number matches 2 run data modify storage stage:main boss_name set value '{"translate":"Cursed Miko"}'
 		execute if score #SELECTED_STAGE number matches 3 run data modify storage stage:main boss_name set value '{"translate":"Root of Fear"}'
@@ -209,12 +210,13 @@ namespace stage()
 		```
 		raise Warning("TODO: tp all player to tutorial")
 		```
+		tp @a 0 4 -16 -90 40
 	}
 	
 	func leave_tutorial()
 	{
 		```
-		raise Warning("TODO: tp all player back to lobby")
+		print(f"tp @a {LOBBY_POS}")
 		```
 		execute as @a run function skill:reset_action
 		

@@ -104,12 +104,15 @@ namespace main()
 		{
 			execute unless score @s game_id = #GLOBAL game_id run function ARG(_PATH)reset
 			scoreboard players reset @s login
+			
+			execute if score #IN_LOBBY number matches 1 run function lobby:display
+			execute if score #IN_LOBBY number matches 1 run function lobby:reset_item
 		}
 		
 		func reset()
 		{
 			```
-			raise Warning("TODO: tp back to lobby")
+			print(f"tp @a {LOBBY_POS}")
 			```
 			scoreboard players reset @s player
 			function skill:reset_action
@@ -120,9 +123,6 @@ namespace main()
 			effect clear @s minecraft:regeneration
 			
 			effect give @s minecraft:instant_health 1 10 true
-			
-			execute if score #IN_LOBBY number matches 1 run function lobby:display
-			execute if score #IN_LOBBY number matches 1 run function lobby:reset_item
 		}
 	}
 	

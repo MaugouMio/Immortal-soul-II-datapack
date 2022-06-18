@@ -34,6 +34,7 @@
 	"Challenge Time: ": "挑戰時間: ",
 	
 	"menu.options": "§a選項...§r",
+	"options.fov": "§a視角廣度(建議80以上)§r",
 	"options.video": "§a顯示設定...§r",
 	"options.fovEffectScale": "§a視角廣度效果(關閉)§r",
 	"options.entityDistanceScaling": "§a實體顯示距離(400+)§r",
