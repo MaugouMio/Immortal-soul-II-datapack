@@ -2700,6 +2700,53 @@ namespace stage()
 			data modify storage lobby:main abyss set value "4"
 		}
 		
+		folder start_anim()
+		{
+			func play()
+			{
+				```
+				print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} rotated 0 0 run function ARG(_PATH)summon")
+				```
+				scoreboard players reset #START_ANIM number
+				function ARG(_PATH)loop
+			}
+			
+			func loop()
+			{
+				scoreboard players add #START_ANIM number 1
+				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				
+				execute if score #START_ANIM number matches 5 as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.march/play
+				execute if score #START_ANIM number matches 24.. as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~-0.25 ~ ~0.5
+				execute if score #START_ANIM number matches 45 run function ARG(_PATH)fade
+				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop
+				execute if score #START_ANIM number matches 65 run function ARG(_PATH)end
+			}
+			
+			func end()
+			{
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.march_loop/stop
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
+				kill 000000c8-0000-00c8-0000-00c8000000c8
+				execute as @a[scores={player=1},limit=1] run function stage:start
+			}
+			
+			func fade()
+			{
+				title @a times 10 10 5
+				title @a title {"text":"0","font":"ui:main"}
+			}
+			
+			func summon()
+			{
+				function abyss:summon/default
+				
+				# 攝影機
+				summon armor_stand ~6 ~-0.4 ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[-90f,-5f],UUID:[I;200,200,200,200]}
+				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+			}
+		}
+		
 		func start()
 		{
 			bossbar set minecraft:boss max 50000
@@ -2721,7 +2768,7 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			function abyss:summon/default
+			# function abyss:summon/default
 			scoreboard players set 00000001-0000-0001-0000-000100000001 number 1
 			execute store result score 00000001-0000-0001-0000-000100000001 health run bossbar get minecraft:boss max
 			execute as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.loop/play
