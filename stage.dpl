@@ -1655,6 +1655,66 @@ namespace stage()
 			data modify storage lobby:main miko set value "2"
 		}
 		
+		folder start_anim()
+		{
+			func play()
+			{
+				```
+				print(f"execute positioned {STAGE_CENTER[1][0]} {GROUND_Y[1]} {STAGE_CENTER[1][1] - 8} run function ARG(_PATH)summon")
+				```
+				scoreboard players reset #START_ANIM number
+				function ARG(_PATH)loop
+			}
+			
+			func loop()
+			{
+				scoreboard players add #START_ANIM number 1
+				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				
+				execute if score #START_ANIM number matches 10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)animate
+				execute if score #START_ANIM number matches 11..30 as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~ ~-0.05 ~ ~-1.25
+				execute if score #START_ANIM number matches 45 run function ARG(_PATH)fade
+				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop
+				execute if score #START_ANIM number matches 65 run function ARG(_PATH)end
+			}
+			
+			func animate()
+			{
+				particle firework ~ ~2 ~ 0 0 0 0.2 30
+				particle flash ~ ~2 ~ 0 0 0 1 1
+				playsound minecraft:enemy.miko.sanka_shoot player @a ~ ~ ~ 3 1 1
+				playsound minecraft:enemy.miko.swoosh player @a ~ ~ ~ 3 1 1
+				
+				function miko:set_variant/default
+				function miko:animations/animation.miko.start_anim/resume
+			}
+			
+			func end()
+			{
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.start_anim/stop
+				kill 000000c8-0000-00c8-0000-00c8000000c8
+				execute as @a[scores={player=1},limit=1] run function stage:start
+			}
+			
+			func fade()
+			{
+				title @a times 10 10 5
+				title @a title {"text":"0","font":"ui:main"}
+			}
+			
+			func summon()
+			{
+				function miko:summon/default
+				execute as 00000001-0000-0001-0000-000100000001 run function miko:set_variant/invisible
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.start_anim/play
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.start_anim/pause
+				
+				# 攝影機
+				summon armor_stand ~ ~-1 ~-1.5 {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[180f,40f],UUID:[I;200,200,200,200]}
+				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+			}
+		}
+		
 		func start()
 		{
 			bossbar set minecraft:boss max 50000
@@ -1679,7 +1739,7 @@ namespace stage()
 		
 		func summon_boss()
 		{
-			function miko:summon/default
+			# function miko:summon/default
 			tag 00000001-0000-0001-0000-000100000001 add boss
 			tag 00000001-0000-0001-0000-000100000001 remove new_miko
 			tag 00000001-0000-0001-0000-000100000001 remove effect
