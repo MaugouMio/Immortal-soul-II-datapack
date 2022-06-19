@@ -81,6 +81,7 @@ namespace main()
 		execute as @a if score @s login matches 1.. run function ARG(_PATH)login_reset/check
 		execute as @e[type=area_effect_cloud,scores={font_animation=1..}] run function ARG(_PATH)font_effect_update/check
 		execute if score #GAME_START number matches 1 run function stage:main
+		execute if score #TUTORIAL_START number matches 1 run function stage:tutorial/main
 		function skill:main
 		execute if score #IN_LOBBY number matches 1 run function lobby:main
 	}

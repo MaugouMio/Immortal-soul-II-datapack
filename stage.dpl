@@ -213,6 +213,7 @@ namespace stage()
 		scoreboard players reset #ZONE number
 		data modify storage skill:main blind set value ""
 		
+		scoreboard players reset * ui_click
 		clear @a
 		function main:effect
 		scoreboard players set @a weapon_mode 1
@@ -222,27 +223,173 @@ namespace stage()
 		item replace entity @a weapon.mainhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
 		item replace entity @a weapon.offhand with minecraft:carrot_on_a_stick{display:{Name:'{"translate":"Immortal Edge","bold":true,"italic":false}'},CustomModelData:1,weapon:1b}
 		
+		item replace entity @a hotbar.8 with minecraft:warped_fungus_on_a_stick{CustomModelData:2,display:{Name:'{"translate":"Back","bold":true,"italic":false}'}}
+		
 		# reset beam CD
 		data modify storage skill:main beam_bar set value ["4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4","4"]
 		scoreboard players set #BEAM_CD number -1
 		
 		effect give @a instant_health 1 5 true
-		```
-		raise Warning("TODO: tp all player to tutorial")
-		```
-		tp @a 0 4 -16 -90 40
+		
+		tp @a 0 29 -16 180 40
+		scoreboard players set #TUTORIAL_START number 1
+		function ARG(_PATH)tutorial/stage1
 	}
 	
-	func leave_tutorial()
+	folder tutorial()
 	{
-		```
-		print(f"tp @a {LOBBY_POS}")
-		```
-		execute as @a run function skill:reset_action
+		func main()
+		{
+			execute as @a[scores={ui_click=1..},limit=1] run function ARG(_PATH)leave
+			execute at @e[type=magma_cube] run particle minecraft:end_rod ~ ~0.1 ~ 0 0 0 0.05 1
+			execute as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)heal_boss
+		}
 		
-		title @a times 0 10 5
-		title @a title {"text":"0","font":"ui:main"}
-		schedule function lobby:return 14t
+		func heal_boss()
+		{
+			execute store result score @s health run bossbar get minecraft:boss max
+			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
+		}
+		
+		func stage1()
+		{
+			# 先做重置
+			fill 1 26 -23 -1 28 -23 minecraft:stone_bricks
+			fill 1 29 -23 -1 31 -23 minecraft:iron_bars
+			
+			tellraw @a {}
+			
+			setblock -3 29 -13 minecraft:polished_blackstone_pressure_plate
+			setblock -3 29 -19 minecraft:polished_blackstone_pressure_plate
+			setblock 3 29 -19 minecraft:polished_blackstone_pressure_plate
+			setblock 3 29 -13 minecraft:polished_blackstone_pressure_plate
+			
+			summon magma_cube -2.5 29.0 -12.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[-135f,0f],Tags:["tutorial"]}
+			summon magma_cube -2.5 29.0 -18.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[-45f,0f],Tags:["tutorial"]}
+			summon magma_cube 3.5 29.0 -18.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[45f,0f],Tags:["tutorial"]}
+			summon magma_cube 3.5 29.0 -12.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[135f,0f],Tags:["tutorial"]}
+		}
+		
+		# 衝刺
+		func stage2()
+		{
+			playsound minecraft:block.piston.contract player @a ~ ~ ~ 3 1 1
+			fill 1 26 -23 -1 28 -23 minecraft:iron_bars
+			fill 1 29 -23 -1 31 -23 minecraft:air
+			
+			setblock -3 29 -13 minecraft:air
+			setblock -3 29 -19 minecraft:air
+			setblock 3 29 -19 minecraft:air
+			setblock 3 29 -13 minecraft:air
+			
+			tellraw @a {}
+			
+			fill 1 29 -37 -1 29 -37 minecraft:polished_blackstone_pressure_plate
+		}
+		
+		# 落地
+		func stage3()
+		{
+			fill 1 29 -37 -1 29 -37 minecraft:air
+			
+			tellraw @a {}
+			
+			bossbar set minecraft:boss name {"translate":"Dummy","color":"white","bold":true}
+			bossbar set minecraft:boss player @a
+			bossbar set minecraft:boss visible true
+			bossbar set minecraft:boss max 3800
+			bossbar set minecraft:boss value 3800
+			
+			setblock 0 1 -44 minecraft:polished_blackstone_pressure_plate
+			summon magma_cube 0.5 1.0 -43.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:1000.0}],Health:380.0f,Rotation:[0f,0f],Tags:["tutorial","boss"],UUID:[I;1,1,1,1]}
+			
+			# 重置這關的門
+			fill 1 26 -51 -1 28 -51 minecraft:stone_bricks
+			fill 1 29 -51 -1 31 -51 minecraft:iron_bars
+		}
+		
+		# 槍
+		func stage4()
+		{
+			bossbar set minecraft:boss visible false
+			
+			setblock 0 1 -44 minecraft:air
+			
+			playsound minecraft:block.piston.contract player @a ~ ~ ~ 5 1 1
+			fill 1 26 -51 -1 28 -51 minecraft:iron_bars
+			fill 1 29 -51 -1 31 -51 minecraft:air
+			
+			tellraw @a {}
+			
+			summon magma_cube -19.5 29.0 -57.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:33.0f,Rotation:[-90f,0f],Tags:["tutorial"]}
+			
+			# 重置這關的門
+			fill 1 26 -65 -1 28 -65 minecraft:stone_bricks
+			fill 1 29 -65 -1 31 -65 minecraft:iron_bars
+		}
+		
+		# 大跳
+		func stage5()
+		{
+			playsound minecraft:block.piston.contract player @a ~ ~ ~ 5 1 1
+			fill 1 26 -65 -1 28 -65 minecraft:iron_bars
+			fill 1 29 -65 -1 31 -65 minecraft:air
+			
+			tellraw @a {}
+			
+			fill 1 29 -79 -1 29 -79 minecraft:polished_blackstone_pressure_plate
+		}
+		
+		# 雷射
+		func stage6()
+		{
+			fill 1 29 -79 -1 29 -79 minecraft:air
+			
+			tellraw @a {}
+			
+			bossbar set minecraft:boss player @a
+			bossbar set minecraft:boss visible true
+			bossbar set minecraft:boss max 1680
+			bossbar set minecraft:boss value 1680
+			
+			setblock 0 29 -89 minecraft:polished_blackstone_pressure_plate
+			summon magma_cube 0.5 29.0 -88.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:1000.0}],Health:168.0f,Rotation:[0f,0f],Tags:["tutorial","boss"],UUID:[I;1,1,1,1]}
+			
+			# 重置這關的門
+			fill 1 26 -93 -1 28 -93 minecraft:stone_bricks
+			fill 1 29 -93 -1 31 -93 minecraft:iron_bars
+		}
+		
+		func end()
+		{
+			bossbar set minecraft:boss visible false
+			
+			setblock 0 29 -89 minecraft:air
+			
+			playsound minecraft:block.piston.contract player @a ~ ~ ~ 3 1 1
+			fill 1 26 -93 -1 28 -93 minecraft:iron_bars
+			fill 1 29 -93 -1 31 -93 minecraft:air
+			
+			tellraw @a {}
+		}
+	
+		func leave()
+		{
+			bossbar set minecraft:boss visible false
+			kill @e[tag=tutorial]
+			
+			scoreboard players reset #TUTORIAL_START number
+			scoreboard players reset * ui_click
+			clear @a
+			```
+			print(f"tp @a {LOBBY_POS}")
+			```
+			execute as @a run function skill:reset_action
+			
+			title @a times 0 10 5
+			title @a title {"text":"0","font":"ui:main"}
+			schedule function lobby:return 14t
+		}
 	}
 	
 	# 真白之刃
