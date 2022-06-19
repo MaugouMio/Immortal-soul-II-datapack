@@ -337,6 +337,7 @@ namespace lobby()
 				func fade()
 				{
 					scoreboard players set #LOCK_UI number 1
+					schedule function stage:start_anim_set 6t
 					
 					playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
 					title @a times 5 10 5

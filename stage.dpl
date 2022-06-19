@@ -62,9 +62,18 @@ namespace stage()
 		execute unless entity @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)failed
 	}
 	
-	func start_anim()
+	func start_anim_set()
 	{
 		gamemode spectator @a
+		
+		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start_anim/set
+		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start_anim/set
+		execute if score #SELECTED_STAGE number matches 3 run function ARG(_PATH)stage3/start_anim/set
+	}
+	
+	func start_anim()
+	{
+		title @a actionbar ""
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/start_anim/play
 		execute if score #SELECTED_STAGE number matches 2 run function ARG(_PATH)stage2/start_anim/play
@@ -168,7 +177,7 @@ namespace stage()
 		
 		title @a times 10 20 10
 		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Victory","color":"yellow"}]
-		schedule function lobby:return 39t
+		schedule function lobby:return 29t
 		
 		# 戰鬥資訊
 		tellraw @a ""
@@ -195,7 +204,7 @@ namespace stage()
 		
 		title @a times 10 20 10
 		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Fail","color":"dark_red"}]
-		schedule function lobby:return 39t
+		schedule function lobby:return 29t
 	}
 	
 	func start_tutorial()
@@ -241,11 +250,16 @@ namespace stage()
 	{
 		folder start_anim()
 		{
-			func play()
+			func set()
 			{
 				```
 				print(f"execute positioned {STAGE_CENTER[0][0]} {GROUND_Y[0]} {STAGE_CENTER[0][1] - 8} run function ARG(_PATH)summon")
 				```
+				tp @a 000000c8-0000-00c8-0000-00c8000000c8
+			}
+			
+			func play()
+			{
 				scoreboard players reset #START_ANIM number
 				function ARG(_PATH)loop
 			}
@@ -253,12 +267,12 @@ namespace stage()
 			func loop()
 			{
 				scoreboard players add #START_ANIM number 1
-				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				execute as @a run spectate 000000c8-0000-00c8-0000-00c8000000c8 @s
 				
 				execute if score #START_ANIM number matches ..20 as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~0.05 ~
 				execute if score #START_ANIM number matches 20 run function ARG(_PATH)swing/play
 				execute if score #START_ANIM number matches 45 run function ARG(_PATH)fade
-				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop
+				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop 1t
 				execute if score #START_ANIM number matches 65 run function ARG(_PATH)end
 			}
 			
@@ -273,20 +287,21 @@ namespace stage()
 				func play()
 				{
 					execute as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~ ~2.8 180 20
+					
 					data modify entity 00000001-0000-0001-0000-000100000001 ArmorItems[3].tag.CustomModelData set value 2
 					data modify entity 00000001-0000-0001-0000-000100000001 HandItems[0].tag.CustomModelData set value 14
 					execute as 00000001-0000-0001-0000-000100000001 at @s run function stage:stage1/wing/check
 					
 					execute at 000000c8-0000-00c8-0000-00c8000000c8 run playsound minecraft:enemy.sword.dance_attack player @a ~ ~ ~ 3 1 1
 					
-					schedule function ARG(_PATH)anim1 2t
+					schedule function ARG(_PATH)anim1 1t
 				}
 				
 				func anim1()
 				{
 					data modify entity 00000001-0000-0001-0000-000100000001 Pose.RightArm set value [166f,150f,0f]
 					data modify entity 00000001-0000-0001-0000-000100000001 Pose.LeftArm set value [45f,105f,355f]
-					schedule function ARG(_PATH)anim2 2t
+					schedule function ARG(_PATH)anim2 1t
 				}
 				
 				func anim2()
@@ -320,17 +335,16 @@ namespace stage()
 			{
 				summon area_effect_cloud ~ ~-0.37 ~ {Tags:["object"],Duration:2147483647,UUID:[I;100,100,100,100],Passengers:[{id:"minecraft:armor_stand",Invisible:1b,Invulnerable:1b,NoGravity:1b,ShowArms:1b,Marker:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:30,CustomPotionColor:-1}}],HandItems:[{id:"minecraft:potion",Count:1b,tag:{CustomModelData:3,CustomPotionColor:-1}},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:4,CustomPotionColor:-1}}],Pose:{RightArm:[87f,150f,0f],LeftArm:[95f,210f,0f]},Tags:["boss","knockback_resist","object"],UUID:[I;1,1,1,1]}]}
 				
-				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
-				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
-				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
-				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
-				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
-				summon husk ~ ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[0f,-60f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
+				summon husk ~0.5 ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[90f,-90f],Tags:["object","wing"],Team:"enemy",UUID:[I;4,4,4,4]}
+				summon husk ~0.5 ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[90f,-90f],Tags:["object","wing"],Team:"enemy",UUID:[I;5,5,5,5]}
+				summon husk ~0.5 ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[90f,-90f],Tags:["object","wing"],Team:"enemy",UUID:[I;6,6,6,6]}
+				summon husk ~0.5 ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[90f,-90f],Tags:["object","wing"],Team:"enemy",UUID:[I;7,7,7,7]}
+				summon husk ~0.5 ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[90f,-90f],Tags:["object","wing"],Team:"enemy",UUID:[I;8,8,8,8]}
+				summon husk ~0.5 ~-1 ~-1 {Silent:1b,Invulnerable:1b,NoAI:1b,ArmorItems:[{},{},{},{id:"minecraft:potion",Count:1b,tag:{CustomModelData:5}}],Rotation:[90f,-90f],Tags:["object","wing"],Team:"enemy",UUID:[I;9,9,9,9]}
 				effect give @e[type=husk,tag=wing] invisibility 1000000 0 true
 				
 				# 攝影機
-				summon armor_stand ~ ~-1 ~-2.3 {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[180f,-3f],UUID:[I;200,200,200,200]}
-				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				summon armor_stand ~ ~-1 ~-2.3 {Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[180f,-3f],UUID:[I;200,200,200,200]}
 			}
 		}
 		
@@ -1657,11 +1671,15 @@ namespace stage()
 		
 		folder start_anim()
 		{
-			func play()
+			func set()
 			{
 				```
-				print(f"execute positioned {STAGE_CENTER[1][0]} {GROUND_Y[1]} {STAGE_CENTER[1][1] - 8} run function ARG(_PATH)summon")
+				print(f"execute positioned {STAGE_CENTER[1][0]} {GROUND_Y[1]} {STAGE_CENTER[1][1] - 8} rotated 0 0 run function ARG(_PATH)summon")
 				```
+				tp @a 000000c8-0000-00c8-0000-00c8000000c8
+			}
+			func play()
+			{
 				scoreboard players reset #START_ANIM number
 				function ARG(_PATH)loop
 			}
@@ -1669,12 +1687,12 @@ namespace stage()
 			func loop()
 			{
 				scoreboard players add #START_ANIM number 1
-				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				execute as @a run spectate 000000c8-0000-00c8-0000-00c8000000c8 @s
 				
 				execute if score #START_ANIM number matches 10 as 00000001-0000-0001-0000-000100000001 at @s run function ARG(_PATH)animate
-				execute if score #START_ANIM number matches 11..30 as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~ ~-0.05 ~ ~-1.25
+				execute if score #START_ANIM number matches 11..30 as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~ ~ ~-0.055 ~ ~-1.55
 				execute if score #START_ANIM number matches 45 run function ARG(_PATH)fade
-				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop
+				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop 1t
 				execute if score #START_ANIM number matches 65 run function ARG(_PATH)end
 			}
 			
@@ -1691,7 +1709,7 @@ namespace stage()
 			
 			func end()
 			{
-				execute as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.start_anim/stop
+				execute as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.start_anim/pause
 				kill 000000c8-0000-00c8-0000-00c8000000c8
 				execute as @a[scores={player=1},limit=1] run function stage:start
 			}
@@ -1710,8 +1728,7 @@ namespace stage()
 				execute as 00000001-0000-0001-0000-000100000001 at @s run function miko:animations/animation.miko.start_anim/pause
 				
 				# 攝影機
-				summon armor_stand ~ ~-1 ~-1.5 {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[180f,40f],UUID:[I;200,200,200,200]}
-				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				summon armor_stand ~ ~-1 ~-1.5 {Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[180f,40f],UUID:[I;200,200,200,200]}
 			}
 		}
 		
@@ -2702,11 +2719,16 @@ namespace stage()
 		
 		folder start_anim()
 		{
-			func play()
+			func set()
 			{
 				```
 				print(f"execute positioned {STAGE_CENTER[2][0] + 5} {GROUND_Y[2] + 0.5} {STAGE_CENTER[2][1]} rotated 0 0 run function ARG(_PATH)summon")
 				```
+				tp @a 000000c8-0000-00c8-0000-00c8000000c8
+			}
+			
+			func play()
+			{
 				scoreboard players reset #START_ANIM number
 				function ARG(_PATH)loop
 			}
@@ -2714,12 +2736,12 @@ namespace stage()
 			func loop()
 			{
 				scoreboard players add #START_ANIM number 1
-				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				execute as @a run spectate 000000c8-0000-00c8-0000-00c8000000c8 @s
 				
-				execute if score #START_ANIM number matches 5 as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.march/play
-				execute if score #START_ANIM number matches 24.. as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~-0.25 ~ ~0.5
+				execute if score #START_ANIM number matches 1 as 00000001-0000-0001-0000-000100000001 at @s run function abyss:animations/animation.model.march/play
+				execute if score #START_ANIM number matches 20.. as 000000c8-0000-00c8-0000-00c8000000c8 at @s run tp @s ~-0.25 ~ ~ ~ ~0.5
 				execute if score #START_ANIM number matches 45 run function ARG(_PATH)fade
-				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop
+				execute unless score #START_ANIM number matches 65 run schedule function ARG(_PATH)loop 1t
 				execute if score #START_ANIM number matches 65 run function ARG(_PATH)end
 			}
 			
@@ -2742,8 +2764,7 @@ namespace stage()
 				function abyss:summon/default
 				
 				# 攝影機
-				summon armor_stand ~6 ~-0.4 ~ {Marker:1b,Invisible:1b,Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[-90f,-5f],UUID:[I;200,200,200,200]}
-				spectate 000000c8-0000-00c8-0000-00c8000000c8 @a
+				summon armor_stand ~6 ~-0.4 ~ {Invulnerable:1b,NoGravity:1b,Tags:["object"],Rotation:[-90f,-5f],UUID:[I;200,200,200,200]}
 			}
 		}
 		
