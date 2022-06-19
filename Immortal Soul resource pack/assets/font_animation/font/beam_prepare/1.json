@@ -1,0 +1,94 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/0.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "0"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/1.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "1"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/2.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "2"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/3.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "3"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/4.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "4"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/5.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "5"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/6.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "6"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/7.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "7"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/8.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "8"
+            ]
+        },
+        {
+            "type": "bitmap",
+            "file": "font_animation:font/beam_prepare/9.png",
+            "ascent": 96,
+            "height": 192,
+            "chars": [
+                "9"
+            ]
+        }
+    ]
+}

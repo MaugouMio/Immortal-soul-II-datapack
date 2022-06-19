@@ -904,6 +904,8 @@ namespace skill()
 				summon minecraft:armor_stand ^ ^ ^19 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 				summon minecraft:armor_stand ^ ^ ^21 {NoGravity:1,Invisible:1,Invulnerable:1,Marker:1,Fire:280s,Tags:["object","effect","blast_target"],ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:26}}]}
 				execute as @e[type=armor_stand,tag=blast_target] positioned as @s run tp @s ~ ~0.1 ~ ~180 ~
+				
+				execute positioned ^ ^0.4 ^1 run function ARG(_PATH)prepare_effect
 			}
 			
 			func show_beam()
@@ -962,6 +964,13 @@ namespace skill()
 					# title @a[scores={weapon_mode=-1}] actionbar [{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"\uF82B\uF82A\uF829\uF828\uF824","font":"space:default"}]
 					title @a actionbar ["",{"nbt":"blind","storage":"skill:main","interpret":true},[{"text":"_","font":"ui:bar"},{"text":"BA984","font":"space:default"},{"nbt":"beam_bar","storage":"skill:main","interpret":true},{"nbt":"beam_bar[]","storage":"skill:main","interpret":true,"separator":{"text":"_","font":"space:default"},"font":"space:default"},{"text":"\uF82B\uF82A\uF829\uF828\uF824","font":"space:default"}]]
 				}
+			}
+			
+			func prepare_effect()
+			{
+				summon minecraft:area_effect_cloud ~ ~ ~ {CustomName:'{"text":"0","font":"font_animation:beam_prepare/1"}',CustomNameVisible:1,Duration:11,Tags:['{"text":"","font":"font_animation:beam_prepare/1"}', '{"text":"","font":"font_animation:beam_prepare/0"}', 'new_font_anim']}
+				scoreboard players set @e[type=area_effect_cloud,tag=new_font_anim,limit=1] font_animation 10
+				tag @e[type=area_effect_cloud,tag=new_font_anim,limit=1] remove new_font_anim
 			}
 		}
 		
