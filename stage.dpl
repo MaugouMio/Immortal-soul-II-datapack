@@ -176,7 +176,7 @@ namespace stage()
 		execute if score #SELECTED_STAGE number matches 2 unless score #UNLOCK_STAGE number matches 3.. run function ARG(_PATH)stage3/unlock
 		
 		title @a times 10 20 10
-		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Victory","color":"yellow"}]
+		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Victory","color":"yellow","bold":true,"font":"minecraft:uniform"}]
 		schedule function lobby:return 29t
 		
 		# 戰鬥資訊
@@ -203,7 +203,7 @@ namespace stage()
 		function ARG(_PATH)end
 		
 		title @a times 10 20 10
-		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Fail","color":"dark_red"}]
+		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Fail","color":"dark_red","bold":true,"font":"minecraft:uniform"}]
 		schedule function lobby:return 29t
 	}
 	
@@ -329,6 +329,14 @@ namespace stage()
 			{
 				title @a times 10 10 5
 				title @a title {"text":"0","font":"ui:main"}
+				schedule function ARG(_PATH)talk 25t
+			}
+			
+			func talk()
+			{
+				title @a times 10 60 10
+				title @a subtitle {"translate":"Now, show me what your soul is capable of","color":"dark_red","bold":true,"font":"minecraft:uniform"}
+				title @a title ""
 			}
 			
 			func summon()
@@ -1718,6 +1726,14 @@ namespace stage()
 			{
 				title @a times 10 10 5
 				title @a title {"text":"0","font":"ui:main"}
+				schedule function ARG(_PATH)talk 25t
+			}
+			
+			func talk()
+			{
+				title @a times 10 60 10
+				title @a subtitle {"translate":"Ha! An interesting human sacrifice","color":"dark_red","bold":true,"font":"minecraft:uniform"}
+				title @a title ""
 			}
 			
 			func summon()
@@ -2757,6 +2773,14 @@ namespace stage()
 			{
 				title @a times 10 10 5
 				title @a title {"text":"0","font":"ui:main"}
+				schedule function ARG(_PATH)talk 25t
+			}
+			
+			func talk()
+			{
+				title @a times 10 60 10
+				title @a subtitle {"translate":"Feel the fear ... And struggle in the abyss!","color":"dark_red","bold":true,"font":"minecraft:uniform"}
+				title @a title ""
 			}
 			
 			func summon()
