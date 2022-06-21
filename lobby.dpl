@@ -31,14 +31,19 @@ namespace lobby()
 	func return()
 	{
 		scoreboard players set #IN_LOBBY number 1
-		# 選一般關卡最後頁面會是選難度，跳回選關卡
-		execute if score #PAGE number matches 3 run scoreboard players set #PAGE number 2
-		# 可能有解鎖，要刷新顯示
-		function ARG(_PATH)click/update_display/stage
+		# 選一般關卡最後頁面會是選難度，跳回選關卡跟做設定
+		execute if score #PAGE number matches 3 run function ARG(_PATH)stage_end
 		function ARG(_PATH)display
 		
 		gamemode adventure @a
 		execute as @a run function ARG(_PATH)reset_item
+	}
+	
+	func stage_end()
+	{
+		scoreboard players set #PAGE number 2
+		# 可能有解鎖，要刷新顯示
+		function ARG(_PATH)click/update_display/stage
 	}
 	
 	func display()
@@ -255,7 +260,6 @@ namespace lobby()
 					{
 						scoreboard players set #LOCK_UI number 1
 						
-						playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
 						title @a times 5 10 5
 						title @a title {"text":"0","font":"ui:main"}
 						

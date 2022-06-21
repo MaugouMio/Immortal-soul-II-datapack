@@ -48,6 +48,7 @@ namespace stage()
 	
 	func main()
 	{
+		function skill:gun/beam/show_bar/update
 		execute as @a[scores={player=1..,death=1..}] run function ARG(_PATH)check_end
 		
 		execute if score #SELECTED_STAGE number matches 1 run function ARG(_PATH)stage1/main
@@ -57,6 +58,7 @@ namespace stage()
 	
 	func check_end()
 	{
+		attribute @s minecraft:generic.attack_damage base set 0
 		scoreboard players reset @s death
 		gamemode spectator @s
 		execute unless entity @a[scores={player=1..},gamemode=adventure] run function ARG(_PATH)failed
@@ -176,6 +178,7 @@ namespace stage()
 		execute if score #SELECTED_STAGE number matches 2 unless score #UNLOCK_STAGE number matches 3.. run function ARG(_PATH)stage3/unlock
 		
 		title @a times 10 20 10
+		title @a subtitle ""
 		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Victory","color":"yellow","bold":true,"font":"minecraft:uniform"}]
 		schedule function lobby:return 29t
 		
@@ -203,6 +206,7 @@ namespace stage()
 		function ARG(_PATH)end
 		
 		title @a times 10 20 10
+		title @a subtitle ""
 		title @a title ["",{"text":"FF","font":"space:default"},{"text":"0","font":"ui:main"},{"text":"FF","font":"space:default"},{"translate":"Fail","color":"dark_red","bold":true,"font":"minecraft:uniform"}]
 		schedule function lobby:return 29t
 	}
@@ -231,6 +235,8 @@ namespace stage()
 		
 		effect give @a instant_health 1 5 true
 		
+		title @a actionbar ""
+		
 		tp @a 0 29 -16 180 40
 		scoreboard players set #TUTORIAL_START number 1
 		function ARG(_PATH)tutorial/stage1
@@ -240,15 +246,19 @@ namespace stage()
 	{
 		func main()
 		{
+			function skill:gun/beam/show_bar/update
+			
 			execute as @a[scores={ui_click=1..},limit=1] run function ARG(_PATH)leave
-			execute at @e[type=magma_cube] run particle minecraft:end_rod ~ ~0.1 ~ 0 0 0 0.05 1
-			execute as 00000001-0000-0001-0000-000100000001 run function ARG(_PATH)heal_boss
+			execute at @e[type=skeleton] run particle minecraft:end_rod ~ ~0.1 ~ 0 0 0 0.05 1
+			execute as 00000001-0000-0001-0000-000100000001 if score @s health matches 1.. run function ARG(_PATH)heal_boss
 		}
 		
 		func heal_boss()
 		{
-			execute store result score @s health run bossbar get minecraft:boss max
-			execute store result bossbar minecraft:boss value run bossbar get minecraft:boss max
+			scoreboard players add @s life 1
+			execute if score @s life matches 3 store result score @s health run bossbar get minecraft:boss max
+			execute if score @s life matches 3 store result bossbar minecraft:boss value run bossbar get minecraft:boss max
+			execute if score @s life matches 3 run scoreboard players reset @s life
 		}
 		
 		func stage1()
@@ -266,10 +276,11 @@ namespace stage()
 			setblock 3 29 -19 minecraft:polished_blackstone_pressure_plate
 			setblock 3 29 -13 minecraft:polished_blackstone_pressure_plate
 			
-			summon magma_cube -2.5 29.0 -12.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[-135f,0f],Tags:["tutorial"]}
-			summon magma_cube -2.5 29.0 -18.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[-45f,0f],Tags:["tutorial"]}
-			summon magma_cube 3.5 29.0 -18.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[45f,0f],Tags:["tutorial"]}
-			summon magma_cube 3.5 29.0 -12.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:48.0f,Rotation:[135f,0f],Tags:["tutorial"]}
+			summon skeleton -2.5 29.0 -12.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:100.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:48.0f,Rotation:[-135f,0f],Team:"enemy",Tags:["tutorial","knockback_resist"]}
+			summon skeleton -2.5 29.0 -18.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:100.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:48.0f,Rotation:[-45f,0f],Team:"enemy",Tags:["tutorial","knockback_resist"]}
+			summon skeleton 3.5 29.0 -18.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:100.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:48.0f,Rotation:[45f,0f],Team:"enemy",Tags:["tutorial","knockback_resist"]}
+			summon skeleton 3.5 29.0 -12.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:100.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:48.0f,Rotation:[135f,0f],Team:"enemy",Tags:["tutorial","knockback_resist"]}
+			execute as @e[type=skeleton] store result score @s number run scoreboard players add #GLOBAL number 1
 		}
 		
 		# 衝刺
@@ -302,13 +313,15 @@ namespace stage()
 			tellraw @a {"translate":"The higher you are, the more damage you can do."}
 			
 			bossbar set minecraft:boss name {"translate":"Dummy","color":"white","bold":true}
-			bossbar set minecraft:boss player @a
+			bossbar set minecraft:boss players @a
 			bossbar set minecraft:boss visible true
 			bossbar set minecraft:boss max 3800
 			bossbar set minecraft:boss value 3800
 			
 			setblock 0 1 -44 minecraft:polished_blackstone_pressure_plate
-			summon magma_cube 0.5 1.0 -43.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:1000.0}],Health:380.0f,Rotation:[0f,0f],Tags:["tutorial","boss"],UUID:[I;1,1,1,1]}
+			summon skeleton 0.5 1.0 -43.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:1000.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:380.0f,Rotation:[0f,0f],Team:"enemy",Tags:["tutorial","boss","knockback_resist"],UUID:[I;1,1,1,1]}
+			execute as 00000001-0000-0001-0000-000100000001 store result score @s health run bossbar get minecraft:boss max
+			execute as 00000001-0000-0001-0000-000100000001 store result score @s number run scoreboard players add #GLOBAL number 1
 			
 			# 重置這關的門
 			fill 1 26 -51 -1 28 -51 minecraft:stone_bricks
@@ -332,7 +345,8 @@ namespace stage()
 			tellraw @a {"translate":"(In %s	mode, the gun will be held by P2.)","with":[{"translate":"Switch","bold":true,"color":"yellow"}]}
 			tellraw @a {"translate":"Right mouse button hold to keep shooting."}
 			
-			summon magma_cube -19.5 29.0 -57.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:100.0}],Health:33.0f,Rotation:[-90f,0f],Tags:["tutorial"]}
+			summon skeleton -19.5 29.0 -57.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:100.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:33.0f,Rotation:[-90f,0f],Team:"enemy",Tags:["tutorial","knockback_resist"]}
+			execute as @e[type=skeleton] store result score @s number run scoreboard players add #GLOBAL number 1
 			
 			# 重置這關的門
 			fill 1 26 -65 -1 28 -65 minecraft:stone_bricks
@@ -364,13 +378,15 @@ namespace stage()
 			tellraw @a {"translate":"Shoot a powerful laser. Being invincible during the shoot."}
 			tellraw @a {"translate":"It takes 90 seconds to fully charge the energy bar."}
 			
-			bossbar set minecraft:boss player @a
+			bossbar set minecraft:boss players @a
 			bossbar set minecraft:boss visible true
 			bossbar set minecraft:boss max 1680
 			bossbar set minecraft:boss value 1680
 			
 			setblock 0 29 -89 minecraft:polished_blackstone_pressure_plate
-			summon magma_cube 0.5 29.0 -88.5 {NoAI:1,Size:0.4,Attributes:[{Name:"minecraft:generic.max_health",Base:1000.0}],Health:168.0f,Rotation:[0f,0f],Tags:["tutorial","boss"],UUID:[I;1,1,1,1]}
+			summon skeleton 0.5 29.0 -88.5 {Attributes:[{Name:"minecraft:generic.max_health",Base:1000.0},{Name:"minecraft:generic.movement_speed",Base:0.0},{Name:"minecraft:generic.follow_range",Base:0.0},{Name:"minecraft:generic.attack_damage",Base:0.0}],Health:168.0f,Rotation:[0f,0f],Team:"enemy",Tags:["tutorial","boss","knockback_resist"],UUID:[I;1,1,1,1]}
+			execute as 00000001-0000-0001-0000-000100000001 store result score @s health run bossbar get minecraft:boss max
+			execute as 00000001-0000-0001-0000-000100000001 store result score @s number run scoreboard players add #GLOBAL number 1
 			
 			# 重置這關的門
 			fill 1 26 -93 -1 28 -93 minecraft:stone_bricks
@@ -404,7 +420,7 @@ namespace stage()
 			```
 			execute as @a run function skill:reset_action
 			
-			title @a times 0 10 5
+			title @a times 5 10 5
 			title @a title {"text":"0","font":"ui:main"}
 			schedule function lobby:return 14t
 		}
