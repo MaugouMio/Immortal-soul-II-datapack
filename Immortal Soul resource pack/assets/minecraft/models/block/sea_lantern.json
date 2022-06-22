@@ -1,0 +1,22 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"all": "minecraft:block/sea_lantern"
+	},
+    "elements": [
+        {
+            "name": "cube",
+            "from": [ 0.0, 0.0, 0.0 ], 
+            "to": [ 16.0, 16.0, 16.0 ], 
+			"shade": false,
+            "faces": {
+                "north": { "texture": "#all", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "east": { "texture": "#all", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "south": { "texture": "#all", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "west": { "texture": "#all", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "up": { "texture": "#all", "uv": [ 0.0, 0.0, 16.0, 16.0 ] },
+                "down": { "texture": "#all", "uv": [ 0.0, 0.0, 16.0, 16.0 ] }
+            }
+        }
+    ]
+}
