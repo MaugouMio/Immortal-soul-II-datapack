@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1655561821,
+    "creation_time": 1655916368,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -32,7 +32,7 @@
       },
       "vanillaAnimationExporter": {
         "rootEntityType": "minecraft:armor_stand",
-        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"aj_model\",\"miko\",\"knockback_resist\",\"object\",\"new_miko\"],UUID:[I;1,1,1,1]}",
+        "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"aj_model\",\"miko\",\"knockback_resist\",\"new_miko\"],UUID:[I;1,1,1,1]}",
         "markerArmorStands": true,
         "autoDistance": true,
         "autoDistanceMovementThreshold": 1,
@@ -11491,7 +11491,7 @@
       "override": false,
       "length": 1.15,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",

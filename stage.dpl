@@ -3,7 +3,7 @@ import utils, loop
 ```
 GROUND_Y = [4.0, 4.0, 4.0]
 STAGE_CENTER = [(122.0, -74.0), (200.0, -6.0), (56.0, 0.0)]
-LOBBY_POS = "0 4 0 0 40"
+LOBBY_POS = "0 4 4 0 40"
 ```
 
 namespace stage()
@@ -94,6 +94,7 @@ namespace stage()
 		
 		# 懶得找為什麼沒重置，再重置一次
 		scoreboard players reset #ZONE number
+		scoreboard players reset #BLIND number
 		data modify storage skill:main blind set value ""
 		
 		# 人數模式設定成指定模式
@@ -177,8 +178,12 @@ namespace stage()
 	{
 		function ARG(_PATH)end
 		
+		# 關卡解鎖
 		execute if score #SELECTED_STAGE number matches 1 unless score #UNLOCK_STAGE number matches 2.. run function ARG(_PATH)stage2/unlock
 		execute if score #SELECTED_STAGE number matches 2 unless score #UNLOCK_STAGE number matches 3.. run function ARG(_PATH)stage3/unlock
+		
+		# 成就檢查 (限地獄模式)
+		execute if score #DIFFICULTY number matches 4 run function ARG(_PATH)check_advancement
 		
 		title @a times 10 20 10
 		title @a subtitle ""
@@ -187,6 +192,10 @@ namespace stage()
 		
 		# 戰鬥資訊
 		tellraw @a ""
+		execute if score #DIFFICULTY number matches 1 run tellraw @a {"translate":"EASY MODE","bold":true,"color":"yellow"}
+		execute if score #DIFFICULTY number matches 2 run tellraw @a {"translate":"NORMAL MODE","bold":true,"color":"gold"}
+		execute if score #DIFFICULTY number matches 3 run tellraw @a {"translate":"HARD MODE","bold":true,"color":"red"}
+		execute if score #DIFFICULTY number matches 4 run tellraw @a {"translate":"HELL MODE","bold":true,"color":"dark_purple"}
 		execute if score #SELECTED_STAGE number matches 1 run data modify storage stage:main boss_name set value '{"translate":"Sacred Knight"}'
 		execute if score #SELECTED_STAGE number matches 2 run data modify storage stage:main boss_name set value '{"translate":"Cursed Miko"}'
 		execute if score #SELECTED_STAGE number matches 3 run data modify storage stage:main boss_name set value '{"translate":"Root of Fear"}'
@@ -204,6 +213,13 @@ namespace stage()
 		tellraw @a [{"translate":"Challenge Time: "},{"score":{"name":"#CHALLENGE_MINUTE","objective":"number"},"color":"aqua"},":",{"score":{"name":"#CHALLENGE_SECOND","objective":"number"},"color":"aqua"},".",{"score":{"name":"#CHALLENGE_MILLI","objective":"number"},"color":"aqua"}]
 	}
 	
+	func check_advancement()
+	{
+		execute if score #SELECTED_STAGE number matches 1 if score #CHALLENGE_END number matches ..1200 run advancement grant @a[scores={player=1..}] only stage:hayaku
+		execute if score #SELECTED_STAGE number matches 2 if score #SIKIGAMI_LEFT number matches 2.. run advancement grant @a[scores={player=1..}] only stage:touhou
+		execute if score #SELECTED_STAGE number matches 3 if score #BLIND_RECORD number matches 9 run advancement grant @a[scores={player=1..}] only stage:darker
+	}
+	
 	func failed()
 	{
 		function ARG(_PATH)end
@@ -218,6 +234,7 @@ namespace stage()
 	{
 		# 懶得找為什麼沒重置，再重置一次
 		scoreboard players reset #ZONE number
+		scoreboard players reset #BLIND number
 		data modify storage skill:main blind set value ""
 		
 		scoreboard players reset * ui_click
@@ -1990,6 +2007,7 @@ namespace stage()
 			
 			bossbar set minecraft:bullet_barrier visible false
 			
+			execute store result score #SIKIGAMI_LEFT number if entity @e[type=armor_stand,tag=miko]
 			function miko:remove/all
 		}
 		
@@ -3007,6 +3025,7 @@ namespace stage()
 		
 		func end()
 		{
+			scoreboard players operation #BLIND_RECORD number = #BLIND number
 			```
 			print(f"tp 7fffffff-7fff-ffff-7fff-ffff7fffffff {STAGE_CENTER[2][0]} {GROUND_Y[2] - 20} {STAGE_CENTER[2][1]}")
 			```

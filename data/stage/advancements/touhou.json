@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:diamond_hoe",
+      "nbt": "{CustomModelData:40}"
+    },
+    "title": {
+      "translate": "Touhou Player"
+    },
+    "description": {
+      "translate": "Defeat Cursed Miko while the clones still exist"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "stage:root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

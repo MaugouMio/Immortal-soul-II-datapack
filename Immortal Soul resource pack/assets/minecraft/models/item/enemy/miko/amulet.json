@@ -18,7 +18,11 @@
 			}
 		}
 	],
+	"gui_light": "front",
 	"display": {
+		"gui": {
+			"rotation": [90, -180, 0]
+		},
 		"head": {
 			"rotation": [0, 0, -16],
 			"translation": [0.25, -20, 0],

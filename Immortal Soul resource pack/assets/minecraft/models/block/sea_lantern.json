@@ -1,7 +1,8 @@
 {
 	"ambientocclusion": false,
 	"textures": {
-		"all": "minecraft:block/sea_lantern"
+		"all": "minecraft:block/sea_lantern",
+		"particle": "minecraft:block/sea_lantern"
 	},
     "elements": [
         {

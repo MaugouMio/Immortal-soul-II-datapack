@@ -1,0 +1,24 @@
+{
+  "display": {
+    "announce_to_chat": false,
+    "background": "minecraft:textures/block/black_wool.png",
+    "description": {
+		"translate": "Hell mode only"
+	},
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:diamond_hoe",
+      "nbt": "{CustomModelData:26}"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "Special Challenge"
+    }
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

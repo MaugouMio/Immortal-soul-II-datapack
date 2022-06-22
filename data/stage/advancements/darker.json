@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:diamond_hoe",
+      "nbt": "{CustomModelData:69}"
+    },
+    "title": {
+      "translate": "Darker Yet Darker"
+    },
+    "description": {
+      "translate": "Defeat Root of Fear after killing 9 eyes"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "parent": "stage:root",
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}
