@@ -96,6 +96,8 @@ namespace main()
 		effect give @s minecraft:jump_boost 1000000 1 true
 		gamemode adventure @s
 		
+		advancement grant @s only stage:root
+		
 		tag @s add flame_target
 		execute if score #IN_LOBBY number matches 1 run function lobby:display
 		execute if score #IN_LOBBY number matches 1 run function lobby:reset_item

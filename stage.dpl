@@ -215,7 +215,7 @@ namespace stage()
 	
 	func check_advancement()
 	{
-		execute if score #SELECTED_STAGE number matches 1 if score #CHALLENGE_END number matches ..1200 run advancement grant @a[scores={player=1..}] only stage:hayaku
+		execute if score #SELECTED_STAGE number matches 1 if score #CHALLENGE_END number matches ..800 run advancement grant @a[scores={player=1..}] only stage:hayaku
 		execute if score #SELECTED_STAGE number matches 2 if score #SIKIGAMI_LEFT number matches 2.. run advancement grant @a[scores={player=1..}] only stage:touhou
 		execute if score #SELECTED_STAGE number matches 3 if score #BLIND_RECORD number matches 9 run advancement grant @a[scores={player=1..}] only stage:darker
 	}
@@ -705,10 +705,6 @@ namespace stage()
 		{
 			func loop()
 			{
-				```
-				# 有要後退先後退
-				print(f"execute if score #BACKSTEP number matches 1 as 00000064-0000-0064-0000-006400000064 at @s rotated ~ 0 positioned ~ {GROUND_Y[0] + 1} ~ run function ARG(__PATH)backstep")
-				```
 				execute if score #REVERT_ACTION number matches 1 run function ARG(_PATH)revert_action
 				
 				schedule function ARG(_PATH)loop 5s
@@ -717,6 +713,11 @@ namespace stage()
 			
 			func check_slash()
 			{
+				```
+				# 有要後退先後退
+				print(f"execute if score #BACKSTEP number matches 1 as 00000064-0000-0064-0000-006400000064 at @s rotated ~ 0 positioned ~ {GROUND_Y[0] + 1} ~ run function ARG(__PATH)backstep")
+				```
+				
 				scoreboard players set #SLASH_USED number 0
 				execute unless score #SLASH_CD number matches 1 if score @s health matches ..2500 run function ARG(_PATH)slash/cast
 				execute if score #SLASH_USED number matches 0 run function ARG(_PATH)rand_skill
@@ -1174,6 +1175,9 @@ namespace stage()
 					execute positioned ~ ~2 ~ if block ^ ^ ^3 #skill:canpass positioned ~ ~-2 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^3 ~ ~
 					execute positioned ~ ~2 ~ unless block ^ ^ ^3 #skill:canpass if block ^ ^ ^2 #skill:canpass positioned ~ ~-2 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^2 ~ ~
 					execute positioned ~ ~2 ~ unless block ^ ^ ^3 #skill:canpass unless block ^ ^ ^2 #skill:canpass if block ^ ^ ^2 #skill:canpass positioned ~ ~-1 ~ run tp 00000064-0000-0064-0000-006400000064 ^ ^ ^1 ~ ~
+					```
+					print(f"execute as 00000064-0000-0064-0000-006400000064 at @s unless block ~ ~0.82 ~ #skill:canpass run tp @s ~ {GROUND_Y[0] - 0.82} ~")
+					```
 					
 					data modify entity 00000001-0000-0001-0000-000100000001 Rotation set from entity 00000064-0000-0064-0000-006400000064 Rotation
 					execute store result entity 00000064-0000-0064-0000-006400000064 Air short 1 run scoreboard players add #AIR number 1
