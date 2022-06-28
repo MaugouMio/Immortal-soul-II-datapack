@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1655916368,
+    "creation_time": 1656214846,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -35,7 +35,7 @@
         "rootEntityNbt": "{Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,Tags:[\"aj_model\",\"miko\",\"knockback_resist\",\"new_miko\"],UUID:[I;1,1,1,1]}",
         "markerArmorStands": true,
         "autoDistance": true,
-        "autoDistanceMovementThreshold": 1,
+        "autoDistanceMovementThreshold": 3,
         "manualDistance": 10,
         "deduplicatePositionFrames": false,
         "deduplicateRotationFrames": true,
@@ -5722,7 +5722,7 @@
               "channel": "timeline",
               "data_points": [
                 {
-                  "script": "scoreboard players set #ANIM_LOCK number 2"
+                  "script": "execute as @e[type=armor_stand,tag=miko] at @s run function stage:stage2/skills/flame/switch_loop"
                 }
               ],
               "uuid": "05b51c08-f8f4-ec1a-d31b-e148c51a9d8f",
@@ -5741,7 +5741,7 @@
       "override": false,
       "length": 0.3,
       "snapping": 20,
-      "selected": false,
+      "selected": true,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",
@@ -5826,7 +5826,7 @@
               "data_points": [
                 {
                   "x": 0,
-                  "y": 0.5,
+                  "y": "0.25",
                   "z": 0
                 }
               ],

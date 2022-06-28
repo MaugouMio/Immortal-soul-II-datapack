@@ -46,7 +46,7 @@
 				}
 			},
 			"timeline": {
-				"0.55": "scoreboard players set #ANIM_LOCK number 2"
+				"0.55": "execute as @e[type=armor_stand,tag=miko] at @s run function stage:stage2/skills/flame/switch_loop"
 			}
 		},
 		"animation.miko.flame_loop": {
@@ -64,7 +64,8 @@
 					"position": {
 						"0.0": [0, 0, 0],
 						"0.15": {
-							"post": [0, 0.5, 0],
+							"pre": [0, 0.25, 0],
+							"post": [0, 0.25, 0],
 							"lerp_mode": "catmullrom"
 						},
 						"0.3": [0, 0, 0]

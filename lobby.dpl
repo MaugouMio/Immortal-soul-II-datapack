@@ -225,6 +225,7 @@ namespace lobby()
 						scoreboard players set #LOCK_UI number 1
 						
 						title @a times 5 5 5
+						title @a subtitle ""
 						title @a title {"text":"0","font":"ui:main"}
 						
 						schedule function ARG(_PATH)stage 7t
@@ -261,6 +262,7 @@ namespace lobby()
 						scoreboard players set #LOCK_UI number 1
 						
 						title @a times 5 10 5
+						title @a subtitle ""
 						title @a title {"text":"0","font":"ui:main"}
 						
 						schedule function ARG(_PATH)update 14t
@@ -345,6 +347,7 @@ namespace lobby()
 					
 					playsound minecraft:ui.start player @a ~ ~ ~ 3 1 1
 					title @a times 5 10 5
+					title @a subtitle ""
 					title @a title {"text":"0","font":"ui:main"}
 					
 					schedule function ARG(_PATH)update 14t
@@ -389,6 +392,7 @@ namespace lobby()
 				scoreboard players set #LOCK_UI number 1
 				
 				title @a times 5 5 5
+				title @a subtitle ""
 				title @a title {"text":"0","font":"ui:main"}
 				
 				schedule function ARG(_PATH)main 7t
