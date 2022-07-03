@@ -13,7 +13,7 @@ namespace main()
 	{
 		datapack disable vanilla
 		
-		setworldspawn 128 4 0
+		setworldspawn 0 5 0
 		
 		forceload add 0 0
 		fill -1 0 -1 1 3 1 minecraft:bedrock
@@ -90,7 +90,6 @@ namespace main()
 	
 	func new_player()
 	{
-		scoreboard players set @s player 0
 		attribute @s minecraft:generic.attack_damage base set 0
 		effect give @s minecraft:saturation 1000000 100 true
 		effect give @s minecraft:jump_boost 1000000 1 true
@@ -99,6 +98,7 @@ namespace main()
 		advancement grant @s only stage:root
 		
 		tag @s add flame_target
+		tp @s 0 5 0 0 0
 		execute if score #IN_LOBBY number matches 1 run function lobby:display
 		execute if score #IN_LOBBY number matches 1 run function lobby:reset_item
 	}
