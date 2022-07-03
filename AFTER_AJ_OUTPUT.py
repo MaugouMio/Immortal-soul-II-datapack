@@ -1,7 +1,7 @@
 from os import listdir, system, path
 import json
 
-DP_DIR = r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul test1\datapacks\immortal soul datapack\data"
+DP_DIR = r"C:\Users\MaugouMio\AppData\Roaming\.minecraft\saves\Immortal Soul 2\datapacks\immortal soul datapack\data"
 
 # animated java 輸出資料包後手動增加 tag @s add effect
 model_list = [

@@ -45,7 +45,6 @@ namespace stage()
 		print(f"forceload add {int(STAGE_CENTER[0][0] - 16)} {int(STAGE_CENTER[0][1] - 16)} {int(STAGE_CENTER[0][0] + 16)} {int(STAGE_CENTER[0][1] + 16)}")
 		print(f"forceload add {int(STAGE_CENTER[1][0] - 16)} {int(STAGE_CENTER[1][1] - 16)} {int(STAGE_CENTER[1][0] + 16)} {int(STAGE_CENTER[1][1] + 16)}")
 		print(f"forceload add {int(STAGE_CENTER[2][0] - 16)} {int(STAGE_CENTER[2][1] - 16)} {int(STAGE_CENTER[2][0] + 16)} {int(STAGE_CENTER[2][1] + 16)}")
-		raise Warning("TODO: forceload BOSS chunks for anim")
 		```
 	}
 	

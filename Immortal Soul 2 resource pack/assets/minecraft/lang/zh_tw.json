@@ -27,7 +27,7 @@
 	"Select Stage": "選擇關卡",
 	"Tutorial": "教學關卡",
 	"Player Mode": "挑戰模式",
-	"(Locked)": "(未解鎖)",
+	"(Defeat %s to unlock)": "(擊倒%s後解鎖)",
 	
 	"Victory": "挑戰成功",
 	"Fail": "挑戰失敗",

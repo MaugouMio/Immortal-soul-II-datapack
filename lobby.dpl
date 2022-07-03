@@ -136,13 +136,13 @@ namespace lobby()
 			
 			func miko()
 			{
-				execute unless score #UNLOCK_STAGE number matches 2.. run title @a actionbar ["",{"text":"FF","font":"space:default"},{"text":"7","font":"ui:blind"},{"text":"FF","font":"space:default"},[{"translate":"Cursed Miko","bold":true}," ",{"translate":"(Locked)","color":"red"}]]
+				execute unless score #UNLOCK_STAGE number matches 2.. run title @a actionbar ["",{"text":"FF","font":"space:default"},{"text":"7","font":"ui:blind"},{"text":"FF","font":"space:default"},[{"translate":"Cursed Miko","bold":true}," ",{"translate":"(Defeat %s to unlock)","color":"red","with":[{"translate":"Sacred Knight"}]}]]
 				execute if score #UNLOCK_STAGE number matches 2.. run title @a actionbar ["",{"text":"FF","font":"space:default"},{"text":"7","font":"ui:blind"},{"text":"FF","font":"space:default"},{"translate":"Cursed Miko","bold":true}]
 			}
 			
 			func abyss()
 			{
-				execute unless score #UNLOCK_STAGE number matches 3 run title @a actionbar ["",{"text":"FF","font":"space:default"},{"text":"7","font":"ui:blind"},{"text":"FF","font":"space:default"},[{"translate":"Root of Fear","bold":true}," ",{"translate":"(Locked)","color":"red"}]]
+				execute unless score #UNLOCK_STAGE number matches 3 run title @a actionbar ["",{"text":"FF","font":"space:default"},{"text":"7","font":"ui:blind"},{"text":"FF","font":"space:default"},[{"translate":"Root of Fear","bold":true}," ",{"translate":"(Defeat %s to unlock)","color":"red","with":[{"translate":"Cursed Miko"}]}]]
 				execute if score #UNLOCK_STAGE number matches 3 run title @a actionbar ["",{"text":"FF","font":"space:default"},{"text":"7","font":"ui:blind"},{"text":"FF","font":"space:default"},{"translate":"Root of Fear","bold":true}]
 			}
 		}

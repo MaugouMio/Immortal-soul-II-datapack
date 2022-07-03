@@ -1,7 +1,7 @@
 {
   "meta": {
     "format_version": "0.0",
-    "creation_time": 1656214846,
+    "creation_time": 1656824363,
     "model_format": "animated_java/ajmodel",
     "box_uv": false,
     "settings": {
@@ -10,9 +10,9 @@
         "exporter": "vanillaAnimationExporter",
         "verbose": true,
         "rigItem": "minecraft:white_dye",
-        "rigModelsExportFolder": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\enemy\\miko\\boss",
-        "predicateFilePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\models\\item\\white_dye.json",
-        "transparentTexturePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\empty.png"
+        "rigModelsExportFolder": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\models\\item\\enemy\\miko\\boss",
+        "predicateFilePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\models\\item\\white_dye.json",
+        "transparentTexturePath": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\empty.png"
       },
       "vanillaStatueExporter": {
         "rootEntityType": "minecraft:marker",
@@ -52,7 +52,7 @@
         "exportMode": "vanilla",
         "mcbFilePath": "",
         "mcbConfigPath": "",
-        "dataPackPath": "C:\\Users\\MaugouMio\\AppData\\Roaming\\.minecraft\\saves\\Immortal Soul test1\\datapacks\\immortal soul datapack"
+        "dataPackPath": "C:\\Users\\MaugouMio\\AppData\\Roaming\\.minecraft\\saves\\Immortal Soul 2\\datapacks\\immortal soul datapack"
       },
       "rawAnimationExporter": {
         "outputJsonPath": ""
@@ -5144,7 +5144,7 @@
   ],
   "textures": [
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\bangs.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\bangs.png",
       "name": "bangs.png",
       "folder": "item/enemy/sword",
       "namespace": "minecraft",
@@ -5158,7 +5158,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAYAAACE2W/HAAAAAXNSR0IArs4c6QAAAE9JREFUKFNjlJSU/M9ABmBE1vj8+XMUPrJ56HKUawSZCLIBm9NhcsjycBuxScKciiwH00yZRnQTkZ2ESw5sIzZJmGayNOKKXpBleG3EpxEAPGVM79HNmH0AAAAASUVORK5CYII="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\left_eye.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\left_eye.png",
       "name": "left_eye.png",
       "folder": "item/enemy/sword",
       "namespace": "minecraft",
@@ -5172,7 +5172,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAALpJREFUOE/FkbENAyEMRc0EmYnyyixAyRqINbJEypRegJo9mMARFuYMl1xImrgBCf/nb76x1hK0QkQj99VzEGiYBpyBlybOYETs/CXA2ToDIIRAMUbpX4JzkxIuibSjKqgpiLAn8iGFPuggJCoAt8trvS9gzPBm2AGLdAlgewD4DeDaHv3eJ6Buhajs9n8B1BkdIoB7mzw5UGvwCkMxRANEXLvGP2Dt29icc0MiKSXIOR80X+c+O/4/4An08UEOmMNCBgAAAABJRU5ErkJggg=="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\main.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\main.png",
       "name": "main.png",
       "folder": "item/enemy/sword",
       "namespace": "minecraft",
@@ -5186,7 +5186,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAQdJREFUWEdjZCAAJCUl/+NT8uz0PrwmMMpoMuJTgFcSpHHUAaMhMBoCNA8BQhYQKicolWccEg7AVdpJmTpRGgAMBEOAUFFLqSMGrwMI+Rw97MkNCawhgGL5j68MDCxsDAwsrKh2/vkN4SOJk+MI4hwAtgjJETDL//xiYODghjuMLAf8v3n8P8PHV8SlZn4xBkZ1S4JVOHGGQVQx/n9y/T/D1w8QHi6H8ItB5LkFGAg1MEixHOEAmC50hyBZDFNCWwcQ4XyqO2CZB8P/yO3/GRgZGakat7j8Ao5yJMAIckDUDga6WA6yd9QBgy8EZhkw/E+7MIBpYNQBoyHQK8vwv/jxACbCgXYAAFASsh3GJ5daAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest.png",
       "name": "chest.png",
       "folder": "",
       "namespace": "",
@@ -5200,7 +5200,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAVCAYAAAB2Wd+JAAAAAXNSR0IArs4c6QAAAHdJREFUOE/V0UsKwCAMBNCk5xM8q+D1bMoIEfFDmyxK667QlxkYJudjpyM/lBCEczYdqOZ9WEqRI0Z6WhcNz5SILRAIKzSID6TirZJ7oPPVxH7L8YBWG/eeoP6gB1Br9baJO7CsipQ78AFoqVln0zlc0Ipa4j/gBcXnjEK2SuViAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest_side.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest_side.png",
       "name": "chest_side.png",
       "folder": "",
       "namespace": "",
@@ -5214,7 +5214,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAACxJREFUGFdj/Pv3738GBgYGJn9/EAUGjFu2MIJpmCRcBkkhVkm4Cdh00lgSACXuHmxsP9vRAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\cloth.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\cloth.png",
       "name": "cloth.png",
       "folder": "",
       "namespace": "",
@@ -5228,7 +5228,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAExJREFUOE9j/Pv3738GBgYGJn9/EEU0YETW+G/jxsGuEeQ/UpwJ8g/Yj8Nd438fn/+kBgw4cOivEZbkiE5rUIXwtEo/jaDAIdU2kHoAvkVZsRr8U3YAAAAASUVORK5CYII="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\skirt.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\skirt.png",
       "name": "skirt.png",
       "folder": "",
       "namespace": "",
@@ -5242,7 +5242,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAUCAYAAACEYr13AAAAAXNSR0IArs4c6QAAAGRJREFUOE9j/O/j858BBP7+ZWBgZgYzwTSIDwLfvjEwcHFhikPVMGI1AFkTLjaGAR8/MjDw82PaSsAwhAtev2ZgEBWFGEACG2HAo0cMDHJyEANIYI8aIMcwGgajYQDKO8MgHQAAj8P7zfpVbUQAAAAASUVORK5CYII="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest2.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\chest2.png",
       "name": "chest2.png",
       "folder": "",
       "namespace": "",
@@ -5256,7 +5256,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAOCAYAAAA8E3wEAAAAAXNSR0IArs4c6QAAAaRJREFUOE/FlL9LHEEUgL/ZH7frrl4SYmMp+AekMX/FFUIKi9R2aawTUlsEQkTEWrjCTsjaBgJWSuAqLS6JjXAoIibmvB+7syNv5xq5I+5tkUy17Lz3vvfNDE+Z81PDP1zq/wNdD/wZ65z2QGeT/bs3ED8d33skf9wwnINgBBz0oH87HfCR/GrA7g2dyysWFpfGm5kaWOZI/wac+khLvNjO2Xcurq55sfyyRPTDkEqvtHV8xPnPNo3V1xWAP74ZlANeDRynVIFKwCyFXKPMyaFBKQii0tAkSaDTprG2XqrBIqj3B7IhyrS+GBwF0Swo11qKsTP6nlAy2WvC78tywDwHk8PdL9Bi+LVpCJ9AXIdaYMuLvlj7IXgeOJ79n8sQUOzvfMALwslAAWQDkIEpNWTJ8Li9hmEfZQ62TXGcYQzxM3BdMNoauqN7lcRcgwwCr0Zza4N42GXl3UfIMhtfNGRsUzoFHAvSGvpda6hAmc+fjJALkB9BMGuLR1FhUyREdYmENC3uevftG+L557x6vwnpAMSqMMlBD21jUjNPIdPWWJbvcw8bEtnVMcVkDgAAAABJRU5ErkJggg=="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\right_eye.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\right_eye.png",
       "name": "right_eye.png",
       "folder": "",
       "namespace": "",
@@ -5270,7 +5270,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAALRJREFUOE/lUrERxCAME6O5zVIcS33LaM7BxZxNwCF88cXTQCHJkkzAxiEiFlrw+BqocTnnxiuPpkZERk8DZ4NcByvp3ghUpzFGpJRMhJVBPYZFqHfQ+nhQFR63hybMVAZ5g9mCiIjAB8DBDFQYMCrsG4Gq50YoDso5rls5GG6hRdcd1BhWwCQZxfI2ccNPPxIDZUWPH20IKOSroB8IyPRtB5J9qwNNWu3BlNRPXXHhtvwnAicCvELZwikrUgAAAABJRU5ErkJggg=="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\mouth.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\mouth.png",
       "name": "mouth.png",
       "folder": "",
       "namespace": "",
@@ -5284,7 +5284,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAICAYAAAD0g6+qAAAAAXNSR0IArs4c6QAAAGhJREFUKFNjZKASYGRgYPgPNQvERgH/5++HyYHFGRMdMdTA9MMkUDT8/fsXrzuZmZnR5RlRDCJkALpuJAPhBoHU/CfTILBj0P0M9iIhA5FdAnMltsADu45AZGLow2UQA3qMwW3GHnMMANxSGwhEyNIPAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\bangs2.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\bangs2.png",
       "name": "bangs2.png",
       "folder": "",
       "namespace": "",
@@ -5298,7 +5298,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAQCAYAAADedLXNAAAAAXNSR0IArs4c6QAAADhJREFUKFNjlJSU/M8ABc+fP2cEMRmHiiDIsTC3wh2PLAhigyTA3kL3FW5BdHPBKmEAZAzcTHQJAHonPVuKVIKSAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\bangs.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\bangs.png",
       "name": "bangs.png",
       "folder": "",
       "namespace": "",
@@ -5312,7 +5312,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAKCAYAAACE2W/HAAAAAXNSR0IArs4c6QAAAE9JREFUKFNj7Obh+c9ABmBE1lj65QsKH9k8dDnKNYJMBNmAzekwOWR5uI3YJGFORZaDaaZMI7qJyE7CJQe2EZskTDNZGnFFL8gyvDbi0wgAEt9QX7fmErYAAAAASUVORK5CYII="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\bangs2.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\bangs2.png",
       "name": "bangs2.png",
       "folder": "",
       "namespace": "",
@@ -5326,7 +5326,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAQCAYAAADedLXNAAAAAXNSR0IArs4c6QAAADhJREFUKFNj7Obh+c8ABaVfvjCCmIxDRRDkWJhb4Y5HFgSxQRJgb6H7CrcgurlglTAAMgZuJroEALQOPbMLuEIzAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\chest.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\chest.png",
       "name": "chest.png",
       "folder": "",
       "namespace": "",
@@ -5340,7 +5340,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAVCAYAAAB2Wd+JAAAAAXNSR0IArs4c6QAAAHpJREFUOE/VkdENgDAIRGGZDtVpOg1DdRkMaGtTqRE+NN6fpo93ySEEg0EO4iCnxFir64AyH4ClMBDB07rSEHIGZAeokKSD8kGk/yzzCLT5duOY6UCrNu99BduL44DUsrI0rgC7qlgWhvuq74IOm87W5wiBTug0/gLcACnzbdYADYspAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\chest_side.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\chest_side.png",
       "name": "chest_side.png",
       "folder": "",
       "namespace": "",
@@ -5354,7 +5354,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAAXNSR0IArs4c6QAAAClJREFUGFdj/N/Q8J8BBJYtA1MgwHjrFiOYhkvCpRAKsUvCTMCqk7aSAEDpGUgitDsBAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\chest2.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\chest2.png",
       "name": "chest2.png",
       "folder": "",
       "namespace": "",
@@ -5368,7 +5368,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAOCAYAAAA8E3wEAAAAAXNSR0IArs4c6QAAAXtJREFUOE/FlLtKA0EUhr+ZvRgDFtqJDxAUrWystI3Y2WmjWIgQsPDh7OzEQixEBUn6YBfBaC6bnR05MxswJJhNCh0YdnbmnPNf5qLsVc3yh039P6DSEEResxmAzSbrT3oQl8bXpuSPKwwXIAhzwBTS/myAU/LnA0x6tL86LC2vjJOZGbCIpb8BzmxpgRPbfm/x2emyurZWIHo0ZK5T+tZs8vHeorK5NQfg5blFKdAB7lugzQWYZe7EK1s78xc/jAqD1hsNaLeobO8UoJeHDBLIDMpenFhEWBQD2qv82SeUrL88Q/+rGKC1IH3QzxWeHlrCEsRy/wJfXuRLk/uohYT2/+4RULw+3KGDcDKgFM8MiG/DHZJ6SRdMirLHB9bZKT1aBK08o5F9lbnMJcheP93fEpmE9d2qJzd8jQRExtZ4NLdmIU28Qpm1R1XrC2nQAhz7pEietzwpWvBsjXHEHm+uictlNvb2IUt9UeeM2GcgTT05GcucxDjHAr4B4MPMXXrDiI8AAAAASUVORK5CYII="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\cloth.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\cloth.png",
       "name": "cloth.png",
       "folder": "",
       "namespace": "",
@@ -5382,7 +5382,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAQCAYAAAAmlE46AAAAAXNSR0IArs4c6QAAAEhJREFUOE9j/N/Q8J8BBJYtA1PEAkYUjVFRxOpjGCiNIP+R4EyQfyBOHe4a1dT+kxowkMChv0ZYWiU6sUEUIpIc/TSCAocMAAARYUCJ8qqqYgAAAABJRU5ErkJggg=="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\left_eye.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\left_eye.png",
       "name": "left_eye.png",
       "folder": "",
       "namespace": "",
@@ -5396,7 +5396,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAM5JREFUOE+lkjEOwjAMRX9v0gWJrUv3HoSJW2QjbNyCiZWFHSk7B2DMlCWHCIoVN26AyoIsiWT/52/H3bnvE8rZe9/xW3svBBImAWtgVcUW7L2f+SrAWjsLwH2aknOO8o+ACk5JLNSKpKPuACQW5rdm+rIQOZBCaw3wOH3mjAbW1lgGkQMSycOAzQ64XYBtCY41j0HzoJI11f4vgFxjhjDgWSo3Drg6tdA2SxAJYHFOFDPgQX796+swLH4khIAY49t+qJZFvYmaHWhz/nbwAsp0SosKV2E3AAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\main.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\main.png",
       "name": "main.png",
       "folder": "",
       "namespace": "",
@@ -5410,7 +5410,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAQdJREFUWEdjZCAAunl4/uNTUpIWj9cExr6pjPgU4JUEaRx1wGgIjIYAzUOAkAWEyglK5RmHhANwlXY9sxZSGgAMBEOAUFFLqSMGrwMI+Rw97MkNCawhgGL5n98MDEzMDAxMTKh2/vsH4SOJk+MI4hwAtgjJETDL//1lYGBhhTuMLAf8z0n+z/DzK3GpmZ2bgXHKXIJVOHGGQVQx/i/K/s/w6weEh8sh7NwQeTYOBkINDFIsRzgApgvdIUgWw5TQ1gFEOJ/qDrikwvBfN6aBgbGhgapxi8sv4ChHAowgB+jdYaCL5SB7Rx0w+ELgjATDf5MXA5gGRh0wGgJH+Rj+W38awEQ40A4AAPuyqnUxpO0pAAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\mouth.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\mouth.png",
       "name": "mouth.png",
       "folder": "",
       "namespace": "",
@@ -5424,7 +5424,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAICAYAAAD0g6+qAAAAAXNSR0IArs4c6QAAAGpJREFUKFNjZKASYKxnYPgPMquRgYER3cz//vFgORhg3LgQQw1MP1gCxoFpaGhowOtOdHmQI1AMImQAuukw9XCDYK4ixyBYkKD4GeZFQgYiuwQeftgCAz3M0NVgixiMWIBpQo8xfDEHkgMAqA0hh+p3dEYAAAAASUVORK5CYII="
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\right_eye.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\right_eye.png",
       "name": "right_eye.png",
       "folder": "",
       "namespace": "",
@@ -5438,7 +5438,7 @@
       "source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAYCAYAAADzoH0MAAAAAXNSR0IArs4c6QAAAMhJREFUOE/lktENgzAMRC+b+Is1InWTTtIwSWdhjX6xCZUpF5wouFF++tFICBT5nu9sAgbOU2SjLHh6W2jr7uuadeEBZJqIFDxbeNXIddCTrhtApzFG3JbljNDTpa5RGEGFAzsPDzwDu07r84cVpAt1fa+gYgvUsfAFYEoJ0AdACzwMYAw3gjrQMx1vOqBYr/MQ7QCt1T2GAVhxAWB+bxO1uAkgaPus6OuP1ixQ8UH/AYDdhx0w+9AMrKh3DsWQ6q49Ltwp/wngDYChSfNwdXu5AAAAAElFTkSuQmCC"
     },
     {
-      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\skirt.png",
+      "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\Immortal Soul 2 resource pack\\assets\\minecraft\\textures\\item\\enemy\\miko\\boss\\hurt\\skirt.png",
       "name": "skirt.png",
       "folder": "",
       "namespace": "",
@@ -5741,7 +5741,7 @@
       "override": false,
       "length": 0.3,
       "snapping": 20,
-      "selected": true,
+      "selected": false,
       "saved": true,
       "path": "C:\\Users\\MaugouMio\\Desktop\\immortal soul datapack\\animated java\\miko.animation.json",
       "anim_time_update": "",
