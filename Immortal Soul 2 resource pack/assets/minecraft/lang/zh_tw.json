@@ -10,6 +10,12 @@
 	"Zone": "領域",
 	"Barrier": "結界",
 	
+	"Notice:": "注意:",
+	"Please check the settings marked in green.": "請先檢查標記綠色的設定",
+	"Make sure you have switched to third person view.": "必須使用使用第三人稱進行遊玩",
+	"(You are in first person view if you can see your hand or the item model at the right bottom of your screen)": "(若可以看到自己的手或畫面右下角的道具模型，則現在為第一人稱)",
+	"Use headphones for better experience.": "使用耳機以獲得完整遊戲體驗",
+	
 	"Select": "選擇",
 	"Back": "返回",
 	"Left": "向左",
@@ -64,7 +70,7 @@
 	"Cannon": "砲擊",
 	"Right click in the air to fire a cannon, with strong recoil.": "在空中點擊右鍵，發射具有強大後座力的砲擊",
 	"Laser": "雷射",
-	"Right click when the energy bar above the item bar is full.": "當道具欄上方的能量條充滿時點擊右鍵",
+	"Sneak and right click when the energy bar above the item bar is full.": "當道具欄上方的能量條充滿時蹲下點擊右鍵",
 	"Shoot a powerful laser. Being invincible during the shoot.": "發射強力的雷射，並且施放過程無敵",
 	"It takes 90 seconds to fully charge the energy bar.": "將能量條填充完畢需要花90秒",
 	"You have finished the tutorial. Go ahead and get back to the menu.": "已完成新手教學，通過前面的門回到主選單",

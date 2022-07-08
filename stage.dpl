@@ -393,7 +393,7 @@ namespace stage()
 			
 			tellraw @a ""
 			tellraw @a {"translate":"Laser","bold":true,"color":"aqua"}
-			tellraw @a {"translate":"Right click when the energy bar above the item bar is full."}
+			tellraw @a {"translate":"Sneak and right click when the energy bar above the item bar is full."}
 			tellraw @a {"translate":"Shoot a powerful laser. Being invincible during the shoot."}
 			tellraw @a {"translate":"It takes 90 seconds to fully charge the energy bar."}
 			
@@ -912,6 +912,7 @@ namespace stage()
 					data modify entity @s Pose.LeftArm set value [95f,210f,0f]
 					# data modify entity @s NoGravity set value 1b
 					particle flash ~ ~1 ~ 0 0 0 1 2 force
+					particle explosion ~ ~1 ~ 0 0 0 1 3 force
 					playsound minecraft:enemy.sword.strike_big player @a ~ ~ ~ 3 1 0
 					
 					bossbar set minecraft:zone color blue
@@ -2379,7 +2380,7 @@ namespace stage()
 					```
 					for i in range(5):
 						print('summon marker ~ ~ ~ {Tags:["object","thunder_summon"]}')
-					print(f"spreadplayers ~ ~ 4.1 6 under {int(GROUND_Y[1] + 3)} false @e[type=marker,tag=thunder_summon]")
+					print(f"spreadplayers ~ ~ 4.1 6 under {int(GROUND_Y[1] + 1)} false @e[type=marker,tag=thunder_summon]")
 					```
 					execute at @e[tag=thunder_summon] run summon armor_stand ~ ~ ~ {Invisible:1b,Invulnerable:1b,NoGravity:1b,Marker:1b,HasVisualFire:1b,ArmorItems:[{},{},{},{id:"minecraft:diamond_hoe",Count:1b,tag:{CustomModelData:41}}],Tags:["object","effect","thunder"]}
 					kill @e[type=marker,tag=thunder_summon]
