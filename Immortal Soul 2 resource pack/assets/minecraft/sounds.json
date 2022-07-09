@@ -430,6 +430,7 @@
     ]
   },
   "enemy.abyss.fear": {
+	"subtitle": "§cMonster screaming§r",
     "sounds": [
       {
         "name": "enemy/abyss/fear",
@@ -454,6 +455,7 @@
     ]
   },
   "enemy.abyss.swallow": {
+	"subtitle": "§cTerrible roar§r",
     "sounds": [
       {
         "name": "enemy/abyss/swallow",

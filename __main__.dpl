@@ -105,6 +105,7 @@ namespace main()
 		tellraw @s ["2. ",{"translate":"Make sure you have switched to third person view.","bold":true}]
 		tellraw @s {"translate":"(You are in first person view if you can see your hand or the item model at the right bottom of your screen)"}
 		tellraw @s ["3. ",{"translate":"Use headphones for better experience.","bold":true}]
+		tellraw @s {"translate":"(You may turn on subtitles instead)"}
 		
 		execute if score #IN_LOBBY number matches 1 run function lobby:display
 		execute if score #IN_LOBBY number matches 1 run function lobby:reset_item

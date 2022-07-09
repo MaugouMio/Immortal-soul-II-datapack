@@ -15,6 +15,7 @@
 	"Make sure you have switched to third person view.": "必須使用使用第三人稱進行遊玩",
 	"(You are in first person view if you can see your hand or the item model at the right bottom of your screen)": "(若可以看到自己的手或畫面右下角的道具模型，則現在為第一人稱)",
 	"Use headphones for better experience.": "使用耳機以獲得完整遊戲體驗",
+	"(You may turn on subtitles instead)": "(作為替代，可以開啟字幕顯示)",
 	
 	"Select": "選擇",
 	"Back": "返回",
@@ -75,6 +76,9 @@
 	"It takes 90 seconds to fully charge the energy bar.": "將能量條填充完畢需要花90秒",
 	"You have finished the tutorial. Go ahead and get back to the menu.": "已完成新手教學，通過前面的門回到主選單",
 	"Dummy": "練習人偶",
+	
+	"§cMonster screaming§r": "§c怪物尖嘯§r",
+	"§cTerrible roar§r": "§c深淵恐懼嘶吼§r",
 	
 	"menu.options": "§a選項...§r",
 	"options.fov": "§a視角廣度(建議80以上)§r",
