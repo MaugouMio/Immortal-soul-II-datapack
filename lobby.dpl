@@ -1,3 +1,5 @@
+import stage
+
 namespace lobby()
 {
 	func install()
@@ -34,7 +36,9 @@ namespace lobby()
 		# 選一般關卡最後頁面會是選難度，跳回選關卡跟做設定
 		execute if score #PAGE number matches 3 run function ARG(_PATH)stage_end
 		function ARG(_PATH)display
-		
+		```
+		print(f"tp @a {LOBBY_POS}")
+		```
 		gamemode adventure @a
 		execute as @a run function ARG(_PATH)reset_item
 	}
