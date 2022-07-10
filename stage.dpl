@@ -2307,9 +2307,15 @@ namespace stage()
 						tp @s ^ ^ ^1
 						scoreboard players set #EXPLODE number 0
 						execute unless block ~ ~ ~ #skill:canpass run scoreboard players set #EXPLODE number 1
-						execute unless score #EXPLODE number matches 1 positioned ~-0.5 ~ ~-0.5 if entity @e[type=#stage:flame_target,limit=1,tag=flame_target,dx=0,dy=0,dz=0] run scoreboard players set #EXPLODE number 1
+						execute unless score #EXPLODE number matches 1 positioned ~-0.5 ~ ~-0.5 as @e[type=#stage:flame_target,limit=1,tag=flame_target,dx=0,dy=0,dz=0] run function ARG(_PATH)check_spectator
 						
 						execute if score #EXPLODE number matches 1 run function ARG(_PATH)explode
+					}
+					
+					func check_spectator()
+					{
+						execute if entity @s[type=!player] run scoreboard players set #EXPLODE number 1
+						execute if entity @s[type=player,gamemode=adventure] run scoreboard players set #EXPLODE number 1
 					}
 					
 					func explode()
