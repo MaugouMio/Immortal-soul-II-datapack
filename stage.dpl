@@ -1997,6 +1997,7 @@ namespace stage()
 			schedule clear ARG(_PATH)skills/flame/circle/summon
 			schedule clear ARG(_PATH)skills/flame/bullet/shoot
 			schedule clear ARG(_PATH)skills/thunder/strike
+			schedule clear ARG(_PATH)skills/sacrifice/call_knock_up
 			schedule clear ARG(_PATH)skills/sacrifice/clear_levitation
 			schedule clear ARG(_PATH)skills/sanka/sakura_draw
 			schedule clear ARG(_PATH)skills/sanka/call_teleport
