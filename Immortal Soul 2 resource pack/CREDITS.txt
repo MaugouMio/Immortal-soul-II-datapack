@@ -4,6 +4,9 @@ AmberW#4615
 Animated Java
  - https://github.com/Animated-Java/animated-java
 
+onnowhere
+ - Core Shader VSH Util: https://github.com/onnowhere/core_shaders/releases/tag/1.0.4
+
 FreeSFX
  - https://freesfx.co.uk
 
